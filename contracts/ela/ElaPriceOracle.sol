@@ -2,7 +2,7 @@ pragma solidity ^0.5.16;
 
 import "../PriceOracle.sol";
 import "../CErc20.sol";
-import "../IPriceCollector.sol";
+import "./IPriceCollector.sol";
 
 contract ElaPriceOracle is PriceOracle, IPriceCollector {
     mapping(address => uint) prices;
@@ -17,8 +17,9 @@ contract ElaPriceOracle is PriceOracle, IPriceCollector {
     constructor(address _priceAdmin) public {
         if (_priceAdmin == address(0x0)) {
             priceAdmin = msg.sender;
+        } else {
+            priceAdmin = _priceAdmin;
         }
-        priceAdmin = _priceAdmin;
     }
 
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {

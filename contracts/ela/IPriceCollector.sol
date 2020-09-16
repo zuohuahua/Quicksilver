@@ -1,5 +1,5 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.5.16;
 
-abstract contract IPriceCollector {
+contract IPriceCollector {
     function setDirectPrice(address asset, uint price) public;
 }
