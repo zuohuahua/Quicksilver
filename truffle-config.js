@@ -79,12 +79,15 @@ module.exports = {
       ethdev: {
           provider: () => new HDWalletProvider(mnemonic, `http://18.162.230.88/ethdev`),
           network_id: 1337,   // This network is yours, in the cloud.
-          production: false    // Treats this network as if it was a public net. (default: false)
+          production: false,    // Treats this network as if it was a public net. (default: false)
+          timeoutBlocks: 200,
+          networkCheckTimeout: 10000000
       },
       elaeth: {
           provider: () => new HDWalletProvider(mnemonic, `https://mainrpc.elaeth.io`),
+          network_id: 12,   // This network is yours, in the cloud.
           production: false    // Treats this network as if it was a public net. (default: false)
-      }
+      },
   },
 
   // Set default mocha options here, use special reporters etc.
