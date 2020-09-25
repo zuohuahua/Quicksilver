@@ -55,7 +55,6 @@ module.exports = async function(deployer, network, accounts) {
         let tetherTokenInstance = await TetherToken.deployed();
         let tetherTokenContract = new web3.eth.Contract(tetherTokenInstance.abi, tetherTokenInstance.address);
         await tetherTokenContract.methods.approve(sUSDT.address, 10000000).send({from: accounts[0]});
-        console.log("==========");
         let sUSDTInstance = await sUSDT.deployed();
         let sUSDTContract = new web3.eth.Contract(sUSDTInstance.abi, sUSDTInstance.address);
         await sUSDTContract.methods.mint(10000000).send({from: accounts[0], gas: 8000000});
@@ -73,6 +72,14 @@ module.exports = async function(deployer, network, accounts) {
         let sETHContract = new web3.eth.Contract(sETHInstance.abi, sETHInstance.address);
         await sETHContract.methods.mint().send({from: accounts[0], gas: 8000000, value: 1e18});
 
+        await proxiedComptrollerContract.methods.enterMarkets([sETH.address, sUSDT.address]).send({from: accounts[0], gas: 8000000});
+        let accountLiquidity = await proxiedComptrollerContract.methods.getAccountLiquidity(accounts[0]).call();
+        console.log("Account Liquidity: ");
+        console.log(accountLiquidity);
+
+        await sUSDTContract.methods.borrow(10000000).send({from: accounts[0], gas: 8000000});
+        let borrowBalance = await sUSDTContract.methods.borrowBalanceCurrent(accounts[0]).call();
+        console.log(borrowBalance);
     }
 };
 
