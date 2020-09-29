@@ -81,7 +81,7 @@ module.exports = {
           network_id: 1337,   // This network is yours, in the cloud.
           production: false,    // Treats this network as if it was a public net. (default: false)
           timeoutBlocks: 200,
-          networkCheckTimeout: 10000000
+          networkCheckTimeout: 100000000
       },
       elaeth: {
           provider: () => new HDWalletProvider(mnemonic, `https://mainrpc.elaeth.io`),

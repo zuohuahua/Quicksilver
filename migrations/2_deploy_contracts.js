@@ -13,7 +13,7 @@ const Reservoir = artifacts.require("Reservoir");
 const maxAssets = 10;
 
 module.exports = async function(deployer, network, accounts) {
-    if (network == "development" || network == "ethdev") {
+    if (network == "development") {
         await deployer.deploy(Unitroller);
         await deployer.deploy(TetherToken, "1000000000000000", "Tether USD", "USDT", 6);
         await deployer.deploy(MockPriceOracle);
@@ -106,6 +106,63 @@ module.exports = async function(deployer, network, accounts) {
         console.log("compAccrued: ", compAccrued);
         let compSpeeds = await proxiedComptrollerContract.methods.compSpeeds(sUSDT.address).call();
         console.log("compSpeeds: ", compSpeeds);
+    }
+
+    if (network == "ethdev") {
+        await deployer.deploy(Unitroller);
+        await deployer.deploy(TetherToken, "1000000000000000", "Tether USD", "USDT", 6);
+        await deployer.deploy(MockPriceOracle);
+        await deployer.deploy(Comptroller);
+        await deployer.deploy(CompToken, Unitroller.address);
+        let unitrollerInstance = await Unitroller.deployed();
+        let comptrollerInstance = await Comptroller.deployed();
+
+        await unitrollerInstance._setPendingImplementation(Comptroller.address);
+        await comptrollerInstance._become(Unitroller.address);
+        await deployer.deploy(InterestModel, "20000000000000000", "200000000000000000");
+        await deployer.deploy(sETH, Unitroller.address, InterestModel.address, "10000000000000000000", "QuickSilver ELA", "sELA", 18, accounts[0]);
+        await deployer.deploy(erc20Delegate);
+        await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, "10000000", "QuickSilver USDT", "sUSDT", 18, accounts[0], erc20Delegate.address, "0x0");
+        const sUSDT = erc20Delegator;
+
+        let proxiedComptrollerContract = new web3.eth.Contract(comptrollerInstance.abi, unitrollerInstance.address);
+
+        let setPriceOracle = proxiedComptrollerContract.methods._setPriceOracle(MockPriceOracle.address).encodeABI();
+        await sendTx(accounts[0], unitrollerInstance.address, setPriceOracle);
+        console.log("Done to set price oracle.")
+
+        let setMaxAssets = proxiedComptrollerContract.methods._setMaxAssets(maxAssets).encodeABI();
+        await sendTx(accounts[0], unitrollerInstance.address, setMaxAssets);
+        console.log("Done to set max assets.")
+
+        let supportETH = proxiedComptrollerContract.methods._supportMarket(sETH.address).encodeABI();
+        await sendTx(accounts[0], unitrollerInstance.address, supportETH);
+        console.log("Done to support market: ", sETH.address);
+
+        let supportUSDT = proxiedComptrollerContract.methods._supportMarket(sUSDT.address).encodeABI();
+        await sendTx(accounts[0], unitrollerInstance.address, supportUSDT);
+        console.log("Done to support market: ", sUSDT.address);
+
+        let elaCollateralFactor = 0.3e18.toString();
+        await proxiedComptrollerContract.methods._setCollateralFactor(sETH.address, elaCollateralFactor).send({from: accounts[0]});
+        console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sETH.address);
+
+        await proxiedComptrollerContract.methods._setLiquidationIncentive(1.5e18.toString()).send({from: accounts[0]});
+        console.log("Done to set liquidation incentive.");
+
+        await proxiedComptrollerContract.methods._addCompMarkets([sETH.address, sUSDT.address]).send({from: accounts[0], gas: 3000000});
+        console.log("Done to add comp market.");
+
+        await proxiedComptrollerContract.methods._setCompRate(0.5e18.toString()).send({from: accounts[0], gas: 3000000});
+        console.log("Done to set comp rate.");
+
+        await proxiedComptrollerContract.methods._setCompToken(CompToken.address).send({from: accounts[0], gas: 3000000});
+        console.log("Done to set comp token.");
+
+        let allSupportedMarkets = await proxiedComptrollerContract.methods.getAllMarkets().call();
+        console.log("allSupportedMarkets: ", allSupportedMarkets);
+
+        await proxiedComptrollerContract.methods.refreshCompSpeeds().send({from: accounts[0], gas: 3000000});;
     }
 };
 
