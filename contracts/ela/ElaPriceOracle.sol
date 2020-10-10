@@ -8,6 +8,7 @@ contract ElaPriceOracle is PriceOracle, IPriceCollector {
     mapping(address => uint) prices;
     address public priceAdmin;
     event PricePosted(address asset, uint previousPriceMantissa, uint requestedPriceMantissa, uint newPriceMantissa);
+    event PriceAdminTransferred(address indexed previousAdmin, address indexed newAdmin);
 
     modifier onlyAdmin {
         require(msg.sender == priceAdmin, "Price Admin required.");
@@ -15,15 +16,11 @@ contract ElaPriceOracle is PriceOracle, IPriceCollector {
     }
 
     constructor(address _priceAdmin) public {
-        if (_priceAdmin == address(0x0)) {
-            priceAdmin = msg.sender;
-        } else {
             priceAdmin = _priceAdmin;
-        }
     }
 
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {
-        if (compareStrings(cToken.symbol(), "cETH")) {
+        if (compareStrings(cToken.symbol(), "sELA")) {
             return 1e18;
         } else {
             return prices[address(CErc20(address(cToken)).underlying())];
@@ -47,5 +44,11 @@ contract ElaPriceOracle is PriceOracle, IPriceCollector {
 
     function compareStrings(string memory a, string memory b) internal pure returns (bool) {
         return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+    }
+
+    function transferPriceAdmin(address newAdmin) public onlyAdmin {
+        require(newAdmin != address(0), "Ownable: new price admin is the zero address");
+        emit PriceAdminTransferred(priceAdmin, newAdmin);
+        priceAdmin = newAdmin;
     }
 }
