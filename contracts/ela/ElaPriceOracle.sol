@@ -15,8 +15,8 @@ contract ElaPriceOracle is PriceOracle, IPriceCollector {
         _;
     }
 
-    constructor(address _priceAdmin) public {
-            priceAdmin = _priceAdmin;
+    constructor() public {
+            priceAdmin = msg.sender;
     }
 
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {
