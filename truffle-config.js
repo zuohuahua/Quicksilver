@@ -84,18 +84,11 @@ module.exports = {
           networkCheckTimeout: 100000000
       },
       elaeth: {
-          //provider: () => new HDWalletProvider(mnemonic, `https://mainrpc.elaeth.io`),
-          provider: () => new HDWalletProvider({
-              mnemonic: {
-                  phrase: mnemonic
-              },
-              providerOrUrl: `https://mainrpc.elaeth.io`,
-              shareNonce: false,
-          }),
-          network_id: "*",   // This network is yours, in the cloud.
+          provider: () => new HDWalletProvider(mnemonic, `https://mainrpc.elaeth.io`),
+          network_id: "1",   // This network is yours, in the cloud.
           timeoutBlocks: 200,
           confirmations: 2,
-          gasPrice: 1,
+          gasPrice: 5000000000,
           skipDryRun: true,
           networkCheckTimeout: 100000000
       },

@@ -153,7 +153,7 @@ function sendTx(fromAddress, toAddress, data) {
         from: fromAddress,
         to: toAddress,
         gas: 6000000,
-        gasPrice: 100000000,
+        gasPrice: 5000000000,
         data: data,
         value: 0
     });
