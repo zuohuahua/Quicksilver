@@ -7,7 +7,6 @@ import "./IPriceCollector.sol";
 contract ElaPriceOracle is PriceOracle, IPriceCollector {
     mapping(address => uint) prices;
     address public priceAdmin;
-    event PricePosted(address asset, uint previousPriceMantissa, uint requestedPriceMantissa, uint newPriceMantissa);
     event PriceAdminTransferred(address indexed previousAdmin, address indexed newAdmin);
 
     modifier onlyAdmin {
@@ -20,7 +19,7 @@ contract ElaPriceOracle is PriceOracle, IPriceCollector {
     }
 
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {
-        if (compareStrings(cToken.symbol(), "sELA")) {
+        if (compareStrings(cToken.symbol(), "sELA") || compareStrings(cToken.symbol(), "sETH")) {
             return 1e18;
         } else {
             return prices[address(CErc20(address(cToken)).underlying())];
