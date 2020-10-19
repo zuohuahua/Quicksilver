@@ -124,15 +124,13 @@ module.exports = async function(deployer, network) {
         console.log("compSpeeds: ", compSpeeds);
     }
 
-    if (network == "ethdev") {
+    if (network == "ethdev" || network == "kovan" || network == "ropsten") {
         await deployer.deploy(MockPriceOracle);
         await deployer.deploy(TetherToken, "1000000000000000", "Tether USD", "USDT", 6);
 
         await deployer.deploy(erc20Delegate);
         await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, "10000000", "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
         const sUSDT = erc20Delegator;
-
-        //let proxiedComptrollerContract = new web3.eth.Contract(comptrollerInstance.abi, unitrollerInstance.address);
 
         let supportUSDT = proxiedComptrollerContract.methods._supportMarket(sUSDT.address).encodeABI();
         await sendTx(admin, unitrollerInstance.address, supportUSDT);
