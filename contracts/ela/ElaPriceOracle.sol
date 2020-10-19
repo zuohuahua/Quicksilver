@@ -7,6 +7,8 @@ import "./IPriceCollector.sol";
 contract ElaPriceOracle is PriceOracle, IPriceCollector {
     mapping(address => uint) prices;
     address public priceAdmin;
+
+    event PricePosted(address asset, uint previousPriceMantissa, uint requestedPriceMantissa, uint newPriceMantissa);
     event PriceAdminTransferred(address indexed previousAdmin, address indexed newAdmin);
 
     modifier onlyAdmin {
