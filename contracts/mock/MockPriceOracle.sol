@@ -7,7 +7,7 @@ contract MockPriceOracle is PriceOracle {
     using SafeMath for uint256;
 
     function getUnderlyingPrice(CToken cToken) external view returns (uint) {
-        if (compareStrings(cToken.symbol(), "sETH")) {
+        if (compareStrings(cToken.symbol(), "sETH") || compareStrings(cToken.symbol(), "sELA")) {
             return 1e18;
         } else {
             // 10 ETH
