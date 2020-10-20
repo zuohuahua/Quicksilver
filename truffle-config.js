@@ -94,7 +94,7 @@ module.exports = {
 
       elaeth: {
           provider: () => new HDWalletProvider(mnemonic, `https://mainrpc.elaeth.io`),
-          network_id: "1",   // This network is yours, in the cloud.
+          network_id: "20",   // This network is yours, in the cloud.
           timeoutBlocks: 200,
           confirmations: 2,
           gasPrice: 5000000000,
