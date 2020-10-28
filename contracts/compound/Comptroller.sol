@@ -1358,12 +1358,6 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
         refreshCompSpeedsInternal();
     }
 
-    function _setCompToken(address _compToken) public {
-        require(msg.sender == admin, "only admin can set comp token");
-
-        compToken = _compToken;
-    }
-
     /**
      * @notice Return all of the markets
      * @dev The automatic getter may be used to access an individual market.
@@ -1382,6 +1376,6 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
      * @return The address of COMP
      */
     function getCompAddress() public view returns (address) {
-        return compToken;
+        return 0xc00e94Cb662C3520282E6f5717214004A7f26888;
     }
 }

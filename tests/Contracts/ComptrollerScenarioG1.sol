@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 
-import "../../contracts/ComptrollerG1.sol";
-import "../../contracts/PriceOracle.sol";
+import "../../contracts/compound/ComptrollerG1.sol";
+import "../../contracts/compound/PriceOracle.sol";
 
 // XXX we should delete G1 everything...
 //  requires fork/deploy bytecode tests

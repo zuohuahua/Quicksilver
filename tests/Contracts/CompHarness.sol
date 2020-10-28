@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
-import "../../contracts/Governance/Comp.sol";
+import "../../contracts/compound/Governance/Comp.sol";
 
 contract CompScenario is Comp {
     constructor(address account) Comp(account) public {}

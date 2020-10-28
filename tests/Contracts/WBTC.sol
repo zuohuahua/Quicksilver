@@ -4,7 +4,7 @@
 
 pragma solidity ^0.5.16;
 
-// File: openzeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/ERC20Basic.sol
 
 /**
  * @title ERC20Basic
@@ -18,7 +18,7 @@ contract ERC20Basic {
   event Transfer(address indexed from, address indexed to, uint256 value);
 }
 
-// File: openzeppelin-solidity/contracts/math/SafeMath.sol
+// File: openzeppelin-solidity/contracts/compound/math/SafeMath.sol
 
 /**
  * @title SafeMath
@@ -70,7 +70,7 @@ library SafeMath {
   }
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/BasicToken.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/BasicToken.sol
 
 /**
  * @title Basic token
@@ -116,7 +116,7 @@ contract BasicToken is ERC20Basic {
 
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/ERC20.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/ERC20.sol
 
 /**
  * @title ERC20 interface
@@ -137,7 +137,7 @@ contract ERC20 is ERC20Basic {
   );
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/StandardToken.sol
 
 /**
  * @title Standard ERC20 token
@@ -258,7 +258,7 @@ contract StandardToken is ERC20, BasicToken {
 
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/DetailedERC20.sol
 
 /**
  * @title DetailedERC20 token
@@ -278,7 +278,7 @@ contract DetailedERC20 is ERC20 {
   }
 }
 
-// File: openzeppelin-solidity/contracts/ownership/Ownable.sol
+// File: openzeppelin-solidity/contracts/compound/ownership/Ownable.sol
 
 /**
  * @title Ownable
@@ -342,12 +342,12 @@ contract Ownable {
   }
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/MintableToken.sol
 
 /**
  * @title Mintable token
  * @dev Simple ERC20 Token example, with mintable token creation
- * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
+ * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/compound/MintableToken.sol
  */
 contract MintableToken is StandardToken, Ownable {
   event Mint(address indexed to, uint256 amount);
@@ -399,7 +399,7 @@ contract MintableToken is StandardToken, Ownable {
   }
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/BurnableToken.sol
 
 /**
  * @title Burnable Token
@@ -429,7 +429,7 @@ contract BurnableToken is BasicToken {
   }
 }
 
-// File: openzeppelin-solidity/contracts/lifecycle/Pausable.sol
+// File: openzeppelin-solidity/contracts/compound/lifecycle/Pausable.sol
 
 /**
  * @title Pausable
@@ -475,7 +475,7 @@ contract Pausable is Ownable {
   }
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/PausableToken.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/PausableToken.sol
 
 /**
  * @title Pausable token
@@ -540,7 +540,7 @@ contract PausableToken is StandardToken, Pausable {
   }
 }
 
-// File: openzeppelin-solidity/contracts/ownership/Claimable.sol
+// File: openzeppelin-solidity/contracts/compound/ownership/Claimable.sol
 
 /**
  * @title Claimable
@@ -576,7 +576,7 @@ contract Claimable is Ownable {
   }
 }
 
-// File: openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol
+// File: openzeppelin-solidity/contracts/compound/token/ERC20/SafeERC20.sol
 
 /**
  * @title SafeERC20
@@ -617,7 +617,7 @@ library SafeERC20 {
   }
 }
 
-// File: openzeppelin-solidity/contracts/ownership/CanReclaimToken.sol
+// File: openzeppelin-solidity/contracts/compound/ownership/CanReclaimToken.sol
 
 /**
  * @title Contracts that should be able to recover tokens

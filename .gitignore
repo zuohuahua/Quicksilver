@@ -2,3 +2,10 @@ build/
 node_modules/
 .idea/
 .secret
+.build
+.scencache
+.solcache
+junit.xml
+scenario/.tsbuilt/
+scenario/.tscache
+

@@ -1,10 +1,10 @@
 pragma solidity ^0.5.16;
 
-import "../PriceOracle.sol";
-import "../CErc20.sol";
+import "./compound/PriceOracle.sol";
+import "./compound/CErc20.sol";
 import "./IPriceCollector.sol";
 
-contract ElaPriceOracle is PriceOracle, IPriceCollector {
+contract QsPriceOracle is PriceOracle, IPriceCollector {
     mapping(address => uint) prices;
     address public priceAdmin;
 

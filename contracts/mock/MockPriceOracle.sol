@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 
-import "../PriceOracle.sol";
-import "../SafeMath.sol";
+import "../compound/PriceOracle.sol";
+import "../compound/SafeMath.sol";
 
 contract MockPriceOracle is PriceOracle {
     using SafeMath for uint256;

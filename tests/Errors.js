@@ -7,7 +7,7 @@
 const path = require('path');
 const solparse = require('solparse');
 
-const errorReporterPath = path.join(__dirname, '..', 'contracts', 'ErrorReporter.sol');
+const errorReporterPath = path.join(__dirname, '..', 'contracts/compound', 'ErrorReporter.sol');
 const contents = solparse.parseFile(errorReporterPath);
 const [
   ComptrollerErrorReporter,
@@ -26,12 +26,12 @@ function parse(reporter) {
   return {Error, FailureInfo, ErrorInv, FailureInfoInv};
 }
 
-const carefulMathPath = path.join(__dirname, '..', 'contracts', 'CarefulMath.sol');
+const carefulMathPath = path.join(__dirname, '..', 'contracts/compound', 'CarefulMath.sol');
 const CarefulMath = solparse.parseFile(carefulMathPath).body.find(k => k.type === 'ContractStatement');
 const MathErrorInv = CarefulMath.body.find(k => k.name == 'MathError').members;
 const MathError = invert(MathErrorInv);
 
-const whitePaperModelPath = path.join(__dirname, '..', 'contracts', 'WhitePaperInterestRateModel.sol');
+const whitePaperModelPath = path.join(__dirname, '..', 'contracts/compound', 'WhitePaperInterestRateModel.sol');
 const whitePaperModel = solparse.parseFile(whitePaperModelPath).body.find(k => k.type === 'ContractStatement');
 
 module.exports = {

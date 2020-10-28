@@ -126,6 +126,4 @@ contract ComptrollerV3Storage is ComptrollerV2Storage {
 
     /// @notice The COMP accrued but not yet transferred to each user
     mapping(address => uint) public compAccrued;
-
-    address internal compToken;
 }
