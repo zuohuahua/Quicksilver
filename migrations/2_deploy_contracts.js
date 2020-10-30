@@ -1,4 +1,4 @@
-const SimplePriceOracle = artifacts.require("SimplePriceOracle");
+const SimplePriceOracle = artifacts.require("QsSimplePriceOracle");
 const InterestModel = artifacts.require("WhitePaperInterestRateModel");
 const Qstroller = artifacts.require("Qstroller");
 const sELA = artifacts.require("CEther");
@@ -6,7 +6,7 @@ const erc20Delegate = artifacts.require("CErc20Delegate");
 const erc20Delegator = artifacts.require("CErc20Delegator");
 const Unitroller = artifacts.require("Unitroller");
 const CompoundLens = artifacts.require("CompoundLens");
-const ElaPriceOracle = artifacts.require("ElaPriceOracle");
+const QsPriceOracle = artifacts.require("QsPriceOracle");
 
 // Mock Tokens
 const TetherToken = artifacts.require("TetherToken");
@@ -24,7 +24,7 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(Unitroller);
     await deployer.deploy(Qstroller);
     await deployer.deploy(CompoundLens);
-    await deployer.deploy(ElaPriceOracle);
+    await deployer.deploy(QsPriceOracle);
 
     let unitrollerInstance = await Unitroller.deployed();
     let comptrollerInstance = await Qstroller.deployed();
@@ -39,7 +39,7 @@ module.exports = async function(deployer, network) {
     let proxiedComptrollerContract = new web3.eth.Contract(comptrollerInstance.abi, unitrollerInstance.address);
     console.log("admin: ", await proxiedComptrollerContract.methods.admin().call());
 
-    let setPriceOracle = proxiedComptrollerContract.methods._setPriceOracle(ElaPriceOracle.address).encodeABI();
+    let setPriceOracle = proxiedComptrollerContract.methods._setPriceOracle(QsPriceOracle.address).encodeABI();
     await sendTx(admin, unitrollerInstance.address, setPriceOracle);
     console.log("Done to set price oracle.")
 

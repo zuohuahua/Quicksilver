@@ -3,10 +3,10 @@ pragma experimental ABIEncoderV2;
 
 contract Comp {
     /// @notice EIP-20 token name for this token
-    string public constant name = "Quick Silver";
+    string public constant name = "Compound";
 
     /// @notice EIP-20 token symbol for this token
-    string public constant symbol = "SILV";
+    string public constant symbol = "Comp";
 
     /// @notice EIP-20 token decimals for this token
     uint8 public constant decimals = 18;
