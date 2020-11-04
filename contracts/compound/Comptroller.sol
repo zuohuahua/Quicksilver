@@ -7,7 +7,7 @@ import "./PriceOracle.sol";
 import "./ComptrollerInterface.sol";
 import "./ComptrollerStorage.sol";
 import "./Unitroller.sol";
-import "./Governance/Comp.sol";
+//import "./Governance/Comp.sol";
 
 /**
  * @title Compound's Comptroller Contract
@@ -1224,6 +1224,8 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
         }
     }
 
+    function transferComp(address user, uint userAccrued, uint threshold) internal returns (uint);
+
     /**
      * @notice Transfer COMP to the user, if they are above the threshold
      * @dev Note: If there is not enough COMP, we do not perform the transfer all.
@@ -1231,17 +1233,17 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
      * @param userAccrued The amount of COMP to (possibly) transfer
      * @return The amount of COMP which was NOT transferred to the user
      */
-    function transferComp(address user, uint userAccrued, uint threshold) internal returns (uint) {
-        if (userAccrued >= threshold && userAccrued > 0) {
-            Comp comp = Comp(getCompAddress());
-            uint compRemaining = comp.balanceOf(address(this));
-            if (userAccrued <= compRemaining) {
-                comp.transfer(user, userAccrued);
-                return 0;
-            }
-        }
-        return userAccrued;
-    }
+    // function transferComp(address user, uint userAccrued, uint threshold) internal returns (uint) {
+    //     if (userAccrued >= threshold && userAccrued > 0) {
+    //         Comp comp = Comp(getCompAddress());
+    //         uint compRemaining = comp.balanceOf(address(this));
+    //         if (userAccrued <= compRemaining) {
+    //             comp.transfer(user, userAccrued);
+    //             return 0;
+    //         }
+    //     }
+    //     return userAccrued;
+    // }
 
     /**
      * @notice Claim all the comp accrued by holder in all markets

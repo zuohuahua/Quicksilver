@@ -1,10 +1,17 @@
 pragma solidity ^0.5.16;
 
 import "./compound/Comptroller.sol";
+import "./compound/EIP20Interface.sol";
+import "./QsConfig.sol";
 
 contract Qstroller is Comptroller {
-    bool public compSpeedGuardianPaused;
-    address public compToken;
+    QsConfig public qsConfig;
+
+    function _setQsConfig(QsConfig _qsConfig) public {
+        require(msg.sender == admin, "Only admin can set quick silver configuration data.");
+
+        qsConfig = _qsConfig;
+    }
 
     /**
      * @notice Sets new governance token distribution speed
@@ -13,38 +20,40 @@ contract Qstroller is Comptroller {
     function _setCompSpeeds(address[] memory _allMarkets, uint[] memory _compSpeeds) public {
         // Check caller is admin
         require(msg.sender == admin, "Only admin can update token distribution");
+        
         require(_allMarkets.length == _compSpeeds.length, "Incomplete parameter");
         require(allMarkets.length == _allMarkets.length, "Must update token distribution within one transaction");
-        _setCompSpeedGuardianPaused(true);
 
         for (uint i = 0; i < _allMarkets.length; i++) {
             compSpeeds[_allMarkets[i]] = _compSpeeds[i];
         }
     }
 
-    function _setCompSpeedGuardianPaused(bool state) public returns (bool) {
-        require(msg.sender == pauseGuardian || msg.sender == admin, "only pause guardian and admin can pause");
-        require(msg.sender == admin || state == true, "only admin can unpause");
-
-        compSpeedGuardianPaused = state;
-        emit ActionPaused("CompSpeed", state);
-        return state;
-    }
 
     function refreshCompSpeeds() public {
-        require(!compSpeedGuardianPaused, "compSpeed is paused");
+        require(!qsConfig.compSpeedGuardianPaused(), "compSpeed is paused");
         require(msg.sender == tx.origin, "only externally owned accounts may refresh speeds");
 
         refreshCompSpeedsInternal();
     }
 
-    function _setCompToken(address _compToken) public {
-        require(msg.sender == admin, "only admin can set comp token");
-
-        compToken = _compToken;
-    }
-
     function getCompAddress() public view returns (address) {
-        return compToken;
+        return qsConfig.compToken();
+    }
+    
+    function calculateSeizeTokenAllocation(uint _seizeTokenAmount) public view returns(uint liquidatorAmount, uint safetyVaultAmount) {
+        return qsConfig.calculateSeizeTokenAllocation(_seizeTokenAmount, liquidationIncentiveMantissa);
+    }
+    
+    function transferComp(address user, uint userAccrued, uint threshold) internal returns (uint) {
+        if (userAccrued >= threshold && userAccrued > 0) {
+            EIP20Interface comp = EIP20Interface(getCompAddress());
+            uint compRemaining = comp.balanceOf(address(this));
+            if (userAccrued <= compRemaining) {
+                comp.transfer(user, userAccrued);
+                return 0;
+            }
+        }
+        return userAccrued;
     }
 }

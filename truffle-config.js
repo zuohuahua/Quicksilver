@@ -46,6 +46,18 @@ module.exports = {
      network_id: "5777",       // Any network (default: none)
       gas: 8000000,
     },
+    elalocal: {
+      host: "127.0.0.1",
+      port: 7545,
+      network_id: "5777",
+      gas: 8000000
+    },
+    ethlocal: {
+      host: "127.0.0.1",
+      port: 7545,
+      network_id: "5777",
+      gas: 8000000
+    },
 
     // Another network with more advanced options...
     // advanced: {
@@ -87,6 +99,15 @@ module.exports = {
           provider: () => new HDWalletProvider(mnemonic, `http://18.162.230.88/ethdev`),
           network_id: 1337,   // This network is yours, in the cloud.
           production: false,    // Treats this network as if it was a public net. (default: false)
+          timeoutBlocks: 200,
+          skipDryRun: true,
+          networkCheckTimeout: 100000000
+      },
+
+      eladev: {
+          provider: () => new HDWalletProvider(mnemonic, `http://18.162.230.88/ethdev`),
+          network_id: 1337,
+          production: false,
           timeoutBlocks: 200,
           skipDryRun: true,
           networkCheckTimeout: 100000000
