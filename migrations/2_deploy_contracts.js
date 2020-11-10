@@ -183,11 +183,11 @@ module.exports = async function(deployer, network) {
 
         let qsControllerInstance = await Qstroller.at(unitrollerInstance.address);
         await qsControllerInstance._supportMarket(sETHInstance.address);
-        console.log("Done to support market: ", sETHInstance.address);
+        console.log("Done to support market sETH: ", sETHInstance.address);
 
         let ethOnElaCollateralFactor = 0.5e18.toString();
         await qsControllerInstance._setCollateralFactor(sETHInstance.address, ethOnElaCollateralFactor);
-        console.log("Done to set collateral factor %s for %s", ethOnElaCollateralFactor, sETHInstance.address);
+        console.log("Done to set collateral factor %s for sETH %s", ethOnElaCollateralFactor, sETHInstance.address);
         addressFactory["ETH"] = ethOnEla;
         addressFactory["sETH"] = erc20Delegator.address;
 
@@ -198,11 +198,11 @@ module.exports = async function(deployer, network) {
         await sHFILInstance._setReserveFactor(reserveFactor);
 
         await qsControllerInstance._supportMarket(sHFILInstance.address);
-        console.log("Done to support market: ", sHFILInstance.address);
+        console.log("Done to support market sHFIL: ", sHFILInstance.address);
 
         let hfilOnElaCollateralFactor = 0.5e18.toString();
         await qsControllerInstance._setCollateralFactor(sHFILInstance.address, hfilOnElaCollateralFactor);
-        console.log("Done to set collateral factor %s for %s", hfilOnElaCollateralFactor, sHFILInstance.address);
+        console.log("Done to set collateral factor %s for sHFIL %s", hfilOnElaCollateralFactor, sHFILInstance.address);
         addressFactory["HFIL"] = filOnEla;
         addressFactory["sHFIL"] = erc20Delegator.address;
 
@@ -213,21 +213,21 @@ module.exports = async function(deployer, network) {
         await sUSDTInstance._setReserveFactor(reserveFactor);
 
         await qsControllerInstance._supportMarket(sUSDTInstance.address);
-        console.log("Done to support market: ", sUSDTInstance.address);
+        console.log("Done to support market sUSDT: ", sUSDTInstance.address);
 
         let usdtOnElaCollateralFactor = 0.5e18.toString();
         await qsControllerInstance._setCollateralFactor(sUSDTInstance.address, usdtOnElaCollateralFactor);
-        console.log("Done to set collateral factor %s for %s", hfilOnElaCollateralFactor, sUSDTInstance.address);
-        addressFactory["HFIL"] = usdtOnEla;
-        addressFactory["sHFIL"] = erc20Delegator.address;
+        console.log("Done to set collateral factor %s for sUSDT %s", usdtOnElaCollateralFactor, sUSDTInstance.address);
+        addressFactory["USDT"] = usdtOnEla;
+        addressFactory["sUSDT"] = erc20Delegator.address;
 
         // handle native token ELA
         await deployer.deploy(sELA, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ELA", "sELA", 18, admin);
         await qsControllerInstance._supportMarket(sELA.address);
-        console.log("Done to support market: ", sELA.address);
+        console.log("Done to support market sELA: ", sELA.address);
         let elaCollateralFactor = 0.15e18.toString();
         await qsControllerInstance._setCollateralFactor(sELA.address, elaCollateralFactor);
-        console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sELA.address);
+        console.log("Done to set collateral factor %s for sELA %s", elaCollateralFactor, sELA.address);
         addressFactory["sELA"] = sELA.address;
     }
     if (network == "elaeth") {
