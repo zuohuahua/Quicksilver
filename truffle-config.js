@@ -80,15 +80,6 @@ module.exports = {
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
 
-    kovan: {
-        provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/98520c87aac949ac9c2310084b2d48b8`),
-        network_id: 42,       // Ropsten's id
-        gas: 5500000,        // Ropsten has a lower block limit than mainnet
-        confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-        timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
-    },
-
     // Useful for private networks
     // private: {
       // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
@@ -107,6 +98,15 @@ module.exports = {
       eladev: {
           provider: () => new HDWalletProvider(mnemonic, `http://18.162.230.88/ethdev`),
           network_id: 1337,
+          production: false,
+          timeoutBlocks: 200,
+          skipDryRun: true,
+          networkCheckTimeout: 100000000
+      },
+
+      elatest: {
+          provider: () => new HDWalletProvider(mnemonic, `https://rpc.elaeth.io`),
+          network_id: 21,
           production: false,
           timeoutBlocks: 200,
           skipDryRun: true,

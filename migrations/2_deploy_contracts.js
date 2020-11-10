@@ -23,6 +23,7 @@ const reserveFactor = 0.2e18.toString();
 
 const maxAssets = 10;
 
+let addressFactory = {};
 module.exports = async function(deployer, network) {
     await deployer.deploy(Unitroller);
     await deployer.deploy(Qstroller);
@@ -30,41 +31,45 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(QsPriceOracle);
     await deployer.deploy(QsConfig);
 
+    addressFactory["Qstroller"] = Unitroller.address;
+    addressFactory["QsPriceOracle"] = QsPriceOracle.address;
+    addressFactory["QsConfig"] = QsConfig.address;
+
     let unitrollerInstance = await Unitroller.deployed();
-    let comptrollerInstance = await Qstroller.deployed();
-    let admin = await comptrollerInstance.admin();
+    let qstrollerInstance = await Qstroller.deployed();
+    let admin = await qstrollerInstance.admin();
     console.log("admin: ", admin);
 
     await unitrollerInstance._setPendingImplementation(Qstroller.address);
-    await comptrollerInstance._become(Unitroller.address);
+    await qstrollerInstance._become(Unitroller.address);
 
     await deployer.deploy(InterestModel, "20000000000000000", "200000000000000000");
 
-    let proxiedComptrollerContract = new web3.eth.Contract(comptrollerInstance.abi, unitrollerInstance.address);
-    console.log("admin: ", await proxiedComptrollerContract.methods.admin().call());
+    let proxiedQstroller = await Qstroller.at(Unitroller.address);
+    console.log("admin: ", await proxiedQstroller.admin());
 
-    let setPriceOracle = proxiedComptrollerContract.methods._setPriceOracle(QsPriceOracle.address).encodeABI();
-    await sendTx(admin, unitrollerInstance.address, setPriceOracle);
-    console.log("Done to set price oracle.", await proxiedComptrollerContract.methods.oracle().call());
+    await proxiedQstroller._setPriceOracle(QsPriceOracle.address);
+    console.log("Done to set price oracle.", await proxiedQstroller.oracle());
 
-    let setQsConfig = proxiedComptrollerContract.methods._setQsConfig(QsConfig.address).encodeABI();
-    await sendTx(admin, unitrollerInstance.address, setQsConfig);
-    console.log("Done to set quick silver config.", await  proxiedComptrollerContract.methods.qsConfig().call());
+    await proxiedQstroller._setQsConfig(QsConfig.address);
+    console.log("Done to set quick silver config.", await  proxiedQstroller.qsConfig());
 
-    let setMaxAssets = proxiedComptrollerContract.methods._setMaxAssets(maxAssets).encodeABI();
-    await sendTx(admin, unitrollerInstance.address, setMaxAssets);
-    console.log("Done to set max assets.", await proxiedComptrollerContract.methods.maxAssets().call());
+    await proxiedQstroller._setMaxAssets(maxAssets);
+    let result = await proxiedQstroller.maxAssets();
+    console.log("Done to set max assets.", result.toString());
 
-    await proxiedComptrollerContract.methods._setLiquidationIncentive(liquidationIncentive).send({from: admin, gas: 3000000});
+    await proxiedQstroller._setLiquidationIncentive(liquidationIncentive);
     console.log("Done to set liquidation incentive.");
-    let incentive = await proxiedComptrollerContract.methods.liquidationIncentiveMantissa().call();
-    console.log("New incentive: ", incentive);
+    let incentive = await proxiedQstroller.liquidationIncentiveMantissa();
+    console.log("New incentive: ", incentive.toString());
 
-    await proxiedComptrollerContract.methods._setCompRate(compRate).send({from: admin, gas: 3000000});
-    console.log("Done to set comp rate with value: ", await proxiedComptrollerContract.methods.compRate().call());
+    await proxiedQstroller._setCompRate(compRate);
+    result = await proxiedQstroller.compRate();
+    console.log("Done to set comp rate with value: ", result.toString());
 
-    await proxiedComptrollerContract.methods._setCloseFactor(closeFactor).send({from: admin, gas: 3000000});
-    console.log("Done to set close factor with value: ", await proxiedComptrollerContract.methods.closeFactorMantissa().call());
+    await proxiedQstroller._setCloseFactor(closeFactor);
+    result = await proxiedQstroller.closeFactorMantissa();
+    console.log("Done to set close factor with value: ", result.toString());
 
     if (network == "development" || network == "eladev" || network == "elalocal" || network == "ethlocal" || network == "ethdev") {
         let compImpl = await unitrollerInstance.comptrollerImplementation();
@@ -74,50 +79,45 @@ module.exports = async function(deployer, network) {
 
         if (network == "eladev" || network == "elalocal") {
             await deployer.deploy(sELA, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ELA", "sELA", 18, admin);
-            let supportELA = proxiedComptrollerContract.methods._supportMarket(sELA.address).encodeABI();
-            await sendTx(admin, unitrollerInstance.address, supportELA);
+            await proxiedQstroller._supportMarket(sELA.address);
             console.log("Done to support market: ", sELA.address);
             let elaCollateralFactor = 0.15e18.toString();
-            await proxiedComptrollerContract.methods._setCollateralFactor(sELA.address, elaCollateralFactor).send({from: admin, gas: 3000000});
+            await proxiedQstroller._setCollateralFactor(sELA.address, elaCollateralFactor);
             console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sELA.address);
+            addressFactory["sELA"] = sELA.address;
 
             // Handle Mocked ETH
             await deployer.deploy(ETHToken);
             await deployer.deploy(erc20Delegate);
             await deployer.deploy(erc20Delegator, ETHToken.address, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH", "sETH", 18, admin, erc20Delegate.address, "0x0");
-            const sETHElastos = erc20Delegator;
-            const sETHElastosInstance = await sETHElastos.deployed();
-            let proxiedETHElastos = new web3.eth.Contract(sETHElastosInstance.abi, sETHElastos.address);
-            await proxiedETHElastos.methods._setReserveFactor(reserveFactor).send({from: admin, gas: 3000000});
-            let supportETHElastos = proxiedComptrollerContract.methods._supportMarket(sETHElastos.address).encodeABI();
-            await sendTx(admin, unitrollerInstance.address, supportETHElastos);
+            const sETHElastosInstance = await erc20Delegator.deployed();
+            await sETHElastosInstance._setReserveFactor(reserveFactor);
+            await proxiedQstroller._supportMarket(erc20Delegator.address)
             let ETHElastosCollateralFactor = 0.5e18.toString();
-            await proxiedComptrollerContract.methods._setCollateralFactor(sETHElastos.address, ETHElastosCollateralFactor).send({from: admin, gas: 3000000});
-            console.log("Done to set collateral factor %s for %s", ETHElastosCollateralFactor, sETHElastos.address);
+            await proxiedQstroller._setCollateralFactor(erc20Delegator.address, ETHElastosCollateralFactor)
+            console.log("Done to set collateral factor %s for %s", ETHElastosCollateralFactor, erc20Delegator.address);
+            addressFactory["ETH"] = ETHToken.address;
+            addressFactory["sETH"] = erc20Delegator.address;
         }
 
         if (network == "ethdev" || network == "ethlocal") {
             await deployer.deploy(sELA, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH", "sETH", 18, admin);
-            let supportELA = proxiedComptrollerContract.methods._supportMarket(sELA.address).encodeABI();
-            await sendTx(admin, unitrollerInstance.address, supportELA);
+            await proxiedQstroller._supportMarket(sELA.address);
             console.log("Done to support market: ", sELA.address);
             let elaCollateralFactor = 0.15e18.toString();
-            await proxiedComptrollerContract.methods._setCollateralFactor(sELA.address, elaCollateralFactor).send({from: admin, gas: 3000000});
+            await proxiedQstroller._setCollateralFactor(sELA.address, elaCollateralFactor)
             console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sELA.address);
 
             // Handle Mocked ETH
             await deployer.deploy(ELAToken);
             await deployer.deploy(erc20Delegate);
             await deployer.deploy(erc20Delegator, ELAToken.address, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ELA on ETH", "sELA", 18, admin, erc20Delegate.address, "0x0");
-            const sELAElastos = erc20Delegator;
-            const sELAElastosInstance = await sELAElastos.deployed();
-            let proxiedELAElastos = new web3.eth.Contract(sELAElastosInstance.abi, sELAElastos.address);
-            await proxiedELAElastos.methods._setReserveFactor(reserveFactor).send({from: admin, gas: 3000000});
-            let supportELAElastos = proxiedComptrollerContract.methods._supportMarket(sELAElastos.address).encodeABI();
-            await sendTx(admin, unitrollerInstance.address, supportELAElastos);
+            const sELAElastosInstance = await erc20Delegator.deployed();
+            await sELAElastosInstance._setReserveFactor(reserveFactor);
+            await proxiedQstroller._supportMarket(erc20Delegator.address)
             let ELAEthCollateralFactor = 0.5e18.toString();
-            await proxiedComptrollerContract.methods._setCollateralFactor(sELAElastos.address, ELAEthCollateralFactor).send({from: admin, gas: 3000000});
-            console.log("Done to set collateral factor %s for %s", ELAEthCollateralFactor, sELAElastos.address);
+            proxiedQstroller._setCollateralFactor(erc20Delegator.address, ELAEthCollateralFactor);
+            console.log("Done to set collateral factor %s for %s", ELAEthCollateralFactor, erc20Delegator.address);
         }
 
 
@@ -125,68 +125,116 @@ module.exports = async function(deployer, network) {
         await deployer.deploy(TetherToken, "1000000000000000", "Tether USD", "USDT", 6);
         await deployer.deploy(erc20Delegate);
         await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, "20000", "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
-        const sUSDT = erc20Delegator;
-        const sUSDTInstance = await sUSDT.deployed();
-        let proxiedSUSDT = new web3.eth.Contract(sUSDTInstance.abi, erc20Delegator.address);
-        await proxiedSUSDT.methods._setReserveFactor(reserveFactor).send({from: admin, gas: 3000000});
-        let supportUSDT = proxiedComptrollerContract.methods._supportMarket(sUSDT.address).encodeABI();
-        await sendTx(admin, unitrollerInstance.address, supportUSDT);
+        const sUSDTInstance = await erc20Delegator.deployed();
+        await sUSDTInstance._setReserveFactor(reserveFactor);
+        await proxiedQstroller._supportMarket(erc20Delegator.address)
         let usdtCollateralFactor = 0.8e18.toString();
-        await proxiedComptrollerContract.methods._setCollateralFactor(sUSDT.address, usdtCollateralFactor).send({from: admin, gas: 3000000});
-        console.log("Done to set collateral factor %s for %s", usdtCollateralFactor, sUSDT.address);
+        await proxiedQstroller._setCollateralFactor(erc20Delegator.address, usdtCollateralFactor);
+        console.log("Done to set collateral factor %s for %s", usdtCollateralFactor, erc20Delegator.address);
+        addressFactory["USDT"] = TetherToken.address;
+        addressFactory["sUSDT"] = erc20Delegator.address;
 
         // Handle Mocked HFIL
         await deployer.deploy(HFILToken);
         await deployer.deploy(erc20Delegate);
         await deployer.deploy(erc20Delegator, HFILToken.address, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver HFIL", "sHFIL", 18, admin, erc20Delegate.address, "0x0");
 
-        const sHFIL = erc20Delegator;
-        const sHFILInstance = await sHFIL.deployed();
-        let proxiedHFIL = new web3.eth.Contract(sHFILInstance.abi, sHFIL.address);
-        await proxiedHFIL.methods._setReserveFactor(reserveFactor).send({from: admin, gas: 3000000});
+        // const sHFIL = erc20Delegator;
+        const sHFILInstance = await erc20Delegator.deployed();
+        await sHFILInstance._setReserveFactor(reserveFactor);
 
-        let supportHFIL = proxiedComptrollerContract.methods._supportMarket(sHFIL.address).encodeABI();
-        await sendTx(admin, unitrollerInstance.address, supportHFIL);
+        await proxiedQstroller._supportMarket(erc20Delegator.address);
         let hfilCollateralFactor = 0.5e18.toString();
-        await proxiedComptrollerContract.methods._setCollateralFactor(sHFIL.address, hfilCollateralFactor).send({from: admin, gas: 3000000});
-        console.log("Done to set collateral factor %s for HFIL %s", hfilCollateralFactor, sHFIL.address);
+        await proxiedQstroller._setCollateralFactor(erc20Delegator.address, hfilCollateralFactor);
+        console.log("Done to set collateral factor %s for HFIL %s", hfilCollateralFactor, erc20Delegator.address);
+        addressFactory["HFIL"] = HFILToken.address;
+        addressFactory["sHFIL"] = erc20Delegator.address;
 
-
-        let allSupportedMarkets = await proxiedComptrollerContract.methods.getAllMarkets().call();
+        let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
         console.log(allSupportedMarkets);
 
-        await proxiedComptrollerContract.methods._setPriceOracle(SimplePriceOracle.address).send({from: admin, gas: 3000000});
+        await proxiedQstroller._setPriceOracle(SimplePriceOracle.address);
         console.log("Done to update price oracle.");
     }
 
-    if (network == "kovan" || network == "ropsten") {
+    if (network == "ropsten") {
         await deployer.deploy(TetherToken, "1000000000000000", "Tether USD", "USDT", 6);
 
         await deployer.deploy(erc20Delegate);
         await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, "10000000", "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
-        const sUSDT = erc20Delegator;
 
-        let supportUSDT = proxiedComptrollerContract.methods._supportMarket(sUSDT.address).encodeABI();
-        await sendTx(admin, unitrollerInstance.address, supportUSDT);
-        console.log("Done to support market: ", sUSDT.address);
+        await proxiedQstroller._supportMarket(erc20Delegator.address);
+        console.log("Done to support market: ", erc20Delegator.address);
 
-        let allSupportedMarkets = await proxiedComptrollerContract.methods.getAllMarkets().call();
+        let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
         console.log("allSupportedMarkets: ", allSupportedMarkets);
     }
 
+    if (network == "elatest") {
+        const ethOnEla = "0x23f1528e61d0af04faa7cff8c7ce9046d9130789";
+        const filOnEla = "0x561cd1aabd7b6859e60ef694ab3ce49e2651b052";
+        const usdtOnEla = "0x7f6a3ca020ca59174d7c677979c5ba4bb447fbab"
+
+        // Handle ethOnEla
+        await deployer.deploy(erc20Delegate);
+        await deployer.deploy(erc20Delegator, ethOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH", "sETH", 18, admin, erc20Delegate.address, "0x0");
+        const sETHInstance = await erc20Delegator.deployed();
+        await sETHInstance._setReserveFactor(reserveFactor);
+
+        let qsControllerInstance = await Qstroller.at(unitrollerInstance.address);
+        await qsControllerInstance._supportMarket(sETHInstance.address);
+        console.log("Done to support market: ", sETHInstance.address);
+
+        let ethOnElaCollateralFactor = 0.5e18.toString();
+        await qsControllerInstance._setCollateralFactor(sETHInstance.address, ethOnElaCollateralFactor);
+        console.log("Done to set collateral factor %s for %s", ethOnElaCollateralFactor, sETHInstance.address);
+        addressFactory["ETH"] = ethOnEla;
+        addressFactory["sETH"] = erc20Delegator.address;
+
+        // Handle filOnEla
+        await deployer.deploy(erc20Delegate);
+        await deployer.deploy(erc20Delegator, filOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver HFIL", "sHFIL", 18, admin, erc20Delegate.address, "0x0");
+        const sHFILInstance = await erc20Delegator.deployed();
+        await sHFILInstance._setReserveFactor(reserveFactor);
+
+        await qsControllerInstance._supportMarket(sHFILInstance.address);
+        console.log("Done to support market: ", sHFILInstance.address);
+
+        let hfilOnElaCollateralFactor = 0.5e18.toString();
+        await qsControllerInstance._setCollateralFactor(sHFILInstance.address, hfilOnElaCollateralFactor);
+        console.log("Done to set collateral factor %s for %s", hfilOnElaCollateralFactor, sHFILInstance.address);
+        addressFactory["HFIL"] = filOnEla;
+        addressFactory["sHFIL"] = erc20Delegator.address;
+
+        // Handle usdtOnEla
+        await deployer.deploy(erc20Delegate);
+        await deployer.deploy(erc20Delegator, usdtOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
+        const sUSDTInstance = await erc20Delegator.deployed();
+        await sUSDTInstance._setReserveFactor(reserveFactor);
+
+        await qsControllerInstance._supportMarket(sUSDTInstance.address);
+        console.log("Done to support market: ", sUSDTInstance.address);
+
+        let usdtOnElaCollateralFactor = 0.5e18.toString();
+        await qsControllerInstance._setCollateralFactor(sUSDTInstance.address, usdtOnElaCollateralFactor);
+        console.log("Done to set collateral factor %s for %s", hfilOnElaCollateralFactor, sUSDTInstance.address);
+        addressFactory["HFIL"] = usdtOnEla;
+        addressFactory["sHFIL"] = erc20Delegator.address;
+
+        // handle native token ELA
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ELA", "sELA", 18, admin);
+        await qsControllerInstance._supportMarket(sELA.address);
+        console.log("Done to support market: ", sELA.address);
+        let elaCollateralFactor = 0.15e18.toString();
+        await qsControllerInstance._setCollateralFactor(sELA.address, elaCollateralFactor);
+        console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sELA.address);
+        addressFactory["sELA"] = sELA.address;
+    }
     if (network == "elaeth") {
-        let allSupportedMarkets = await proxiedComptrollerContract.methods.getAllMarkets().call();
+        let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
         console.log("allSupportedMarkets: ", allSupportedMarkets);
     }
-};
 
-function sendTx(fromAddress, toAddress, data) {
-    web3.eth.sendTransaction({
-        from: fromAddress,
-        to: toAddress,
-        gas: 6000000,
-        gasPrice: 5000000000,
-        data: data,
-        value: 0
-    });
-}
+    console.log("================= Copy and record below addresses ==============")
+    console.log(addressFactory);
+};

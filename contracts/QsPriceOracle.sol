@@ -38,7 +38,6 @@ contract QsPriceOracle is PriceOracle, IPriceCollector {
         prices[asset] = price;
     }
 
-    // v1 price oracle interface for use as backing of proxy
     function assetPrices(address asset) external view returns (uint) {
         return prices[asset];
     }
