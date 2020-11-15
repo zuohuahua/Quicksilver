@@ -177,7 +177,7 @@ module.exports = async function(deployer, network) {
 
         // Handle ethOnEla
         await deployer.deploy(erc20Delegate);
-        await deployer.deploy(erc20Delegator, ethOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH", "sElaETH", 18, admin, erc20Delegate.address, "0x0");
+        await deployer.deploy(erc20Delegator, ethOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH on Elastos", "sElaETH", 18, admin, erc20Delegate.address, "0x0");
         const sETHInstance = await erc20Delegator.deployed();
         await sETHInstance._setReserveFactor(reserveFactor);
 

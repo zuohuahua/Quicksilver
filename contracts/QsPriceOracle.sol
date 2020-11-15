@@ -33,9 +33,19 @@ contract QsPriceOracle is PriceOracle, IPriceCollector {
         setDirectPrice(asset, underlyingPriceMantissa);
     }
 
-    function setDirectPrice(address asset, uint price) public onlyAdmin {
-        emit PricePosted(asset, prices[asset], price, price);
-        prices[asset] = price;
+    function setDirectPrice(address _asset, uint _price) public onlyAdmin {
+        prices[_asset] = _price;
+        emit PricePosted(_asset, prices[_asset], _price, _price);
+    }
+
+    function setDirectPrice(address[] memory _assets, uint[] memory _prices) public onlyAdmin {
+        require(_assets.length > 0, "At least one asset price is required");
+        require(_assets.length == _prices.length, "Assets and prices are not match");
+
+        for (uint i = 0; i < _assets.length; i++) {
+            prices[_assets[i]] = _prices[i];
+            emit PricePosted(_assets[i], prices[_assets[i]], _prices[i], _prices[i]);
+        }
     }
 
     function assetPrices(address asset) external view returns (uint) {
