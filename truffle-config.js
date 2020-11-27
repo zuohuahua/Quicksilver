@@ -44,7 +44,6 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 7545,            // Standard Ethereum port (default: none)
      network_id: "5777",       // Any network (default: none)
-      gas: 8000000,
     },
     elalocal: {
       host: "127.0.0.1",
@@ -137,7 +136,7 @@ module.exports = {
       settings: {          // See the solidity docs for advice about optimization and evmVersion
        optimizer: {
          enabled: true,
-         runs: 200
+         runs: 20
        },
       //  evmVersion: "byzantium"
       }

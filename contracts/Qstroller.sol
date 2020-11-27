@@ -25,7 +25,12 @@ contract Qstroller is Comptroller {
         require(allMarkets.length == _allMarkets.length, "Must update token distribution within one transaction");
 
         for (uint i = 0; i < _allMarkets.length; i++) {
-            compSpeeds[_allMarkets[i]] = _compSpeeds[i];
+            address cToken = _allMarkets[i];
+            Market storage market = markets[cToken];
+            if (market.isComped == false) {
+                _addCompMarketInternal(cToken);
+            }
+            compSpeeds[cToken] = _compSpeeds[i];
         }
     }
 
@@ -37,6 +42,14 @@ contract Qstroller is Comptroller {
         refreshCompSpeedsInternal();
     }
 
+    function refreshCompSpeedsInternal() internal {
+        if (qsConfig.compSpeedGuardianPaused()) {
+            return;
+        } else {
+            super.refreshCompSpeedsInternal();
+        }
+    }
+
     function getCompAddress() public view returns (address) {
         return qsConfig.compToken();
     }
@@ -46,8 +59,9 @@ contract Qstroller is Comptroller {
     }
     
     function transferComp(address user, uint userAccrued, uint threshold) internal returns (uint) {
-        if (userAccrued >= threshold && userAccrued > 0) {
-            EIP20Interface comp = EIP20Interface(getCompAddress());
+        address compAddress = getCompAddress();
+        if (userAccrued >= threshold && userAccrued > 0 && compAddress != address(0x0)) {
+            EIP20Interface comp = EIP20Interface(compAddress);
             uint compRemaining = comp.balanceOf(address(this));
             if (userAccrued <= compRemaining) {
                 comp.transfer(user, userAccrued);

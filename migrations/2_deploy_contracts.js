@@ -78,7 +78,7 @@ module.exports = async function(deployer, network) {
         await deployer.deploy(SimplePriceOracle);
 
         if (network == "eladev" || network == "elalocal") {
-            await deployer.deploy(sELA, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ELA", "sELA", 18, admin);
+            await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ELA", "sELA", 18, admin);
             await proxiedQstroller._supportMarket(sELA.address);
             console.log("Done to support market: ", sELA.address);
             let elaCollateralFactor = 0.15e18.toString();
@@ -89,7 +89,7 @@ module.exports = async function(deployer, network) {
             // Handle Mocked ETH
             await deployer.deploy(ETHToken);
             await deployer.deploy(erc20Delegate);
-            await deployer.deploy(erc20Delegator, ETHToken.address, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH", "sETH", 18, admin, erc20Delegate.address, "0x0");
+            await deployer.deploy(erc20Delegator, ETHToken.address, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ETH on ELA", "sElaETH", 18, admin, erc20Delegate.address, "0x0");
             const sETHElastosInstance = await erc20Delegator.deployed();
             await sETHElastosInstance._setReserveFactor(reserveFactor);
             await proxiedQstroller._supportMarket(erc20Delegator.address)
@@ -101,21 +101,21 @@ module.exports = async function(deployer, network) {
         }
 
         if (network == "ethdev" || network == "ethlocal") {
-            await deployer.deploy(sELA, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH", "sETH", 18, admin);
+            await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ETH", "sETH", 18, admin);
             await proxiedQstroller._supportMarket(sELA.address);
             console.log("Done to support market: ", sELA.address);
-            let elaCollateralFactor = 0.15e18.toString();
+            let elaCollateralFactor = 0.5e18.toString();
             await proxiedQstroller._setCollateralFactor(sELA.address, elaCollateralFactor)
             console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sELA.address);
 
             // Handle Mocked ETH
             await deployer.deploy(ELAToken);
             await deployer.deploy(erc20Delegate);
-            await deployer.deploy(erc20Delegator, ELAToken.address, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ELA on ETH", "sELA", 18, admin, erc20Delegate.address, "0x0");
+            await deployer.deploy(erc20Delegator, ELAToken.address, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ELA on ETH", "sEthELA", 18, admin, erc20Delegate.address, "0x0");
             const sELAElastosInstance = await erc20Delegator.deployed();
             await sELAElastosInstance._setReserveFactor(reserveFactor);
             await proxiedQstroller._supportMarket(erc20Delegator.address)
-            let ELAEthCollateralFactor = 0.5e18.toString();
+            let ELAEthCollateralFactor = 0.15e18.toString();
             proxiedQstroller._setCollateralFactor(erc20Delegator.address, ELAEthCollateralFactor);
             console.log("Done to set collateral factor %s for %s", ELAEthCollateralFactor, erc20Delegator.address);
         }
@@ -124,7 +124,7 @@ module.exports = async function(deployer, network) {
         // Handle Mocked USDT
         await deployer.deploy(TetherToken, "1000000000000000", "Tether USD", "USDT", 6);
         await deployer.deploy(erc20Delegate);
-        await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, "20000", "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
+        await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, 0.02e6.toString(), "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
         const sUSDTInstance = await erc20Delegator.deployed();
         await sUSDTInstance._setReserveFactor(reserveFactor);
         await proxiedQstroller._supportMarket(erc20Delegator.address)
@@ -137,7 +137,7 @@ module.exports = async function(deployer, network) {
         // Handle Mocked HFIL
         await deployer.deploy(HFILToken);
         await deployer.deploy(erc20Delegate);
-        await deployer.deploy(erc20Delegator, HFILToken.address, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver HFIL", "sHFIL", 18, admin, erc20Delegate.address, "0x0");
+        await deployer.deploy(erc20Delegator, HFILToken.address, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver HFIL", "sHFIL", 18, admin, erc20Delegate.address, "0x0");
 
         // const sHFIL = erc20Delegator;
         const sHFILInstance = await erc20Delegator.deployed();
@@ -161,7 +161,7 @@ module.exports = async function(deployer, network) {
         await deployer.deploy(TetherToken, "1000000000000000", "Tether USD", "USDT", 6);
 
         await deployer.deploy(erc20Delegate);
-        await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, "10000000", "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
+        await deployer.deploy(erc20Delegator, TetherToken.address, Unitroller.address, InterestModel.address, 0.02e6.toString(), "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
 
         await proxiedQstroller._supportMarket(erc20Delegator.address);
         console.log("Done to support market: ", erc20Delegator.address);
@@ -172,12 +172,13 @@ module.exports = async function(deployer, network) {
 
     if (network == "elatest") {
         const ethOnEla = "0x23f1528e61d0af04faa7cff8c7ce9046d9130789";
-        const filOnEla = "0x561cd1aabd7b6859e60ef694ab3ce49e2651b052";
-        const usdtOnEla = "0x7f6a3ca020ca59174d7c677979c5ba4bb447fbab"
+        const filOnEla = "0xd3f1be7f74d25f39184d2d0670966e2e837562e3";
+        const usdtOnEla = "0xa7daaf45ae0b2e567eb563fb57ea9cfffdfd73dd";
+        const usdcOnEla = "0x9064a6dae8023033e5119a3a3bdff65736cfe9e2"
 
         // Handle ethOnEla
         await deployer.deploy(erc20Delegate);
-        await deployer.deploy(erc20Delegator, ethOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ETH on Elastos", "sElaETH", 18, admin, erc20Delegate.address, "0x0");
+        await deployer.deploy(erc20Delegator, ethOnEla, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ETH on Elastos", "sElaETH", 18, admin, erc20Delegate.address, "0x0");
         const sETHInstance = await erc20Delegator.deployed();
         await sETHInstance._setReserveFactor(reserveFactor);
 
@@ -193,7 +194,7 @@ module.exports = async function(deployer, network) {
 
         // Handle filOnEla
         await deployer.deploy(erc20Delegate);
-        await deployer.deploy(erc20Delegator, filOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver HFIL", "sHFIL", 18, admin, erc20Delegate.address, "0x0");
+        await deployer.deploy(erc20Delegator, filOnEla, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ethHFIL", "sEthHFIL", 18, admin, erc20Delegate.address, "0x0");
         const sHFILInstance = await erc20Delegator.deployed();
         await sHFILInstance._setReserveFactor(reserveFactor);
 
@@ -208,7 +209,7 @@ module.exports = async function(deployer, network) {
 
         // Handle usdtOnEla
         await deployer.deploy(erc20Delegate);
-        await deployer.deploy(erc20Delegator, usdtOnEla, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver USDT", "sUSDT", 18, admin, erc20Delegate.address, "0x0");
+        await deployer.deploy(erc20Delegator, usdtOnEla, Unitroller.address, InterestModel.address, 0.02e6.toString(), "QuickSilver ethUSDT", "sEthUSDT", 18, admin, erc20Delegate.address, "0x0");
         const sUSDTInstance = await erc20Delegator.deployed();
         await sUSDTInstance._setReserveFactor(reserveFactor);
 
@@ -221,8 +222,23 @@ module.exports = async function(deployer, network) {
         addressFactory["USDT"] = usdtOnEla;
         addressFactory["sUSDT"] = erc20Delegator.address;
 
+        // Handle usdcOnEla
+        await deployer.deploy(erc20Delegate);
+        await deployer.deploy(erc20Delegator, usdcOnEla, Unitroller.address, InterestModel.address, 0.02e6.toString(), "QuickSilver ethUSDC", "sEthUSDC", 18, admin, erc20Delegate.address, "0x0");
+        const sUSDCInstance = await erc20Delegator.deployed();
+        await sUSDCInstance._setReserveFactor(reserveFactor);
+
+        await qsControllerInstance._supportMarket(sUSDCInstance.address);
+        console.log("Done to support market sUSDC: ", sUSDCInstance.address);
+
+        let usdcOnElaCollateralFactor = 0.5e18.toString();
+        await qsControllerInstance._setCollateralFactor(sUSDCInstance.address, usdcOnElaCollateralFactor);
+        console.log("Done to set collateral factor %s for sUSDC %s", usdcOnElaCollateralFactor, sUSDCInstance.address);
+        addressFactory["USDC"] = usdcOnEla;
+        addressFactory["sUSDC"] = erc20Delegator.address;
+
         // handle native token ELA
-        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, "20000000000000000", "QuickSilver ELA", "sELA", 18, admin);
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ELA", "sELA", 18, admin);
         await qsControllerInstance._supportMarket(sELA.address);
         console.log("Done to support market sELA: ", sELA.address);
         let elaCollateralFactor = 0.15e18.toString();
