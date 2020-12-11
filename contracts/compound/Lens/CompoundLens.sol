@@ -291,6 +291,15 @@ contract CompoundLens {
         });
     }
 
+    function getCompBalanceWithAccrued(Comp comp, ComptrollerLensInterface comptroller, address account) external returns (uint balance, uint allocated) {
+        balance = comp.balanceOf(account);
+        comptroller.claimComp(account);
+        uint newBalance = comp.balanceOf(account);
+        uint accrued = comptroller.compAccrued(account);
+        uint total = add(accrued, newBalance, "sum comp total");
+        allocated = sub(total, balance, "sub allocated");
+    }
+
     struct CompVotes {
         uint blockNumber;
         uint votes;
