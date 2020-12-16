@@ -8,6 +8,7 @@ const Unitroller = artifacts.require("Unitroller");
 const CompoundLens = artifacts.require("CompoundLens");
 const QsPriceOracle = artifacts.require("QsPriceOracle");
 const QsConfig = artifacts.require("QsConfig");
+const Maximillion = artifacts.require("Maximillion");
 
 // Mock Tokens
 const TetherToken = artifacts.require("TetherToken");
@@ -30,10 +31,13 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(CompoundLens);
     await deployer.deploy(QsPriceOracle);
     await deployer.deploy(QsConfig);
+    await deployer.deploy(Maximillion);
 
     addressFactory["Qstroller"] = Unitroller.address;
     addressFactory["QsPriceOracle"] = QsPriceOracle.address;
     addressFactory["QsConfig"] = QsConfig.address;
+    addressFactory["CompoundLens"] = CompoundLens.address;
+    addressFactory["Maximillion"] = Maximillion.address;
 
     let unitrollerInstance = await Unitroller.deployed();
     let qstrollerInstance = await Qstroller.deployed();
@@ -146,7 +150,8 @@ module.exports = async function(deployer, network) {
         await proxiedQstroller._supportMarket(erc20Delegator.address);
         let hfilCollateralFactor = 0.5e18.toString();
         await proxiedQstroller._setCollateralFactor(erc20Delegator.address, hfilCollateralFactor);
-        console.log("Done to set collateral factor %s for HFIL %s", hfilCollateralFactor, erc20Delegator.address);
+        let hfilCollateralFactorAfter = await proxiedQstroller.markets(erc20Delegator.address);
+        console.log("Done to set collateral factor %s for HFIL %s", hfilCollateralFactorAfter.collateralFactorMantissa, erc20Delegator.address);
         addressFactory["HFIL"] = HFILToken.address;
         addressFactory["sHFIL"] = erc20Delegator.address;
 
