@@ -31,13 +31,11 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(CompoundLens);
     await deployer.deploy(QsPriceOracle);
     await deployer.deploy(QsConfig);
-    await deployer.deploy(Maximillion);
 
     addressFactory["Qstroller"] = Unitroller.address;
     addressFactory["QsPriceOracle"] = QsPriceOracle.address;
     addressFactory["QsConfig"] = QsConfig.address;
     addressFactory["CompoundLens"] = CompoundLens.address;
-    addressFactory["Maximillion"] = Maximillion.address;
 
     let unitrollerInstance = await Unitroller.deployed();
     let qstrollerInstance = await Qstroller.deployed();
@@ -89,6 +87,8 @@ module.exports = async function(deployer, network) {
             await proxiedQstroller._setCollateralFactor(sELA.address, elaCollateralFactor);
             console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sELA.address);
             addressFactory["sELA"] = sELA.address;
+            await deployer.deploy(Maximillion, sELA.address);
+            addressFactory["Maximillion"] = Maximillion.address;
 
             // Handle Mocked ETH
             await deployer.deploy(ETHToken);
@@ -111,6 +111,9 @@ module.exports = async function(deployer, network) {
             let elaCollateralFactor = 0.5e18.toString();
             await proxiedQstroller._setCollateralFactor(sELA.address, elaCollateralFactor)
             console.log("Done to set collateral factor %s for %s", elaCollateralFactor, sELA.address);
+            addressFactory["sETH"] = sELA.address;
+            await deployer.deploy(Maximillion, sELA.address);
+            addressFactory["Maximillion"] = Maximillion.address;
 
             // Handle Mocked ETH
             await deployer.deploy(ELAToken);
@@ -122,6 +125,8 @@ module.exports = async function(deployer, network) {
             let ELAEthCollateralFactor = 0.15e18.toString();
             proxiedQstroller._setCollateralFactor(erc20Delegator.address, ELAEthCollateralFactor);
             console.log("Done to set collateral factor %s for %s", ELAEthCollateralFactor, erc20Delegator.address);
+            addressFactory["ELA"] = ELAToken.address;
+            addressFactory["sELA"] = erc20Delegator.address;
         }
 
 
@@ -250,6 +255,8 @@ module.exports = async function(deployer, network) {
         await qsControllerInstance._setCollateralFactor(sELA.address, elaCollateralFactor);
         console.log("Done to set collateral factor %s for sELA %s", elaCollateralFactor, sELA.address);
         addressFactory["sELA"] = sELA.address;
+        await deployer.deploy(Maximillion, sELA.address);
+        addressFactory["Maximillion"] = Maximillion.address;
     }
     if (network == "elaeth") {
         let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
