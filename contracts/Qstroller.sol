@@ -24,6 +24,7 @@ contract Qstroller is Comptroller {
         require(_allMarkets.length == _compSpeeds.length, "Incomplete parameter");
         require(allMarkets.length == _allMarkets.length, "Must update token distribution within one transaction");
 
+        uint _compRate = 0;
         for (uint i = 0; i < _allMarkets.length; i++) {
             address cToken = _allMarkets[i];
             Market storage market = markets[cToken];
@@ -31,7 +32,9 @@ contract Qstroller is Comptroller {
                 _addCompMarketInternal(cToken);
             }
             compSpeeds[cToken] = _compSpeeds[i];
+            _compRate = add_(_compRate, _compSpeeds[i]);
         }
+        _setCompRate(_compRate);
     }
 
 
