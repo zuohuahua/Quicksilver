@@ -166,4 +166,8 @@ contract CEther is SToken {
 
         require(errCode == uint(Error.NO_ERROR), string(fullMessage));
     }
+
+    function isNativeToken() public pure returns (bool) {
+        return true;
+    }
 }

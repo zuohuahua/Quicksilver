@@ -65,4 +65,8 @@ contract SToken is CToken {
         return uint(Error.NO_ERROR);
     }
 
+    function isNativeToken() public pure returns (bool) {
+        return false;
+    }
+
 }

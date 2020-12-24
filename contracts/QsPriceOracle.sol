@@ -3,6 +3,7 @@ pragma solidity ^0.5.16;
 import "./compound/PriceOracle.sol";
 import "./compound/CErc20.sol";
 import "./IPriceCollector.sol";
+import "./SToken.sol";
 
 contract QsPriceOracle is PriceOracle, IPriceCollector {
     mapping(address => uint) prices;
@@ -21,7 +22,7 @@ contract QsPriceOracle is PriceOracle, IPriceCollector {
     }
 
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {
-        if (compareStrings(cToken.symbol(), "sELA") || compareStrings(cToken.symbol(), "sETH")) {
+        if (SToken(address(cToken)).isNativeToken()) {
             return 1e18;
         } else {
             return prices[address(CErc20(address(cToken)).underlying())];
