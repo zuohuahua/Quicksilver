@@ -19,8 +19,7 @@ const ELAToken = artifacts.require("ELAToken");
 // Parameters
 const closeFactor = 0.5e18.toString();
 const liquidationIncentive = 1.13e18.toString();
-const compRate = 0.5e18.toString();
-const reserveFactor = 0.2e18.toString();
+const reserveFactor = 0.3e18.toString();
 
 const maxAssets = 10;
 
@@ -48,7 +47,6 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(InterestModel, "20000000000000000", "200000000000000000");
 
     let proxiedQstroller = await Qstroller.at(Unitroller.address);
-    console.log("admin: ", await proxiedQstroller.admin());
 
     await proxiedQstroller._setPriceOracle(QsPriceOracle.address);
     console.log("Done to set price oracle.", await proxiedQstroller.oracle());
@@ -64,10 +62,6 @@ module.exports = async function(deployer, network) {
     console.log("Done to set liquidation incentive.");
     let incentive = await proxiedQstroller.liquidationIncentiveMantissa();
     console.log("New incentive: ", incentive.toString());
-
-    await proxiedQstroller._setCompRate(compRate);
-    result = await proxiedQstroller.compRate();
-    console.log("Done to set comp rate with value: ", result.toString());
 
     await proxiedQstroller._setCloseFactor(closeFactor);
     result = await proxiedQstroller.closeFactorMantissa();
@@ -263,6 +257,17 @@ module.exports = async function(deployer, network) {
         console.log("allSupportedMarkets: ", allSupportedMarkets);
     }
 
+    if (network == "hecotest" || network == "heco") {
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "Filda HT", "fHT", 18, admin);
+        await proxiedQstroller._supportMarket(sELA.address);
+        console.log("Done to support market fHT: ", sELA.address);
+        let htCollateralFactor = 0.15e18.toString();
+        await proxiedQstroller._setCollateralFactor(sELA.address, htCollateralFactor);
+        console.log("Done to set collateral factor %s for fHT %s", htCollateralFactor, sELA.address);
+        addressFactory["fHT"] = sELA.address;
+        await deployer.deploy(Maximillion, sELA.address);
+        addressFactory["Maximillion"] = Maximillion.address;
+    }
     console.log("================= Copy and record below addresses ==============")
     console.log(addressFactory);
 };
