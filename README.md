@@ -1,26 +1,49 @@
-Quick Silver
+Quicksilver
 =================
-Quick Silver is one fork of Compound.
+Quicksilver is one fork of Compound.
 
-🎉 Release 🎉
-### ELA ETH
+### ELA Testnet
 |       Contract       |                  Address                   |
 | :------------------: | :----------------------------------------: |
-| sELA | 0x4e07f5C9b2e46bE713e43159C65250E34d7bB316 |
-| Comptroller | 0x2Ac63DFC9357c8bd4476ce9fAE8653A7E24B89B9 |
-| ElaPriceOracle | 0x893d9bB8b95Dc87498EE7Df7D09eA9CddF624429 |
-| SILV Token | 0xF078938635F18BD136a41F9Ea5af50689B4D5cb0 |
-| CompoundLens | 0x46C4bE8B5F3D9c643a66FeF6aeF1E558d178BA75 |
-| InterestRateModel | 0xE4508554F6c676Da9578C92dfcb6Ee466E71DcF9 |
+| sELA | 0x7eBEeAcaf6Dec5C85D992E4d15f18227E3695d97 |
+| Comptroller | 0x9bCDf73B28F9214f51f8722a32Bd96bfe4f16Fa6 |
+| ElaPriceOracle | 0x916dAbC2544287E6b1145DEe7976CF085E5EEa5b |
+| SILV | 0xd9e18828f29ac768ab3e1eebd3c3037efdef9e92 |
+| ETH | 0x23f1528e61d0af04faa7cff8c7ce9046d9130789 |
+| sETH | 0x403AB093EB21Ae2C73bc1Eb23CCDB5a7c0bb1C80 |
+| HFIL | 0xd3f1be7f74d25f39184d2d0670966e2e837562e3 |
+| sHFIL | 0x33B1B094360E5b5a3a7649Bed8145fb230898DB2 |
+| USDT | 0xa7daaf45ae0b2e567eb563fb57ea9cfffdfd73dd |
+| sUSDT | 0x1551F44753147071c585169C621f45E0af920f31 |
 
-### Dev ENV (http://18.162.230.88/ethdev)
+
+### Heco Testnet
 |       Contract       |                  Address                   |
 | :------------------: | :----------------------------------------: |
-| sUSDT | 0xC0F6C06A579F11Bb9cA6C674156d561Aa8a79A9a |
-| sELA | 0xBD2247A60f1B91b88b6f9e18675a97288433F04F |
-| Comptroller | 0xaab1F888D15e3f0fb4508165A2d3d4950690181D |
-| ElaPriceOracle | 0x4eb186C46e7857006f1A242b2AfA71f42C9c9008 |
-| SILV Token | 0xF9e515D82C6994c127B4604CA722272Ff91BB52d |
-| CompoundLens | 0x0a2248DC5C7b74Cfd304147894410C53B258C49f |
-| Mock USDT | 0x88518985E892B6F9a3F992F40D03441B8716EcA2 |
-| InterestRateModel | 0x797df0F153D4F2351F81F19BAC09bBBd3fAA577C |
+| fHT | 0x824151251B38056d54A15E56B73c54ba44811aF8 |
+| Comptroller | 0xb74633f2022452f377403B638167b0A135DB096d |
+| ElaPriceOracle | 0x0a6a06003417dA7BCF1C2bdc27e2A30C38EfF4Ad |
+| FilDA | 0x9d81f4554e717f7054c1bfbb2f7c323389b116a5 |
+| ELA | 0x874f0618315fafd23f500b3a80a8a72148936f8e |
+| fELA | 0xb6B9B25C18a7fa951379538a988605478B5C0940 |
+| HFIL | 0x098050ed091521658f759f978469883d5bd8ea19 |
+| fHFIL | 0x33B1B094360E5b5a3a7649Bed8145fb230898DB2 |
+| USDT | 0x9893efec0c06a5c82ed76a726d12ee469fe449d8 |
+| fUSDT | 0x3CDd62735E3282D07f8bcD6bc3B1a55B5D28eddA |
+
+
+
+### Heco Mainnet
+|       Contract       |                  Address                   |
+| :------------------: | :----------------------------------------: |
+| fHT | 0x824151251B38056d54A15E56B73c54ba44811aF8 |
+| Comptroller | 0x0a6a06003417dA7BCF1C2bdc27e2A30C38EfF4Ad |
+| ElaPriceOracle | 0x0a6a06003417dA7BCF1C2bdc27e2A30C38EfF4Ad |
+| FilDA | 0xe36ffd17b2661eb57144ceaef942d95295e637f0 |
+| ELA | 0xa1ecfc2bec06e4b43ddd423b94fef84d0dbc8f5c |
+| fELA | 0xb6B9B25C18a7fa951379538a988605478B5C0940 |
+| HFIL | 0xae3a768f9ab104c69a7cd6041fe16ffa235d1810 |
+| fHFIL | 0x043aFB65e93500CE5BCbf5Bbb41FC1fDcE2B7518 |
+| USDT | 0x581edd7eab23896513360d7ee8dfe07a5cad2abd |
+| fUSDT | 0x2a2EF6d5EEF3896578fD0Cf070E38d55e734Aa8E |
+
