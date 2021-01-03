@@ -1,6 +1,8 @@
 Quicksilver
 =================
-Quicksilver is one fork of Compound.
+Quicksilver is a debit and credit protocol based on a modification of Compound that provides debit and credit mining capabilities for FilDA.
+It runs on both Elastos and Heco (Huobi ecosystem).
+
 
 ### ELA Testnet
 |       Contract       |                  Address                   |
