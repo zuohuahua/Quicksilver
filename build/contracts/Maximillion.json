@@ -1,0 +1,2126 @@
+{
+  "contractName": "Maximillion",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract CEther",
+          "name": "cEther_",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "cEther",
+      "outputs": [
+        {
+          "internalType": "contract CEther",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        }
+      ],
+      "name": "repayBehalf",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "contract CEther",
+          "name": "cEther_",
+          "type": "address"
+        }
+      ],
+      "name": "repayBehalfExplicit",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract CEther\",\"name\":\"cEther_\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"cEther\",\"outputs\":[{\"internalType\":\"contract CEther\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"}],\"name\":\"repayBehalf\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"},{\"internalType\":\"contract CEther\",\"name\":\"cEther_\",\"type\":\"address\"}],\"name\":\"repayBehalfExplicit\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Compound\",\"methods\":{\"repayBehalf(address)\":{\"details\":\"The provided Ether is applied towards the borrow balance, any excess is refunded\",\"params\":{\"borrower\":\"The address of the borrower account to repay on behalf of\"}},\"repayBehalfExplicit(address,address)\":{\"details\":\"The provided Ether is applied towards the borrow balance, any excess is refunded\",\"params\":{\"borrower\":\"The address of the borrower account to repay on behalf of\",\"cEther_\":\"The address of the cEther contract to repay in\"}}},\"title\":\"Compound's Maximillion Contract\"},\"userdoc\":{\"methods\":{\"constructor\":\"Construct a Maximillion to repay max in a CEther market\",\"repayBehalf(address)\":{\"notice\":\"msg.sender sends Ether to repay an account's borrow in the cEther market\"},\"repayBehalfExplicit(address,address)\":{\"notice\":\"msg.sender sends Ether to repay an account's borrow in a cEther market\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Maximillion.sol\":\"Maximillion\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[]},\"sources\":{\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/Ownable.sol\":{\"keccak256\":\"0xa9a8fac085ea67f25333b2b32b4b1aa9693a251e17e724ba0c00b50d6ddb81b6\",\"urls\":[\"bzz-raw://daea04c657abbd5b719f455ce2a320e5d7cc751ce4ce267fdc3edfe1642ec697\",\"dweb:/ipfs/QmQmvQHdecLKUxYPBiubBBsW7gPUNydWXAF4iZ7ouHJvLa\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/QsConfig.sol\":{\"keccak256\":\"0xba39814f910b77fad1960c8565c8ffd1869c1a88428f1cde7c6f830cc88e42de\",\"urls\":[\"bzz-raw://5a78fea7f21b8bc754b6dfdb0a415d7d1db31d30746ae5998a520aea7e7c532b\",\"dweb:/ipfs/QmbhsB6eFKmvdCKfFpYPMAhjPHATBt5xfy9JLRhSKs7373\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/Qstroller.sol\":{\"keccak256\":\"0x5bfe9dc84487270b609958133ed595029097b9983652c4451ca9d398b024a612\",\"urls\":[\"bzz-raw://d610fe9b7b57a71165faffb63d0b20d248cd2c1694328f999f43ba5c381c0094\",\"dweb:/ipfs/QmNQCNVhnRFwbwDrLvdSSQmhK1EGW3qTBqdQnubYgpLw3o\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/SToken.sol\":{\"keccak256\":\"0xfd1b5a56338e6e7fcd41932506678ea01965371efda7c8139aef858fc0b40589\",\"urls\":[\"bzz-raw://b955936efd274973c5ab8cc9e6b5f3f89810d7b210e1756555f45d1e7e2079e7\",\"dweb:/ipfs/QmU58YpVrafdyc7ERGmEWehYP8VuXcT8oukF4UCYR6zEiT\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/CEther.sol\":{\"keccak256\":\"0x0a0746794a9d600564fc6f2db745bda44e90d5a5ea46873f013d3709c63b4754\",\"urls\":[\"bzz-raw://3d3847b9dd544af0db54bf2858f135d406a50c8d0335d6e8047c08f7f77e7351\",\"dweb:/ipfs/QmYUfFEEGExfHirtn5Xvxb9hPnZpSrUthtNVtp2a74HTHu\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/CToken.sol\":{\"keccak256\":\"0xb1be3cfd7be68f319e5500183788d60f571c057c68b219d1017421dbe8335655\",\"urls\":[\"bzz-raw://fdfaae72c5e71f6ebff0883d43a0ac311e51e5b0c37632caba2034dd1f0467e4\",\"dweb:/ipfs/QmfN85ft4y1wUrcmjtZMethCa4cbgpabEsg957dxebzNFW\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/CTokenInterfaces.sol\":{\"keccak256\":\"0xbedd7a46507f6e249f4019c9cadf95d5e3af38fa914c9572a81f6d79c946bd66\",\"urls\":[\"bzz-raw://d3b56940e52267ebaf199d907a65a01565fddddb5ff9fc1c41cf0033f04266e9\",\"dweb:/ipfs/QmS758sZoFK3MV16oNZyiMEjU4MECXAMpyMKLtz1hauhK5\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/CarefulMath.sol\":{\"keccak256\":\"0x0647348f27e41d22555d99eebd217dee02a4d737df6accd7cce5347a7487c7de\",\"urls\":[\"bzz-raw://08882d26c11a6d240949a5afba79a74694a8b651093c05c5ae4cc359a0181c22\",\"dweb:/ipfs/QmVXb1tDswuhMRNuDLajzohdkvx2kBmqu1Rxn1BAKUfhkV\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Comptroller.sol\":{\"keccak256\":\"0x65e725aae303be564fa933189657f3dfdf339e01a07ccd80de4bc5c8fa144c65\",\"urls\":[\"bzz-raw://3a372d4877275baf0c8d39445c95d20ed05358314c6d86ff8dd7dd78f487f1d1\",\"dweb:/ipfs/QmS8vsXJD9nqnMY6nEBPgSCBQFzbPpd39LXpdkLG3dvNtU\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/ComptrollerInterface.sol\":{\"keccak256\":\"0xede7670d2dd7b25d0187aecd2c28b7b5ca7d7c1bdac144fbedecf5d4bdd92a6b\",\"urls\":[\"bzz-raw://ffeffe133548cc3b8e97b040b12ae5e041d84f9b482f45b7d536d78eaf6c1550\",\"dweb:/ipfs/QmWYsBjz19U4aBbJmQ96A5sa23UKZnaS3k8oN8bNTyAUsz\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/ComptrollerStorage.sol\":{\"keccak256\":\"0x4cdd6e2b3db0368fe5d6cd84e0df65131e019170cd4bfbf5c83d067253786929\",\"urls\":[\"bzz-raw://81b448160d92a8c99597c9dbcd554dd750f0179fd9b3f995cb5111bee02d22e1\",\"dweb:/ipfs/QmYpgkAx9DRmPHr1ZUwyjBXo96KGLgxC72wpv5CXUraBv1\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/EIP20Interface.sol\":{\"keccak256\":\"0xfd8ed2eac6d0b4d9ee6b32628ba68bae17544b66f190a5f7ce0c6ad024579dc8\",\"urls\":[\"bzz-raw://701be308137fe36f221f1d7c815247a272638df40917e7d1456b3b16e8402897\",\"dweb:/ipfs/QmPDkPoKiWXMjwpGa65JHBjo5NH8AA3q1nMhsewfUZHjpx\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/EIP20NonStandardInterface.sol\":{\"keccak256\":\"0x9719f12e4b80b51147ac195553a198cf8b0c516e7e4d04fc324a23ed15cbafb2\",\"urls\":[\"bzz-raw://50c3ba49b80106c88b0171390aa4127edc86f7b29607abe3dc6d08eaefebf837\",\"dweb:/ipfs/QmP6AHNmFdwYwWUeHnhYi3drCQy4dpnnqUbkMeU3oAtokj\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/ErrorReporter.sol\":{\"keccak256\":\"0x5179afb1071c0fd555e5c1f1d2565f72dbe1740cc3dd02f6e52037f150afc5c9\",\"urls\":[\"bzz-raw://691454eb195c6ec77409cf681ef6929c8102e65d25dd563bf2a93c04eaceeb9f\",\"dweb:/ipfs/QmegumxJuZ5yeDmJoahzGfH4EV4d1XFvmH1vNfdcdcrWJi\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Exponential.sol\":{\"keccak256\":\"0xaa59feeb5759614eb9a9af023f843e5e638f4cff7df0060c2f8b2b804d13db7f\",\"urls\":[\"bzz-raw://dca42502fe6f9edc87a73491663c985181c91921ee2db53dc72bd05ab939d681\",\"dweb:/ipfs/QmbiGFW5x1WA6V9nzQrs868cHzcz1W5X9GiMPKK4TFR7qp\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/InterestRateModel.sol\":{\"keccak256\":\"0x081c9ed2b26861141f9d133cd6bcfac29f7abbaf12a09881fb2b37741ecbbfee\",\"urls\":[\"bzz-raw://9832e689adf59ef6c720caed52f5467c85a6f3178953fa1cd35552db6fd3d3c8\",\"dweb:/ipfs/QmRCP3R8agPNeAeRf2qQX5GeixXk34NtZGVSvHBtLZieQQ\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Maximillion.sol\":{\"keccak256\":\"0x263344974c184127a83a3d1d36b117aafa3c5c96122f7b35b7c1076f004849b4\",\"urls\":[\"bzz-raw://ca46e2c8b496fa64a8c1644cfe88103e3d9c50ac18b6e3d832860992c3aa1bd7\",\"dweb:/ipfs/QmUw4bo7qCM9MbLZRDBgb7M5b7r7FXRyQEMtK2Awgu8LLY\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/PriceOracle.sol\":{\"keccak256\":\"0xe79ebc23bba508eb2479e7b3340abf566da1ab62131f106aee1aac3dc53816ef\",\"urls\":[\"bzz-raw://9b4c1daa3dbc6e8f3c9ca3345c93fc72644578ad755e48115014c23e054fdeeb\",\"dweb:/ipfs/QmcuAYQCJRKW6nMAXfPUwqxM6tBLwrbPqmVQs9oYC8Hmmq\"]},\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Unitroller.sol\":{\"keccak256\":\"0x51f81451eab9d5c4849507e724f2b2c53e41f54e5359fdbeae89432a727c16df\",\"urls\":[\"bzz-raw://4cd19a3cc1522e736270fe14911875c2baaa6c03c76d4d2d0e18e3af4ac4ea0b\",\"dweb:/ipfs/QmSbCFBHFnNHMBKVPtE53x3Cz4kLWoBaci4S3qwqLBqr5N\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516103363803806103368339818101604052602081101561003357600080fd5b5051600080546001600160a01b039092166001600160a01b03199092169190911790556102d1806100656000396000f3fe6080604052600436106100345760003560e01c806319b68c0014610039578063367b7f051461006a5780639f35c3d51461009a575b600080fd5b34801561004557600080fd5b5061004e6100c0565b604080516001600160a01b039092168252519081900360200190f35b6100986004803603604081101561008057600080fd5b506001600160a01b03813581169160200135166100cf565b005b610098600480360360208110156100b057600080fd5b50356001600160a01b0316610282565b6000546001600160a01b031681565b60003490506000826001600160a01b03166317bfdfbc856040518263ffffffff1660e01b815260040180826001600160a01b03166001600160a01b03168152602001915050602060405180830381600087803b15801561012e57600080fd5b505af1158015610142573d6000803e3d6000fd5b505050506040513d602081101561015857600080fd5b505190508082111561020a57826001600160a01b031663e597461982866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b1580156101bc57600080fd5b505af11580156101d0573d6000803e3d6000fd5b505060405133935084860380156108fc02935091506000818181858888f19350505050158015610204573d6000803e3d6000fd5b5061027c565b826001600160a01b031663e597461983866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b15801561026257600080fd5b505af1158015610276573d6000803e3d6000fd5b50505050505b50505050565b6000546102999082906001600160a01b03166100cf565b5056fea265627a7a7231582080900b322b3587055225c089edc445e758775f9ec7a588debba846741a0cc76e64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600436106100345760003560e01c806319b68c0014610039578063367b7f051461006a5780639f35c3d51461009a575b600080fd5b34801561004557600080fd5b5061004e6100c0565b604080516001600160a01b039092168252519081900360200190f35b6100986004803603604081101561008057600080fd5b506001600160a01b03813581169160200135166100cf565b005b610098600480360360208110156100b057600080fd5b50356001600160a01b0316610282565b6000546001600160a01b031681565b60003490506000826001600160a01b03166317bfdfbc856040518263ffffffff1660e01b815260040180826001600160a01b03166001600160a01b03168152602001915050602060405180830381600087803b15801561012e57600080fd5b505af1158015610142573d6000803e3d6000fd5b505050506040513d602081101561015857600080fd5b505190508082111561020a57826001600160a01b031663e597461982866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b1580156101bc57600080fd5b505af11580156101d0573d6000803e3d6000fd5b505060405133935084860380156108fc02935091506000818181858888f19350505050158015610204573d6000803e3d6000fd5b5061027c565b826001600160a01b031663e597461983866040518363ffffffff1660e01b815260040180826001600160a01b03166001600160a01b031681526020019150506000604051808303818588803b15801561026257600080fd5b505af1158015610276573d6000803e3d6000fd5b50505050505b50505050565b6000546102999082906001600160a01b03166100cf565b5056fea265627a7a7231582080900b322b3587055225c089edc445e758775f9ec7a588debba846741a0cc76e64736f6c63430005100032",
+  "sourceMap": "120:1449:31:-;;;330:68;8:9:-1;5:2;;;30:1;27;20:12;5:2;330:68:31;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;330:68:31;375:6;:16;;-1:-1:-1;;;;;375:16:31;;;-1:-1:-1;;;;;;375:16:31;;;;;;;;;120:1449;;;;;;",
+  "deployedSourceMap": "120:1449:31:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;216:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;216:20:31;;;:::i;:::-;;;;-1:-1:-1;;;;;216:20:31;;;;;;;;;;;;;;1141:426;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;;;;;;1141:426:31;;;;;;;;;;:::i;:::-;;682:108;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;682:108:31;-1:-1:-1;;;;;682:108:31;;:::i;216:20::-;;;-1:-1:-1;;;;;216:20:31;;:::o;1141:426::-;1229:13;1245:9;1229:25;;1264:12;1279:7;-1:-1:-1;;;;;1279:28:31;;1308:8;1279:38;;;;;;;;;;;;;-1:-1:-1;;;;;1279:38:31;-1:-1:-1;;;;;1279:38:31;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1279:38:31;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1279:38:31;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1279:38:31;;-1:-1:-1;1331:18:31;;;1327:234;;;1365:7;-1:-1:-1;;;;;1365:25:31;;1397:7;1406:8;1365:50;;;;;;;;;;;;;-1:-1:-1;;;;;1365:50:31;-1:-1:-1;;;;;1365:50:31;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1365:50:31;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;-1:-1;;1429:39:31;;:10;;-1:-1:-1;1449:18:31;;;1429:39;;;;;-1:-1:-1;1449:18:31;-1:-1:-1;1429:39:31;;;;1449:18;1429:10;:39;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1429:39:31;1327:234;;;1499:7;-1:-1:-1;;;;;1499:25:31;;1531:8;1541;1499:51;;;;;;;;;;;;;-1:-1:-1;;;;;1499:51:31;-1:-1:-1;;;;;1499:51:31;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1499:51:31;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1499:51:31;;;;;1327:234;1141:426;;;;:::o;682:108::-;776:6;;746:37;;766:8;;-1:-1:-1;;;;;776:6:31;746:19;:37::i;:::-;682:108;:::o",
+  "source": "pragma solidity ^0.5.16;\n\nimport \"./CEther.sol\";\n\n/**\n * @title Compound's Maximillion Contract\n * @author Compound\n */\ncontract Maximillion {\n    /**\n     * @notice The default cEther market to repay in\n     */\n    CEther public cEther;\n\n    /**\n     * @notice Construct a Maximillion to repay max in a CEther market\n     */\n    constructor(CEther cEther_) public {\n        cEther = cEther_;\n    }\n\n    /**\n     * @notice msg.sender sends Ether to repay an account's borrow in the cEther market\n     * @dev The provided Ether is applied towards the borrow balance, any excess is refunded\n     * @param borrower The address of the borrower account to repay on behalf of\n     */\n    function repayBehalf(address borrower) public payable {\n        repayBehalfExplicit(borrower, cEther);\n    }\n\n    /**\n     * @notice msg.sender sends Ether to repay an account's borrow in a cEther market\n     * @dev The provided Ether is applied towards the borrow balance, any excess is refunded\n     * @param borrower The address of the borrower account to repay on behalf of\n     * @param cEther_ The address of the cEther contract to repay in\n     */\n    function repayBehalfExplicit(address borrower, CEther cEther_) public payable {\n        uint received = msg.value;\n        uint borrows = cEther_.borrowBalanceCurrent(borrower);\n        if (received > borrows) {\n            cEther_.repayBorrowBehalf.value(borrows)(borrower);\n            msg.sender.transfer(received - borrows);\n        } else {\n            cEther_.repayBorrowBehalf.value(received)(borrower);\n        }\n    }\n}\n",
+  "sourcePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Maximillion.sol",
+  "ast": {
+    "absolutePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Maximillion.sol",
+    "exportedSymbols": {
+      "Maximillion": [
+        25041
+      ]
+    },
+    "id": 25042,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 24960,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".16"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:31"
+      },
+      {
+        "absolutePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/CEther.sol",
+        "file": "./CEther.sol",
+        "id": 24961,
+        "nodeType": "ImportDirective",
+        "scope": 25042,
+        "sourceUnit": 2987,
+        "src": "26:22:31",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Compound's Maximillion Contract\n@author Compound",
+        "fullyImplemented": true,
+        "id": 25041,
+        "linearizedBaseContracts": [
+          25041
+        ],
+        "name": "Maximillion",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 24963,
+            "name": "cEther",
+            "nodeType": "VariableDeclaration",
+            "scope": 25041,
+            "src": "216:20:31",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_CEther_$2986",
+              "typeString": "contract CEther"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 24962,
+              "name": "CEther",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2986,
+              "src": "216:6:31",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_CEther_$2986",
+                "typeString": "contract CEther"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 24972,
+              "nodeType": "Block",
+              "src": "365:33:31",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 24970,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 24968,
+                      "name": "cEther",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24963,
+                      "src": "375:6:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_CEther_$2986",
+                        "typeString": "contract CEther"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 24969,
+                      "name": "cEther_",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24965,
+                      "src": "384:7:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_CEther_$2986",
+                        "typeString": "contract CEther"
+                      }
+                    },
+                    "src": "375:16:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_CEther_$2986",
+                      "typeString": "contract CEther"
+                    }
+                  },
+                  "id": 24971,
+                  "nodeType": "ExpressionStatement",
+                  "src": "375:16:31"
+                }
+              ]
+            },
+            "documentation": "@notice Construct a Maximillion to repay max in a CEther market",
+            "id": 24973,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 24966,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 24965,
+                  "name": "cEther_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 24973,
+                  "src": "342:14:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_CEther_$2986",
+                    "typeString": "contract CEther"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 24964,
+                    "name": "CEther",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2986,
+                    "src": "342:6:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_CEther_$2986",
+                      "typeString": "contract CEther"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "341:16:31"
+            },
+            "returnParameters": {
+              "id": 24967,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "365:0:31"
+            },
+            "scope": 25041,
+            "src": "330:68:31",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 24983,
+              "nodeType": "Block",
+              "src": "736:54:31",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 24979,
+                        "name": "borrower",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24975,
+                        "src": "766:8:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 24980,
+                        "name": "cEther",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24963,
+                        "src": "776:6:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_CEther_$2986",
+                          "typeString": "contract CEther"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_contract$_CEther_$2986",
+                          "typeString": "contract CEther"
+                        }
+                      ],
+                      "id": 24978,
+                      "name": "repayBehalfExplicit",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 25040,
+                      "src": "746:19:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_contract$_CEther_$2986_$returns$__$",
+                        "typeString": "function (address,contract CEther)"
+                      }
+                    },
+                    "id": 24981,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "746:37:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 24982,
+                  "nodeType": "ExpressionStatement",
+                  "src": "746:37:31"
+                }
+              ]
+            },
+            "documentation": "@notice msg.sender sends Ether to repay an account's borrow in the cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of",
+            "id": 24984,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "repayBehalf",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 24976,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 24975,
+                  "name": "borrower",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 24984,
+                  "src": "703:16:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 24974,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "703:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "702:18:31"
+            },
+            "returnParameters": {
+              "id": 24977,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "736:0:31"
+            },
+            "scope": 25041,
+            "src": "682:108:31",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 25039,
+              "nodeType": "Block",
+              "src": "1219:348:31",
+              "statements": [
+                {
+                  "assignments": [
+                    24992
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 24992,
+                      "name": "received",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 25039,
+                      "src": "1229:13:31",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "typeName": {
+                        "id": 24991,
+                        "name": "uint",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1229:4:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 24995,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 24993,
+                      "name": "msg",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28115,
+                      "src": "1245:3:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_magic_message",
+                        "typeString": "msg"
+                      }
+                    },
+                    "id": 24994,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "value",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": null,
+                    "src": "1245:9:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1229:25:31"
+                },
+                {
+                  "assignments": [
+                    24997
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 24997,
+                      "name": "borrows",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 25039,
+                      "src": "1264:12:31",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "typeName": {
+                        "id": 24996,
+                        "name": "uint",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1264:4:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 25002,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 25000,
+                        "name": "borrower",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24986,
+                        "src": "1308:8:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 24998,
+                        "name": "cEther_",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24988,
+                        "src": "1279:7:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_CEther_$2986",
+                          "typeString": "contract CEther"
+                        }
+                      },
+                      "id": 24999,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "borrowBalanceCurrent",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3627,
+                      "src": "1279:28:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$_t_uint256_$",
+                        "typeString": "function (address) external returns (uint256)"
+                      }
+                    },
+                    "id": 25001,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1279:38:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1264:53:31"
+                },
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 25005,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "id": 25003,
+                      "name": "received",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24992,
+                      "src": "1331:8:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": ">",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "id": 25004,
+                      "name": "borrows",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24997,
+                      "src": "1342:7:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1331:18:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": {
+                    "id": 25037,
+                    "nodeType": "Block",
+                    "src": "1485:76:31",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 25034,
+                              "name": "borrower",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 24986,
+                              "src": "1541:8:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            ],
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 25032,
+                                "name": "received",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24992,
+                                "src": "1531:8:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "id": 25027,
+                                  "name": "cEther_",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 24988,
+                                  "src": "1499:7:31",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_contract$_CEther_$2986",
+                                    "typeString": "contract CEther"
+                                  }
+                                },
+                                "id": 25030,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "memberName": "repayBorrowBehalf",
+                                "nodeType": "MemberAccess",
+                                "referencedDeclaration": 2730,
+                                "src": "1499:25:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
+                                  "typeString": "function (address) payable external"
+                                }
+                              },
+                              "id": 25031,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "value",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1499:31:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
+                                "typeString": "function (uint256) pure returns (function (address) payable external)"
+                              }
+                            },
+                            "id": 25033,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1499:41:31",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
+                              "typeString": "function (address) payable external"
+                            }
+                          },
+                          "id": 25035,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1499:51:31",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 25036,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1499:51:31"
+                      }
+                    ]
+                  },
+                  "id": 25038,
+                  "nodeType": "IfStatement",
+                  "src": "1327:234:31",
+                  "trueBody": {
+                    "id": 25026,
+                    "nodeType": "Block",
+                    "src": "1351:128:31",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 25013,
+                              "name": "borrower",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 24986,
+                              "src": "1406:8:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            ],
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 25011,
+                                "name": "borrows",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24997,
+                                "src": "1397:7:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "id": 25006,
+                                  "name": "cEther_",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 24988,
+                                  "src": "1365:7:31",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_contract$_CEther_$2986",
+                                    "typeString": "contract CEther"
+                                  }
+                                },
+                                "id": 25009,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "memberName": "repayBorrowBehalf",
+                                "nodeType": "MemberAccess",
+                                "referencedDeclaration": 2730,
+                                "src": "1365:25:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
+                                  "typeString": "function (address) payable external"
+                                }
+                              },
+                              "id": 25010,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "value",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1365:31:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
+                                "typeString": "function (uint256) pure returns (function (address) payable external)"
+                              }
+                            },
+                            "id": 25012,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1365:40:31",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
+                              "typeString": "function (address) payable external"
+                            }
+                          },
+                          "id": 25014,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1365:50:31",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 25015,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1365:50:31"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "id": 25023,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "leftExpression": {
+                                "argumentTypes": null,
+                                "id": 25021,
+                                "name": "received",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24992,
+                                "src": "1449:8:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "nodeType": "BinaryOperation",
+                              "operator": "-",
+                              "rightExpression": {
+                                "argumentTypes": null,
+                                "id": 25022,
+                                "name": "borrows",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24997,
+                                "src": "1460:7:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "src": "1449:18:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 25016,
+                                "name": "msg",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 28115,
+                                "src": "1429:3:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_magic_message",
+                                  "typeString": "msg"
+                                }
+                              },
+                              "id": 25019,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "sender",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1429:10:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address_payable",
+                                "typeString": "address payable"
+                              }
+                            },
+                            "id": 25020,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "transfer",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1429:19:31",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                              "typeString": "function (uint256)"
+                            }
+                          },
+                          "id": 25024,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1429:39:31",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 25025,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1429:39:31"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "documentation": "@notice msg.sender sends Ether to repay an account's borrow in a cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of\n@param cEther_ The address of the cEther contract to repay in",
+            "id": 25040,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "repayBehalfExplicit",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 24989,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 24986,
+                  "name": "borrower",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 25040,
+                  "src": "1170:16:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 24985,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1170:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 24988,
+                  "name": "cEther_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 25040,
+                  "src": "1188:14:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_CEther_$2986",
+                    "typeString": "contract CEther"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 24987,
+                    "name": "CEther",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2986,
+                    "src": "1188:6:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_CEther_$2986",
+                      "typeString": "contract CEther"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1169:34:31"
+            },
+            "returnParameters": {
+              "id": 24990,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1219:0:31"
+            },
+            "scope": 25041,
+            "src": "1141:426:31",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 25042,
+        "src": "120:1449:31"
+      }
+    ],
+    "src": "0:1570:31"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/Maximillion.sol",
+    "exportedSymbols": {
+      "Maximillion": [
+        25041
+      ]
+    },
+    "id": 25042,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 24960,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".16"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:31"
+      },
+      {
+        "absolutePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol/contracts/compound/CEther.sol",
+        "file": "./CEther.sol",
+        "id": 24961,
+        "nodeType": "ImportDirective",
+        "scope": 25042,
+        "sourceUnit": 2987,
+        "src": "26:22:31",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Compound's Maximillion Contract\n@author Compound",
+        "fullyImplemented": true,
+        "id": 25041,
+        "linearizedBaseContracts": [
+          25041
+        ],
+        "name": "Maximillion",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 24963,
+            "name": "cEther",
+            "nodeType": "VariableDeclaration",
+            "scope": 25041,
+            "src": "216:20:31",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_CEther_$2986",
+              "typeString": "contract CEther"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 24962,
+              "name": "CEther",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2986,
+              "src": "216:6:31",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_CEther_$2986",
+                "typeString": "contract CEther"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 24972,
+              "nodeType": "Block",
+              "src": "365:33:31",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 24970,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 24968,
+                      "name": "cEther",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24963,
+                      "src": "375:6:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_CEther_$2986",
+                        "typeString": "contract CEther"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 24969,
+                      "name": "cEther_",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24965,
+                      "src": "384:7:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_CEther_$2986",
+                        "typeString": "contract CEther"
+                      }
+                    },
+                    "src": "375:16:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_CEther_$2986",
+                      "typeString": "contract CEther"
+                    }
+                  },
+                  "id": 24971,
+                  "nodeType": "ExpressionStatement",
+                  "src": "375:16:31"
+                }
+              ]
+            },
+            "documentation": "@notice Construct a Maximillion to repay max in a CEther market",
+            "id": 24973,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 24966,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 24965,
+                  "name": "cEther_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 24973,
+                  "src": "342:14:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_CEther_$2986",
+                    "typeString": "contract CEther"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 24964,
+                    "name": "CEther",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2986,
+                    "src": "342:6:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_CEther_$2986",
+                      "typeString": "contract CEther"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "341:16:31"
+            },
+            "returnParameters": {
+              "id": 24967,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "365:0:31"
+            },
+            "scope": 25041,
+            "src": "330:68:31",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 24983,
+              "nodeType": "Block",
+              "src": "736:54:31",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 24979,
+                        "name": "borrower",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24975,
+                        "src": "766:8:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 24980,
+                        "name": "cEther",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24963,
+                        "src": "776:6:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_CEther_$2986",
+                          "typeString": "contract CEther"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_contract$_CEther_$2986",
+                          "typeString": "contract CEther"
+                        }
+                      ],
+                      "id": 24978,
+                      "name": "repayBehalfExplicit",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 25040,
+                      "src": "746:19:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_contract$_CEther_$2986_$returns$__$",
+                        "typeString": "function (address,contract CEther)"
+                      }
+                    },
+                    "id": 24981,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "746:37:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 24982,
+                  "nodeType": "ExpressionStatement",
+                  "src": "746:37:31"
+                }
+              ]
+            },
+            "documentation": "@notice msg.sender sends Ether to repay an account's borrow in the cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of",
+            "id": 24984,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "repayBehalf",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 24976,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 24975,
+                  "name": "borrower",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 24984,
+                  "src": "703:16:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 24974,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "703:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "702:18:31"
+            },
+            "returnParameters": {
+              "id": 24977,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "736:0:31"
+            },
+            "scope": 25041,
+            "src": "682:108:31",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 25039,
+              "nodeType": "Block",
+              "src": "1219:348:31",
+              "statements": [
+                {
+                  "assignments": [
+                    24992
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 24992,
+                      "name": "received",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 25039,
+                      "src": "1229:13:31",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "typeName": {
+                        "id": 24991,
+                        "name": "uint",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1229:4:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 24995,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 24993,
+                      "name": "msg",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 28115,
+                      "src": "1245:3:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_magic_message",
+                        "typeString": "msg"
+                      }
+                    },
+                    "id": 24994,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "value",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": null,
+                    "src": "1245:9:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1229:25:31"
+                },
+                {
+                  "assignments": [
+                    24997
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 24997,
+                      "name": "borrows",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 25039,
+                      "src": "1264:12:31",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      },
+                      "typeName": {
+                        "id": 24996,
+                        "name": "uint",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1264:4:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 25002,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 25000,
+                        "name": "borrower",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24986,
+                        "src": "1308:8:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 24998,
+                        "name": "cEther_",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 24988,
+                        "src": "1279:7:31",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_CEther_$2986",
+                          "typeString": "contract CEther"
+                        }
+                      },
+                      "id": 24999,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "borrowBalanceCurrent",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3627,
+                      "src": "1279:28:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$_t_uint256_$",
+                        "typeString": "function (address) external returns (uint256)"
+                      }
+                    },
+                    "id": 25001,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1279:38:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1264:53:31"
+                },
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 25005,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "id": 25003,
+                      "name": "received",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24992,
+                      "src": "1331:8:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": ">",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "id": 25004,
+                      "name": "borrows",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 24997,
+                      "src": "1342:7:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1331:18:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": {
+                    "id": 25037,
+                    "nodeType": "Block",
+                    "src": "1485:76:31",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 25034,
+                              "name": "borrower",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 24986,
+                              "src": "1541:8:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            ],
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 25032,
+                                "name": "received",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24992,
+                                "src": "1531:8:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "id": 25027,
+                                  "name": "cEther_",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 24988,
+                                  "src": "1499:7:31",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_contract$_CEther_$2986",
+                                    "typeString": "contract CEther"
+                                  }
+                                },
+                                "id": 25030,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "memberName": "repayBorrowBehalf",
+                                "nodeType": "MemberAccess",
+                                "referencedDeclaration": 2730,
+                                "src": "1499:25:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
+                                  "typeString": "function (address) payable external"
+                                }
+                              },
+                              "id": 25031,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "value",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1499:31:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
+                                "typeString": "function (uint256) pure returns (function (address) payable external)"
+                              }
+                            },
+                            "id": 25033,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1499:41:31",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
+                              "typeString": "function (address) payable external"
+                            }
+                          },
+                          "id": 25035,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1499:51:31",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 25036,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1499:51:31"
+                      }
+                    ]
+                  },
+                  "id": 25038,
+                  "nodeType": "IfStatement",
+                  "src": "1327:234:31",
+                  "trueBody": {
+                    "id": 25026,
+                    "nodeType": "Block",
+                    "src": "1351:128:31",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 25013,
+                              "name": "borrower",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 24986,
+                              "src": "1406:8:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              }
+                            ],
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 25011,
+                                "name": "borrows",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24997,
+                                "src": "1397:7:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "id": 25006,
+                                  "name": "cEther_",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 24988,
+                                  "src": "1365:7:31",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_contract$_CEther_$2986",
+                                    "typeString": "contract CEther"
+                                  }
+                                },
+                                "id": 25009,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "memberName": "repayBorrowBehalf",
+                                "nodeType": "MemberAccess",
+                                "referencedDeclaration": 2730,
+                                "src": "1365:25:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$",
+                                  "typeString": "function (address) payable external"
+                                }
+                              },
+                              "id": 25010,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "value",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1365:31:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_setvalue_pure$_t_uint256_$returns$_t_function_external_payable$_t_address_$returns$__$value_$",
+                                "typeString": "function (uint256) pure returns (function (address) payable external)"
+                              }
+                            },
+                            "id": 25012,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1365:40:31",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_external_payable$_t_address_$returns$__$value",
+                              "typeString": "function (address) payable external"
+                            }
+                          },
+                          "id": 25014,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1365:50:31",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 25015,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1365:50:31"
+                      },
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "id": 25023,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "leftExpression": {
+                                "argumentTypes": null,
+                                "id": 25021,
+                                "name": "received",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24992,
+                                "src": "1449:8:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "nodeType": "BinaryOperation",
+                              "operator": "-",
+                              "rightExpression": {
+                                "argumentTypes": null,
+                                "id": 25022,
+                                "name": "borrows",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 24997,
+                                "src": "1460:7:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "src": "1449:18:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 25016,
+                                "name": "msg",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 28115,
+                                "src": "1429:3:31",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_magic_message",
+                                  "typeString": "msg"
+                                }
+                              },
+                              "id": 25019,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "sender",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "1429:10:31",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_address_payable",
+                                "typeString": "address payable"
+                              }
+                            },
+                            "id": 25020,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "transfer",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1429:19:31",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                              "typeString": "function (uint256)"
+                            }
+                          },
+                          "id": 25024,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1429:39:31",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 25025,
+                        "nodeType": "ExpressionStatement",
+                        "src": "1429:39:31"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "documentation": "@notice msg.sender sends Ether to repay an account's borrow in a cEther market\n@dev The provided Ether is applied towards the borrow balance, any excess is refunded\n@param borrower The address of the borrower account to repay on behalf of\n@param cEther_ The address of the cEther contract to repay in",
+            "id": 25040,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "repayBehalfExplicit",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 24989,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 24986,
+                  "name": "borrower",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 25040,
+                  "src": "1170:16:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 24985,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1170:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 24988,
+                  "name": "cEther_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 25040,
+                  "src": "1188:14:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_CEther_$2986",
+                    "typeString": "contract CEther"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 24987,
+                    "name": "CEther",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 2986,
+                    "src": "1188:6:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_CEther_$2986",
+                      "typeString": "contract CEther"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1169:34:31"
+            },
+            "returnParameters": {
+              "id": 24990,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1219:0:31"
+            },
+            "scope": 25041,
+            "src": "1141:426:31",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 25042,
+        "src": "120:1449:31"
+      }
+    ],
+    "src": "0:1570:31"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {
+    "128": {
+      "events": {},
+      "links": {},
+      "address": "0x32fbB9c822ABd1fD9e4655bfA55A45285Fb8992d",
+      "transactionHash": "0x44df673e027704d7bb93ce7ca5e39a7e30671fd0cbe103ee49dcfcea9001c1b4"
+    },
+    "256": {
+      "events": {},
+      "links": {},
+      "address": "0x32fbB9c822ABd1fD9e4655bfA55A45285Fb8992d",
+      "transactionHash": "0xa3f26942b1d8d2406f4ce136e63a9a6bed013a90204cc31649f90b285fbb2a25"
+    }
+  },
+  "schemaVersion": "3.2.5",
+  "updatedAt": "2021-01-02T13:37:46.399Z",
+  "devdoc": {
+    "author": "Compound",
+    "methods": {
+      "repayBehalf(address)": {
+        "details": "The provided Ether is applied towards the borrow balance, any excess is refunded",
+        "params": {
+          "borrower": "The address of the borrower account to repay on behalf of"
+        }
+      },
+      "repayBehalfExplicit(address,address)": {
+        "details": "The provided Ether is applied towards the borrow balance, any excess is refunded",
+        "params": {
+          "borrower": "The address of the borrower account to repay on behalf of",
+          "cEther_": "The address of the cEther contract to repay in"
+        }
+      }
+    },
+    "title": "Compound's Maximillion Contract"
+  },
+  "userdoc": {
+    "methods": {
+      "constructor": "Construct a Maximillion to repay max in a CEther market",
+      "repayBehalf(address)": {
+        "notice": "msg.sender sends Ether to repay an account's borrow in the cEther market"
+      },
+      "repayBehalfExplicit(address,address)": {
+        "notice": "msg.sender sends Ether to repay an account's borrow in a cEther market"
+      }
+    }
+  }
+}
