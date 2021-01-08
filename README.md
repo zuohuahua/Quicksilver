@@ -39,7 +39,7 @@ It runs on both Elastos and Heco (Huobi ecosystem).
 |       Contract       |                  Address                   |
 | :------------------: | :----------------------------------------: |
 | fHT | 0x824151251B38056d54A15E56B73c54ba44811aF8 |
-| Comptroller | 0x0a6a06003417dA7BCF1C2bdc27e2A30C38EfF4Ad |
+| Comptroller | 0xb74633f2022452f377403B638167b0A135DB096d |
 | ElaPriceOracle | 0x0a6a06003417dA7BCF1C2bdc27e2A30C38EfF4Ad |
 | FilDA | 0xe36ffd17b2661eb57144ceaef942d95295e637f0 |
 | ELA | 0xa1ecfc2bec06e4b43ddd423b94fef84d0dbc8f5c |
