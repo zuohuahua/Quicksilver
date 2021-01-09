@@ -10,14 +10,14 @@ module.exports = async function(callback) {
         for (market of allSupportedMarkets) {
             let cTokenInstance = await CToken.at(market);
             let cTokenName = await cTokenInstance.name();
-            let totalReserves = await cTokenInstance.totalReserves() / Math.pow(10, 18);
-            let reserveFactorMantissa = await cTokenInstance.reserveFactorMantissa() / Math.pow(10, 18);
+            let exchangeRate = await cTokenInstance.exchangeRateStored();
+            let totalSupply = await cTokenInstance.totalSupply() * exchangeRate / Math.pow(10, 36);
+            let totalBorrows = await cTokenInstance.totalBorrows() / Math.pow(10, 18);
             if (cTokenName === "Filda HUSD") {
-                totalReserves = await cTokenInstance.totalReserves() / Math.pow(10, 8);
-                reserveFactorMantissa = await cTokenInstance.reserveFactorMantissa() / Math.pow(10, 18);
+                totalSupply = await cTokenInstance.totalSupply() * exchangeRate / Math.pow(10, 28);
+                totalBorrows = await cTokenInstance.totalBorrows() / Math.pow(10, 8);
             }
-            if (totalReserves <= 0) continue;
-            console.log(`${cTokenName} totalReserves: ${totalReserves}, reserveFactorMantissa: ${reserveFactorMantissa}`)
+            console.log(`${cTokenName} totalSupply: ${totalSupply}, totalBorrows: ${totalBorrows}`)
         }
         callback();
     } catch (e) {
