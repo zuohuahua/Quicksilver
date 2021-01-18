@@ -2,17 +2,14 @@ const Qstroller = artifacts.require("Qstroller");
 const erc20Delegate = artifacts.require("CErc20Delegate");
 const erc20Delegator = artifacts.require("CErc20Delegator");
 const Unitroller = artifacts.require("Unitroller");
-const InterestModel = artifacts.require("WhitePaperInterestRateModel");
 const erc20Token = artifacts.require("EIP20Interface");
-
-const initialExchangeRateMantissa = 0.02e18.toString();
 
 const argv = require('yargs').argv;
 
 let reserveFactor = 0.3e18.toString();
 let underlyingTokenAddr = "0xd3f1be7f74d25f39184d2d0670966e2e837562e3";
-let collateralFactor = 0.5e18.toString();
-
+let collateralFactor = 0.05e18.toString();
+let interestModelAddress = "0x5c167485aadB427AE925f63804D9E8Cdc508b317";
 module.exports = async function(callback) {
     try {
         console.log(`argv> token=${argv.token}, collateralFactor=${argv.collateralFactor}`);
@@ -33,7 +30,7 @@ module.exports = async function(callback) {
         let qsControllerInstance = await Qstroller.at(Unitroller.address);
         let admin = await qsControllerInstance.admin();
         let newErc20Delegate = await erc20Delegate.new();
-        let fTokenInstance = await erc20Delegator.new(underlyingTokenAddr, Unitroller.address, InterestModel.address, initialExchange.toString(), fTokenName, fTokenSymbol, 18, admin, newErc20Delegate.address, "0x0");
+        let fTokenInstance = await erc20Delegator.new(underlyingTokenAddr, Unitroller.address, interestModelAddress, initialExchange.toString(), fTokenName, fTokenSymbol, 18, admin, newErc20Delegate.address, "0x0");
         await fTokenInstance._setReserveFactor(reserveFactor);
 
         await qsControllerInstance._supportMarket(fTokenInstance.address);
