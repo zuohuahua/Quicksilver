@@ -1,7 +1,7 @@
 const Qstroller = artifacts.require("Qstroller");
 const CToken = artifacts.require("CToken");
 const Unitroller = artifacts.require("Unitroller");
-const reserveFactor = 0.10e18.toString();
+const reserveFactor = 0.15e18.toString();
 
 module.exports = async function(callback) {
     try {
@@ -11,6 +11,8 @@ module.exports = async function(callback) {
         for (market of allSupportedMarkets) {
             let cTokenInstance = await CToken.at(market);
             let cTokenName = await cTokenInstance.name();
+            let compSpeed = await proxiedQstroller.compSpeeds(market);
+            if (compSpeed <= 0) continue;
             await cTokenInstance._setReserveFactor(reserveFactor);
             console.log(`reserveFactor is set to ${reserveFactor} for ${cTokenName} : ${cTokenInstance.address}`);
         }

@@ -13,10 +13,13 @@ module.exports = async function(callback) {
             let cTokenInstance = await CToken.at(market);
             let cTokenName = await cTokenInstance.name();
             let compSpeed = await proxiedQstroller.compSpeeds(market);
+            let mintPaused = await proxiedQstroller.mintGuardianPaused(market)
+            //console.log(`${cTokenName} ${market} mintPaused: ${mintPaused}`);
             if (compSpeed <= 0) continue;
             let marketState = await proxiedQstroller.markets(market);
-            let collateralRatio = marketState['collateralFactorMantissa'].toString()/Math.pow(10, 16);
-            console.log(`${cTokenName} ${market} collateralFactor: ${collateralRatio}%`);
+            let collateralRatio = marketState['collateralFactorMantissa'].toString()
+            console.log(`${cTokenName} ${market} collateralFactor: ${collateralRatio}`);
+            console.log(balance)
         }
         callback();
     } catch (e) {
