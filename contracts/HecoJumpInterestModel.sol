@@ -1,13 +1,13 @@
 pragma solidity ^0.5.16;
 
-import "./InterestRateModel.sol";
-import "./SafeMath.sol";
+import "./compound/InterestRateModel.sol";
+import "./compound/SafeMath.sol";
 
 /**
-  * @title Compound's JumpRateModel Contract
-  * @author Compound
+  * @title Derived from Compound's JumpRateModel Contract
+  * @author FilDA
   */
-contract JumpRateModel is InterestRateModel {
+contract HecoJumpInterestModel is InterestRateModel {
     using SafeMath for uint;
 
     event NewInterestParams(uint baseRatePerBlock, uint multiplierPerBlock, uint jumpMultiplierPerBlock, uint kink);
