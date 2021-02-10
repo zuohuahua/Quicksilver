@@ -12,7 +12,7 @@ module.exports = async function(callback) {
             let cTokenName = await cTokenInstance.name();
             let totalReserves = await cTokenInstance.totalReserves() / Math.pow(10, 18);
             let reserveFactorMantissa = await cTokenInstance.reserveFactorMantissa() / Math.pow(10, 18);
-            if (cTokenName === "Filda HUSD") {
+            if (cTokenName === "Filda HUSD" || cTokenName === "Filda pNEO") {
                 totalReserves = await cTokenInstance.totalReserves() / Math.pow(10, 8);
                 reserveFactorMantissa = await cTokenInstance.reserveFactorMantissa() / Math.pow(10, 18);
             }
