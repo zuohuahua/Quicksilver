@@ -19,7 +19,6 @@ module.exports = async function(callback) {
             let marketState = await proxiedQstroller.markets(market);
             let collateralRatio = marketState['collateralFactorMantissa'].toString()
             console.log(`${cTokenName} ${market} collateralFactor: ${collateralRatio}`);
-            console.log(balance)
         }
         callback();
     } catch (e) {

@@ -38,6 +38,9 @@ module.exports = async function(callback) {
 
         await qsControllerInstance._setCollateralFactor(fTokenInstance.address, collateralFactor);
         console.log("Done to set collateral factor %s for %s %s", collateralFactor, fTokenSymbol, fTokenInstance.address);
+
+        await qsControllerInstance._setMintPaused(fTokenInstance.address, true)
+        console.log("MintPaused: ", await qsControllerInstance.mintGuardianPaused(fTokenInstance.address))
         callback();
     } catch (e) {
         callback(e);

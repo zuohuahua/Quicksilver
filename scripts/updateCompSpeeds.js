@@ -22,35 +22,49 @@ const allTokens = [
     '0x7620D69D8afBaF927c14FF719FAeb1CE0560A4f7', // HBSV(F)
     '0x74F8D9B701bD4d8ee4ec812AF82C71EB67B9Ec75', // HBSV
     '0x28c395e3f37937aCDE226392254bb9c996655eb3',  // HXTZ(F)
-    '0xfEA846A1284554036aC3191B5dFd786C0F4Db611' // HXTZ
-] // HBSV
+    '0xfEA846A1284554036aC3191B5dFd786C0F4Db611', // HXTZ
+    '0x92701DA6A28Ca70aA5Dfca2B8Ae2b4B8a22a0C11',  // HBSV
+    '0x73Fa2931e060F7d43eE554fd1De7F61115fE1751',  // AAVE
+    '0xAc9E3AE0C188eb583785246Fef37AEF9ea159fb7', // UNI
+    '0x88962975FDE8C7805fE0f38b7c91C18f4d55bb40'  // SNX
+]
 
 const allCompSpeeds = [
-    '240000000000000000', // HT
-    '180000000000000000', // ELA
-    '156000000000000000', // HFIL
+    '252000000000000000', // HT
+    '72000000000000000', // ELA
+    '120000000000000000', // HFIL
     '0',                  // ethUSDT
-    '384000000000000000', // HUSD
+    '432000000000000000', // HUSD
     '0',                  // HPT(F)
     '0',                  // ETH(F
     '0',                  // HBTC
-    '96000000000000000', // HPT
-    '168000000000000000', // ETH
-    '336000000000000000', // HBTC
+    '60000000000000000', // HPT
+    '192000000000000000', // ETH
+    '360000000000000000', // HBTC
     '0',                  // HDOT(F)
-    '96000000000000000', // HDOT
-    '96000000000000000', // HBCH
+    '72000000000000000', // HDOT
+    '72000000000000000', // HBCH
     '0',                  // HLTC(F)
     '96000000000000000', // HLTC
-    '480000000000000000', // HUSDT
+    '504000000000000000', // HUSDT
     '0',                 // HBSV(F)
-    '48000000000000000', // HBSV
+    '36000000000000000', // HBSV
     '0',                  // HXTZ(F)
-    '24000000000000000'   // HXTZ
+    '12000000000000000',   // HXTZ
+    '48000000000000000',    // PNEO
+    '24000000000000000', // AAVE
+    '24000000000000000', // UNI
+    '24000000000000000', // SNX
 ]
 
 module.exports = async function(callback) {
     try {
+        let sum = BigInt(0)
+        for (let i = 0; i < allTokens.length; i++) {
+            console.log(`${allTokens[i]} => ${allCompSpeeds[i]}`)
+            sum += BigInt(allCompSpeeds[i])
+        }
+        console.log(`CompRate: ${sum}`)
         let unitrollerInstance = await Unitroller.deployed();
         let proxiedQstroller = await Qstroller.at(unitrollerInstance.address);
         await proxiedQstroller._setCompSpeeds(allTokens, allCompSpeeds);
