@@ -8,7 +8,7 @@ contract Qstroller is Comptroller {
     QsConfig public qsConfig;
 
     function _setQsConfig(QsConfig _qsConfig) public {
-        require(msg.sender == admin, "Only admin can set quick silver configuration data.");
+        require(msg.sender == admin);
 
         qsConfig = _qsConfig;
     }
@@ -19,10 +19,9 @@ contract Qstroller is Comptroller {
      */
     function _setCompSpeeds(address[] memory _allMarkets, uint[] memory _compSpeeds) public {
         // Check caller is admin
-        require(msg.sender == admin, "Only admin can update token distribution");
+        require(msg.sender == admin);
         
-        require(_allMarkets.length == _compSpeeds.length, "Incomplete parameter");
-        require(allMarkets.length == _allMarkets.length, "Must update token distribution within one transaction");
+        require(_allMarkets.length == _compSpeeds.length);
 
         uint _compRate = 0;
         for (uint i = 0; i < _allMarkets.length; i++) {
@@ -39,8 +38,8 @@ contract Qstroller is Comptroller {
 
 
     function refreshCompSpeeds() public {
-        require(!qsConfig.compSpeedGuardianPaused(), "compSpeed is paused");
-        require(msg.sender == tx.origin, "only externally owned accounts may refresh speeds");
+        require(!qsConfig.compSpeedGuardianPaused());
+        require(msg.sender == tx.origin);
 
         refreshCompSpeedsInternal();
     }
@@ -84,9 +83,9 @@ contract Qstroller is Comptroller {
      * @return 0 if the mint is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
      */
     function mintAllowed(address cToken, address minter, uint mintAmount) external returns (uint) {
-        require(!qsConfig.isBlocked(minter), "Minter not allowed");
+        require(!qsConfig.isBlocked(minter));
         // Pausing is a very serious situation - we revert to sound the alarms
-        require(!mintGuardianPaused[cToken], "mint is paused");
+        require(!mintGuardianPaused[cToken]);
 
         // Shh - currently unused
         minter;
