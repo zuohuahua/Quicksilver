@@ -225,31 +225,7 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
 
     /*** Policy Hooks ***/
 
-    /**
-     * @notice Checks if the account should be allowed to mint tokens in the given market
-     * @param cToken The market to verify the mint against
-     * @param minter The account which would get the minted tokens
-     * @param mintAmount The amount of underlying being supplied to the market in exchange for tokens
-     * @return 0 if the mint is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
-     */
-    function mintAllowed(address cToken, address minter, uint mintAmount) external returns (uint) {
-        // Pausing is a very serious situation - we revert to sound the alarms
-        require(!mintGuardianPaused[cToken], "mint is paused");
 
-        // Shh - currently unused
-        minter;
-        mintAmount;
-
-        if (!markets[cToken].isListed) {
-            return uint(Error.MARKET_NOT_LISTED);
-        }
-
-        // Keep the flywheel moving
-        updateCompSupplyIndex(cToken);
-        distributeSupplierComp(cToken, minter, false);
-
-        return uint(Error.NO_ERROR);
-    }
 
     /**
      * @notice Validates mint and reverts on rejection. May emit logs.
