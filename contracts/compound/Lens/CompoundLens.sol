@@ -113,14 +113,14 @@ contract CompoundLens {
         uint tokenAllowance;
     }
 
-    function cTokenBalances(CToken cToken, address payable account) public returns (CTokenBalances memory) {
+    function cTokenBalances(SToken cToken, address payable account) public returns (CTokenBalances memory) {
         uint balanceOf = cToken.balanceOf(account);
         uint borrowBalanceCurrent = cToken.borrowBalanceCurrent(account);
         uint balanceOfUnderlying = cToken.balanceOfUnderlying(account);
         uint tokenBalance;
         uint tokenAllowance;
 
-        if (compareStrings(cToken.symbol(), "cETH")) {
+        if (cToken.isNativeToken()) {
             tokenBalance = account.balance;
             tokenAllowance = account.balance;
         } else {
@@ -140,7 +140,7 @@ contract CompoundLens {
         });
     }
 
-    function cTokenBalancesAll(CToken[] calldata cTokens, address payable account) external returns (CTokenBalances[] memory) {
+    function cTokenBalancesAll(SToken[] calldata cTokens, address payable account) external returns (CTokenBalances[] memory) {
         uint cTokenCount = cTokens.length;
         CTokenBalances[] memory res = new CTokenBalances[](cTokenCount);
         for (uint i = 0; i < cTokenCount; i++) {
@@ -188,6 +188,13 @@ contract CompoundLens {
             liquidity: liquidity,
             shortfall: shortfall
         });
+    }
+
+    function getAccountLimitsExpand(ComptrollerLensInterface comptroller, address account) public view returns (uint liquidity, uint shortfall,  CToken[] memory markets) {
+        AccountLimits memory accountLimits = getAccountLimits(comptroller, account);
+        liquidity = accountLimits.liquidity;
+        shortfall = accountLimits.shortfall;
+        markets = accountLimits.markets;
     }
 
     struct GovReceipt {
@@ -340,10 +347,6 @@ contract CompoundLens {
             });
         }
         return res;
-    }
-
-    function compareStrings(string memory a, string memory b) internal pure returns (bool) {
-        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
     function add(uint a, uint b, string memory errorMessage) internal pure returns (uint) {
