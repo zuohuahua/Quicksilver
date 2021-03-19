@@ -13,7 +13,13 @@ contract QsPriceOracleV2 is PriceOracle, IPriceCollector {
         uint errPrice;
         address priceAdmin;
     }
-    mapping(address => uint) prices;
+
+    struct PriceInfo {
+        uint price;
+        uint updatedAt;
+        address reportedBy;
+    }
+    mapping(address => PriceInfo) prices;
     mapping(address => bool) public priceAdmin;
     address public governance;
     mapping(address => ErrorInfo) public errorInfo;
@@ -27,6 +33,7 @@ contract QsPriceOracleV2 is PriceOracle, IPriceCollector {
     event PriceAdminAdded(address newAdmin);
     event PriceAdminRemoved(address newAdmin);
     event PriceAlert(address priceAdmin, address asset, uint previousPriceMantissa, uint newPriceMantissa);
+    event AssetPriceSourceUpdated(address indexed asset, address indexed source);
 
     modifier onlyPriceAdmin {
         require(priceAdmin[msg.sender], "Price Admin required.");
@@ -52,7 +59,7 @@ contract QsPriceOracleV2 is PriceOracle, IPriceCollector {
         if (SToken(address(cToken)).isNativeToken()) {
             return 1e18;
         } else {
-            return prices[address(CErc20(address(cToken)).underlying())];
+            return prices[address(CErc20(address(cToken)).underlying())].price;
         }
     }
 
@@ -63,20 +70,20 @@ contract QsPriceOracleV2 is PriceOracle, IPriceCollector {
 
     function isValidPrice(address _asset, uint _price) public view returns (bool) {
         // initial price is 0
-        if (prices[_asset] == 0) return true;
+        if (prices[_asset].price == 0) return true;
 
-        uint min = prices[_asset].div(2);
-        uint max = prices[_asset].mul(2);
+        uint min = prices[_asset].price.div(2);
+        uint max = prices[_asset].price.mul(2);
 
         return _price > min && _price < max;
     }
 
     function setDirectPrice(address _asset, uint _price) public onlyPriceAdmin whenNotPaused {
-        uint previousPrice = prices[_asset];
+        uint previousPrice = prices[_asset].price;
         uint newPrice = _price;
         if (isValidPrice(_asset, _price)) {
-            prices[_asset] = newPrice;
-            emit PricePosted(_asset, previousPrice, newPrice,  prices[_asset]);
+            prices[_asset] = PriceInfo(newPrice, block.timestamp, msg.sender);
+            emit PricePosted(_asset, previousPrice, newPrice,  prices[_asset].price);
         } else {
             errorInfo[_asset] = ErrorInfo(block.timestamp, previousPrice, newPrice, msg.sender);
             errorHappened[_asset] = true;
@@ -94,10 +101,10 @@ contract QsPriceOracleV2 is PriceOracle, IPriceCollector {
     }
 
     function setPrice(address _asset, uint _price) private onlyPriceAdmin {
-        uint previousPrice = prices[_asset];
+        uint previousPrice = prices[_asset].price;
         uint newPrice = _price;
-        prices[_asset] = newPrice;
-        emit PricePosted(_asset, previousPrice, newPrice,  prices[_asset]);
+        prices[_asset] = PriceInfo(newPrice, block.timestamp, msg.sender);
+        emit PricePosted(_asset, previousPrice, newPrice,  prices[_asset].price);
     }
 
     function setDirectPriceWithForce(address[] memory _assets, uint[] memory _prices) public onlyPriceAdmin {
@@ -110,7 +117,13 @@ contract QsPriceOracleV2 is PriceOracle, IPriceCollector {
     }
 
     function assetPrices(address asset) external view returns (uint) {
-        return prices[asset];
+        return prices[asset].price;
+    }
+
+    function getPriceInfo(address asset) external view returns (uint price, uint updatedAt, address reportedBy) {
+        price = prices[asset].price;
+        updatedAt = prices[asset].updatedAt;
+        reportedBy = prices[asset].reportedBy;
     }
 
     function addPriceAdmin(address newPriceAdmin) public onlyGovernance {
