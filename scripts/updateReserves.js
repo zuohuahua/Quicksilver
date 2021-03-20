@@ -1,7 +1,7 @@
 const Qstroller = artifacts.require("Qstroller");
 const CToken = artifacts.require("CToken");
 const Unitroller = artifacts.require("Unitroller");
-const reserveFactor = 0.0e18.toString();
+const reserveFactor = 0.15e18.toString();
 module.exports = async function(callback) {
     try {
         let unitrollerInstance = await Unitroller.deployed();
