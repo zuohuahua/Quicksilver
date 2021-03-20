@@ -49,14 +49,14 @@
     "absolutePath": "/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/compound/PriceOracle.sol",
     "exportedSymbols": {
       "PriceOracle": [
-        25484
+        27053
       ]
     },
-    "id": 25485,
+    "id": 27054,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 25472,
+        "id": 27041,
         "literals": [
           "solidity",
           "^",
@@ -64,16 +64,16 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:35"
+        "src": "0:24:39"
       },
       {
         "absolutePath": "/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/compound/CToken.sol",
         "file": "./CToken.sol",
-        "id": 25473,
+        "id": 27042,
         "nodeType": "ImportDirective",
-        "scope": 25485,
-        "sourceUnit": 6751,
-        "src": "26:22:35",
+        "scope": 27054,
+        "sourceUnit": 8371,
+        "src": "26:22:39",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -83,20 +83,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 25484,
+        "id": 27053,
         "linearizedBaseContracts": [
-          25484
+          27053
         ],
         "name": "PriceOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": true,
-            "id": 25476,
+            "id": 27045,
             "name": "isPriceOracle",
             "nodeType": "VariableDeclaration",
-            "scope": 25484,
-            "src": "156:41:35",
+            "scope": 27053,
+            "src": "156:41:39",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -104,10 +104,10 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 25474,
+              "id": 27043,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
-              "src": "156:4:35",
+              "src": "156:4:39",
               "typeDescriptions": {
                 "typeIdentifier": "t_bool",
                 "typeString": "bool"
@@ -116,14 +116,14 @@
             "value": {
               "argumentTypes": null,
               "hexValue": "74727565",
-              "id": 25475,
+              "id": 27044,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "bool",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "193:4:35",
+              "src": "193:4:39",
               "subdenomination": null,
               "typeDescriptions": {
                 "typeIdentifier": "t_bool",
@@ -136,38 +136,38 @@
           {
             "body": null,
             "documentation": "@notice Get the underlying price of a cToken asset\n@param cToken The cToken to get the underlying price of\n@return The underlying asset price mantissa (scaled by 1e18).\n Zero means the price is unavailable.",
-            "id": 25483,
+            "id": 27052,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getUnderlyingPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 25479,
+              "id": 27048,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 25478,
+                  "id": 27047,
                   "name": "cToken",
                   "nodeType": "VariableDeclaration",
-                  "scope": 25483,
-                  "src": "488:13:35",
+                  "scope": 27052,
+                  "src": "488:13:39",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$6750",
+                    "typeIdentifier": "t_contract$_CToken_$8370",
                     "typeString": "contract CToken"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 25477,
+                    "id": 27046,
                     "name": "CToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 6750,
-                    "src": "488:6:35",
+                    "referencedDeclaration": 8370,
+                    "src": "488:6:39",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$6750",
+                      "typeIdentifier": "t_contract$_CToken_$8370",
                       "typeString": "contract CToken"
                     }
                   },
@@ -175,19 +175,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "487:15:35"
+              "src": "487:15:39"
             },
             "returnParameters": {
-              "id": 25482,
+              "id": 27051,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 25481,
+                  "id": 27050,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 25483,
-                  "src": "526:4:35",
+                  "scope": 27052,
+                  "src": "526:4:39",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -195,10 +195,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 25480,
+                    "id": 27049,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "526:4:35",
+                    "src": "526:4:39",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -208,33 +208,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "525:6:35"
+              "src": "525:6:39"
             },
-            "scope": 25484,
-            "src": "460:72:35",
+            "scope": 27053,
+            "src": "460:72:39",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 25485,
-        "src": "50:484:35"
+        "scope": 27054,
+        "src": "50:484:39"
       }
     ],
-    "src": "0:535:35"
+    "src": "0:535:39"
   },
   "legacyAST": {
     "absolutePath": "/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/compound/PriceOracle.sol",
     "exportedSymbols": {
       "PriceOracle": [
-        25484
+        27053
       ]
     },
-    "id": 25485,
+    "id": 27054,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 25472,
+        "id": 27041,
         "literals": [
           "solidity",
           "^",
@@ -242,16 +242,16 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:35"
+        "src": "0:24:39"
       },
       {
         "absolutePath": "/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/compound/CToken.sol",
         "file": "./CToken.sol",
-        "id": 25473,
+        "id": 27042,
         "nodeType": "ImportDirective",
-        "scope": 25485,
-        "sourceUnit": 6751,
-        "src": "26:22:35",
+        "scope": 27054,
+        "sourceUnit": 8371,
+        "src": "26:22:39",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -261,20 +261,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 25484,
+        "id": 27053,
         "linearizedBaseContracts": [
-          25484
+          27053
         ],
         "name": "PriceOracle",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": true,
-            "id": 25476,
+            "id": 27045,
             "name": "isPriceOracle",
             "nodeType": "VariableDeclaration",
-            "scope": 25484,
-            "src": "156:41:35",
+            "scope": 27053,
+            "src": "156:41:39",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -282,10 +282,10 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 25474,
+              "id": 27043,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
-              "src": "156:4:35",
+              "src": "156:4:39",
               "typeDescriptions": {
                 "typeIdentifier": "t_bool",
                 "typeString": "bool"
@@ -294,14 +294,14 @@
             "value": {
               "argumentTypes": null,
               "hexValue": "74727565",
-              "id": 25475,
+              "id": 27044,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
               "kind": "bool",
               "lValueRequested": false,
               "nodeType": "Literal",
-              "src": "193:4:35",
+              "src": "193:4:39",
               "subdenomination": null,
               "typeDescriptions": {
                 "typeIdentifier": "t_bool",
@@ -314,38 +314,38 @@
           {
             "body": null,
             "documentation": "@notice Get the underlying price of a cToken asset\n@param cToken The cToken to get the underlying price of\n@return The underlying asset price mantissa (scaled by 1e18).\n Zero means the price is unavailable.",
-            "id": 25483,
+            "id": 27052,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getUnderlyingPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 25479,
+              "id": 27048,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 25478,
+                  "id": 27047,
                   "name": "cToken",
                   "nodeType": "VariableDeclaration",
-                  "scope": 25483,
-                  "src": "488:13:35",
+                  "scope": 27052,
+                  "src": "488:13:39",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_CToken_$6750",
+                    "typeIdentifier": "t_contract$_CToken_$8370",
                     "typeString": "contract CToken"
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 25477,
+                    "id": 27046,
                     "name": "CToken",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 6750,
-                    "src": "488:6:35",
+                    "referencedDeclaration": 8370,
+                    "src": "488:6:39",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_CToken_$6750",
+                      "typeIdentifier": "t_contract$_CToken_$8370",
                       "typeString": "contract CToken"
                     }
                   },
@@ -353,19 +353,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "487:15:35"
+              "src": "487:15:39"
             },
             "returnParameters": {
-              "id": 25482,
+              "id": 27051,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 25481,
+                  "id": 27050,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 25483,
-                  "src": "526:4:35",
+                  "scope": 27052,
+                  "src": "526:4:39",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -373,10 +373,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 25480,
+                    "id": 27049,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "526:4:35",
+                    "src": "526:4:39",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -386,20 +386,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "525:6:35"
+              "src": "525:6:39"
             },
-            "scope": 25484,
-            "src": "460:72:35",
+            "scope": 27053,
+            "src": "460:72:39",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 25485,
-        "src": "50:484:35"
+        "scope": 27054,
+        "src": "50:484:39"
       }
     ],
-    "src": "0:535:35"
+    "src": "0:535:39"
   },
   "compiler": {
     "name": "solc",
@@ -407,7 +407,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-01-24T08:41:47.981Z",
+  "updatedAt": "2021-03-18T10:38:39.612Z",
   "devdoc": {
     "methods": {
       "getUnderlyingPrice(address)": {
