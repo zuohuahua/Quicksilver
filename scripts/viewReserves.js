@@ -16,8 +16,8 @@ module.exports = async function(callback) {
                 totalReserves = await cTokenInstance.totalReserves() / Math.pow(10, 8);
                 reserveFactorMantissa = await cTokenInstance.reserveFactorMantissa() / Math.pow(10, 18);
             }
-            if (totalReserves <= 0) continue;
-            console.log(`${cTokenName} totalReserves: ${totalReserves}, reserveFactorMantissa: ${reserveFactorMantissa}`)
+            if (totalReserves <= 0 && reserveFactorMantissa > 0) continue;
+            console.log(`${cTokenName} ${market} totalReserves: ${totalReserves}, reserveFactorMantissa: ${reserveFactorMantissa}`)
         }
         callback();
     } catch (e) {
