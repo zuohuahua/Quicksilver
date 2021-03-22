@@ -40,22 +40,11 @@ contract ChainlinkAdaptor is PriceOracle {
             return getUnderlyingPriceFromFallback(cToken);
         }
 
-        uint256 assetPriceDecimals = assetsPriceSources[asset].decimals();
-        uint256 assetDecimals = CToken(asset).decimals();
-        uint256 assetPriceInUsd = getPrice(assetsPriceSources[asset]);
-
-        uint256 nativeTokenPriceDecimals = nativeTokenPriceSource.decimals();
-        uint256 nativeTokenPriceInUsd = getPrice(nativeTokenPriceSource);
-
-        if (assetPriceInUsd == 0 || nativeTokenPriceInUsd == 0) {
+        uint256 priceFromChainlink = getUnderlyingPriceFromChainlink(priceSource, cToken);
+        if (priceFromChainlink == 0) {
             return getUnderlyingPriceFromFallback(cToken);
         }
-
-        if (assetPriceDecimals == nativeTokenPriceDecimals) {
-            return assetPriceInUsd.mul(10 ** 18).mul(10 ** 18).div(nativeTokenPriceInUsd.mul(10 ** assetDecimals));
-        } else {
-            return assetPriceInUsd.mul(10 ** 18).mul(10 ** nativeTokenPriceDecimals).mul(10 ** 18).div(nativeTokenPriceInUsd.mul(10 ** assetDecimals).mul(10 ** assetPriceDecimals));
-        }
+        return priceFromChainlink;
     }
 
     function getUnderlyingPriceFromFallback(CToken cToken) public view returns (uint) {
@@ -63,6 +52,30 @@ contract ChainlinkAdaptor is PriceOracle {
             return fallbackPriceOracle.getUnderlyingPrice(cToken);
         }
         return 0;
+    }
+
+    function getUnderlyingPriceFromChainlink(ChainlinkAggregatorV3Interface chainlinkPriceSource, CToken cToken) view internal returns(uint256) {
+        uint256 assetPriceDecimals = chainlinkPriceSource.decimals();
+        address asset = address(CErc20(address(cToken)).underlying());
+
+        uint256 assetDecimals = CErc20(address(asset)).decimals();
+        uint256 assetPriceInUsd = getPrice(chainlinkPriceSource);
+
+        uint256 nativeTokenPriceDecimals = nativeTokenPriceSource.decimals();
+        uint256 nativeTokenPriceInUsd = getPrice(nativeTokenPriceSource);
+
+        if (assetPriceInUsd == 0 || nativeTokenPriceInUsd == 0) {
+            return 0;
+        }
+        if (assetPriceDecimals == nativeTokenPriceDecimals) {
+            return assetPriceInUsd.mul(10 ** 18).mul(10 ** 18).div(nativeTokenPriceInUsd.mul(10 ** assetDecimals));
+        } else {
+            return assetPriceInUsd.mul(10 ** 18).mul(10 ** nativeTokenPriceDecimals).mul(10 ** 18).div(nativeTokenPriceInUsd.mul(10 ** assetDecimals).mul(10 ** assetPriceDecimals));
+        }
+    }
+
+    function preCheckPrice(ChainlinkAggregatorV3Interface chainlinkPriceSource, CToken cToken) view external returns(uint256 priceFromChainlink, uint256 priceFromFallback) {
+        (priceFromChainlink, priceFromFallback) = (getUnderlyingPriceFromChainlink(chainlinkPriceSource, cToken), getUnderlyingPriceFromFallback(cToken));
     }
 
     function getSourcePrice(address asset) view public returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) {
