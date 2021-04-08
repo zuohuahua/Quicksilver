@@ -4,7 +4,7 @@ const erc20Delegator = artifacts.require("CErc20Delegator");
 const Unitroller = artifacts.require("Unitroller");
 const erc20Token = artifacts.require("EIP20Interface");
 
-const argv = require('yargs').argv;
+const argv = require('yargs').option('token', {string:true}).argv;
 
 let reserveFactor = 0.15e18.toString();
 let underlyingTokenAddr = "0xd3f1be7f74d25f39184d2d0670966e2e837562e3";
