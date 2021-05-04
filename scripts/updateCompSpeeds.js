@@ -32,33 +32,33 @@ const allTokens = [
 ]
 
 const allCompSpeeds = [
-    '198000000000000000', // HT
+    '234000000000000000', // HT
     '3600000000000000', // ELA
-    '21600000000000000', // HFIL
+    '72000000000000000', // HFIL
     '0',                  // ethUSDT
-    '1080000000000000000', // HUSD
+    '1008000000000000000', // HUSD
     '0',                  // HPT(F)
     '0',                  // ETH(F
     '0',                  // HBTC
-    '10800000000000000', // HPT
+    '7200000000000000', // HPT
     '61200000000000000', // ETH
-    '180000000000000000', // HBTC
+    '171900000000000000', // HBTC
     '0',                  // HDOT(F)
-    '19800000000000000', // HDOT
-    '7920000000000000', // HBCH
+    '16200000000000000', // HDOT
+    '7200000000000000', // HBCH
     '0',                  // HLTC(F)
-    '15480000000000000', // HLTC
-    '1900440000000000000', // HUSDT
+    '12600000000000000', // HLTC
+    '1908000000000000000', // HUSDT
     '0',                 // HBSV(F)
-    '1800000000000000', // HBSV
+    '720000000000000', // HBSV
     '0',                  // HXTZ(F)
-    '360000000000000',   // HXTZ
+    '180000000000000',   // HXTZ
     '3600000000000000',    // PNEO
     '5040000000000000', // AAVE
     '7200000000000000', // UNI
     '2160000000000000', // SNX
     '72000000000000000',  // MDX
-    '9000000000000000'  // Link
+    '7200000000000000'  // Link
 ]
 
 module.exports = async function(callback) {
@@ -69,10 +69,10 @@ module.exports = async function(callback) {
             sum += BigInt(allCompSpeeds[i])
         }
         console.log(`CompRate: ${sum}`)
-        // let unitrollerInstance = await Unitroller.deployed();
-        // let proxiedQstroller = await Qstroller.at(unitrollerInstance.address);
-        // await proxiedQstroller._setCompSpeeds(allTokens, allCompSpeeds);
-        // callback();
+        let unitrollerInstance = await Unitroller.deployed();
+        let proxiedQstroller = await Qstroller.at(unitrollerInstance.address);
+        await proxiedQstroller._setCompSpeeds(allTokens, allCompSpeeds);
+        callback();
     } catch (e) {
         console.log(e);
         callback(e);

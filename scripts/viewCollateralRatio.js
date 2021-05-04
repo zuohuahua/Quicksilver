@@ -18,7 +18,7 @@ module.exports = async function(callback) {
             if (compSpeed <= 0) continue;
             let marketState = await proxiedQstroller.markets(market);
             let collateralRatio = marketState['collateralFactorMantissa'].toString()
-            console.log(`${cTokenName} ${market} collateralFactor: ${collateralRatio/Math.pow(10, 16)}%`);
+            console.log(`${cTokenName} ${market} collateralRatio: ${collateralRatio} collateralFactor: ${collateralRatio/Math.pow(10, 16)}%`);
         }
         callback();
     } catch (e) {
