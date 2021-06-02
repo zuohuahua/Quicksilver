@@ -31,25 +31,12 @@ contract Qstroller is Comptroller {
                 _addCompMarketInternal(cToken);
             }
             compSpeeds[cToken] = _compSpeeds[i];
-            _compRate = add_(_compRate, _compSpeeds[i]);
+            uint supplySpeed = _compSpeeds[i] >> 128;
+            uint borrowSpeed = uint128(_compSpeeds[i]);
+            uint compSpeed = add_(supplySpeed, borrowSpeed);
+            _compRate = add_(_compRate, compSpeed);
         }
-        _setCompRate(_compRate);
-    }
-
-
-    function refreshCompSpeeds() public {
-        require(!qsConfig.compSpeedGuardianPaused());
-        require(msg.sender == tx.origin);
-
-        refreshCompSpeedsInternal();
-    }
-
-    function refreshCompSpeedsInternal() internal {
-        if (qsConfig.compSpeedGuardianPaused()) {
-            return;
-        } else {
-            super.refreshCompSpeedsInternal();
-        }
+        compRate = _compRate;
     }
 
     function getCompAddress() public view returns (address) {
@@ -99,5 +86,54 @@ contract Qstroller is Comptroller {
         updateCompSupplyIndex(cToken);
         distributeSupplierComp(cToken, minter, false);
         return uint(Error.NO_ERROR);
+    }
+
+    /**
+  * @notice Accrue COMP to the market by updating the supply index
+  * @param cToken The market whose supply index to update
+  */
+    function updateCompSupplyIndex(address cToken) internal {
+        CompMarketState storage supplyState = compSupplyState[cToken];
+        uint supplySpeed = compSpeeds[cToken];
+        // use first 128 bit as supplySpeed
+        supplySpeed = supplySpeed >> 128 == 0 ? supplySpeed : supplySpeed >> 128;
+        uint blockNumber = getBlockNumber();
+        uint deltaBlocks = sub_(blockNumber, uint(supplyState.block));
+        if (deltaBlocks > 0 && supplySpeed > 0) {
+            uint supplyTokens = CToken(cToken).totalSupply();
+            uint compAccrued = mul_(deltaBlocks, supplySpeed);
+            Double memory ratio = supplyTokens > 0 ? fraction(compAccrued, supplyTokens) : Double({mantissa: 0});
+            Double memory index = add_(Double({mantissa: supplyState.index}), ratio);
+            compSupplyState[cToken] = CompMarketState({
+            index: safe224(index.mantissa, "index > 224bits"),
+            block: safe32(blockNumber, "blockNumber > 32bits")
+            });
+        } else if (deltaBlocks > 0 && supplyState.index > 0) {
+            supplyState.block = safe32(blockNumber, "blockNumber > 32bits");
+        }
+    }
+
+    /**
+     * @notice Accrue COMP to the market by updating the borrow index
+     * @param cToken The market whose borrow index to update
+     */
+    function updateCompBorrowIndex(address cToken, Exp memory marketBorrowIndex) internal {
+        CompMarketState storage borrowState = compBorrowState[cToken];
+        // use last 128 bit as borrowSpeed
+        uint borrowSpeed = uint128(compSpeeds[cToken]);
+        uint blockNumber = getBlockNumber();
+        uint deltaBlocks = sub_(blockNumber, uint(borrowState.block));
+        if (deltaBlocks > 0 && borrowSpeed > 0) {
+            uint borrowAmount = div_(CToken(cToken).totalBorrows(), marketBorrowIndex);
+            uint compAccrued = mul_(deltaBlocks, borrowSpeed);
+            Double memory ratio = borrowAmount > 0 ? fraction(compAccrued, borrowAmount) : Double({mantissa: 0});
+            Double memory index = add_(Double({mantissa: borrowState.index}), ratio);
+            compBorrowState[cToken] = CompMarketState({
+            index: safe224(index.mantissa, "index > 224bits"),
+            block: safe32(blockNumber, "blockNumber > 32bits")
+            });
+        } else if (deltaBlocks > 0 && borrowState.index > 0) {
+            borrowState.block = safe32(blockNumber, "blockNumber > 32bits");
+        }
     }
 }
