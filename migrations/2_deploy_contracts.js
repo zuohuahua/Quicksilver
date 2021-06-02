@@ -29,7 +29,7 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(Qstroller);
     await deployer.deploy(CompoundLens);
     await deployer.deploy(QsPriceOracle);
-    await deployer.deploy(QsConfig);
+    await deployer.deploy(QsConfig, "0x0000000000000000000000000000000000000000");
 
     addressFactory["Qstroller"] = Unitroller.address;
     addressFactory["QsPriceOracle"] = QsPriceOracle.address;
