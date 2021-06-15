@@ -3,16 +3,16 @@ const CToken = artifacts.require("CToken");
 const Qstroller = artifacts.require("Qstroller");
 const Unitroller = artifacts.require("Unitroller");
 
-const baseRatePerYear = 0.02e18.toString()
-const multiplierPerYear = 0.73e18.toString()
-const jumpMultiplierPerYear = 3.1e18.toString()
-const kink = 0.55e18.toString()
+const baseRatePerYear = 0.03e18.toString()
+const multiplierPerYear = 0.32e18.toString()
+const jumpMultiplierPerYear = 5e18.toString()
+const kink = 0.95e18.toString()
 const reserveFactor = 0.15e18.toString();
 
 module.exports = async function(callback) {
     try {
         let newInterestModel = await JumpInterestModel.new(baseRatePerYear, multiplierPerYear, jumpMultiplierPerYear, kink);
-        let allSupportedMarkets = ["0x5788C014D41cA706DE03969E283eE7b93827B7B1"]
+        let allSupportedMarkets = ["0x824151251B38056d54A15E56B73c54ba44811aF8"]
         for (market of allSupportedMarkets) {
             let interestModelAddr = newInterestModel.address;
             let cTokenInstance = await CToken.at(market);
