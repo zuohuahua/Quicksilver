@@ -5,6 +5,7 @@ const CToken = artifacts.require("CToken");
 
 module.exports = async function(callback) {
     try {
+        let marketInterestModel = {};
         let unitrollerInstance = await Unitroller.deployed();
         let proxiedQstroller = await Qstroller.at(unitrollerInstance.address);
         let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
@@ -22,8 +23,10 @@ module.exports = async function(callback) {
             let baseRatePerBlock = await interestRateModelInstance.baseRatePerBlock();
             let jumpMultiplierPerBlock = await interestRateModelInstance.jumpMultiplierPerBlock();
             let kink = await interestRateModelInstance.kink();
+            marketInterestModel[interestRateModel] = market;
             console.log(`${cTokenName} ${market} reserveFactorMantissa: ${reserveFactorMantissa.toFixed(2)} interestModel: ${interestRateModel} blocksPerYear: ${blocksPerYear} baseRatePerBlock: ${(baseRatePerBlock * blocksPerYear/Math.pow(10, 18)).toFixed(2)} multiplierPerBlock: ${(multiplierPerBlock * blocksPerYear/Math.pow(10, 18)).toFixed(2)} kink: ${kink/Math.pow(10, 18)} jumpMultiplierPerBlock: ${(jumpMultiplierPerBlock * blocksPerYear/Math.pow(10, 18)).toFixed(2)}`);
         }
+        console.log("marketInterestModel: ", marketInterestModel)
         callback();
     } catch (e) {
         console.log(e);
