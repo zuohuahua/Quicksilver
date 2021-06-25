@@ -143,6 +143,27 @@ module.exports = {
           networkCheckTimeout: 100000000,
           websockets: true
       },
+
+      bsctest: {
+          provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545/`),
+          network_id: "97",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 10000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
+          websockets: true
+      },
+      bsc: {
+          provider: () => new HDWalletProvider(mnemonic, `wss://bsc-ws-node.nariox.org:443`),
+          network_id: "56",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 10000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
+          websockets: true
+      },
   },
 
   // Set default mocha options here, use special reporters etc.

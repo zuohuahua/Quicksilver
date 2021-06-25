@@ -6,7 +6,7 @@ const erc20Delegate = artifacts.require("CErc20Delegate");
 const erc20Delegator = artifacts.require("CErc20Delegator");
 const Unitroller = artifacts.require("Unitroller");
 const CompoundLens = artifacts.require("CompoundLens");
-const QsPriceOracle = artifacts.require("QsPriceOracle");
+const ChainLinkPriceOracle = artifacts.require("ChainlinkAdaptor");
 const QsConfig = artifacts.require("QsConfig");
 const Maximillion = artifacts.require("Maximillion");
 
@@ -28,11 +28,9 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(Unitroller);
     await deployer.deploy(Qstroller);
     await deployer.deploy(CompoundLens);
-    await deployer.deploy(QsPriceOracle);
     await deployer.deploy(QsConfig, "0x0000000000000000000000000000000000000000");
 
     addressFactory["Qstroller"] = Unitroller.address;
-    addressFactory["QsPriceOracle"] = QsPriceOracle.address;
     addressFactory["QsConfig"] = QsConfig.address;
     addressFactory["CompoundLens"] = CompoundLens.address;
 
@@ -47,9 +45,6 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(InterestModel, "20000000000000000", "200000000000000000");
 
     let proxiedQstroller = await Qstroller.at(Unitroller.address);
-
-    await proxiedQstroller._setPriceOracle(QsPriceOracle.address);
-    console.log("Done to set price oracle.", await proxiedQstroller.oracle());
 
     await proxiedQstroller._setQsConfig(QsConfig.address);
     console.log("Done to set quick silver config.", await  proxiedQstroller.qsConfig());
@@ -265,6 +260,27 @@ module.exports = async function(deployer, network) {
         await proxiedQstroller._setCollateralFactor(sELA.address, htCollateralFactor);
         console.log("Done to set collateral factor %s for fHT %s", htCollateralFactor, sELA.address);
         addressFactory["fHT"] = sELA.address;
+        await deployer.deploy(Maximillion, sELA.address);
+        addressFactory["Maximillion"] = Maximillion.address;
+    }
+
+    if (network == "bsctest" || network == "bsc") {
+        let bnbPriceSource = "0x2514895c72f50D8bd4B4F9b1110F0D6bD2c97526";
+        if (network == "bsc") {
+            bnbPriceSource = "0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE";
+        }
+        await deployer.deploy(ChainLinkPriceOracle, bnbPriceSource);
+        let proxiedQstroller = await Qstroller.at(Unitroller.address);
+        await proxiedQstroller._setPriceOracle(ChainLinkPriceOracle.address);
+        console.log("Done to set price oracle.", await proxiedQstroller.oracle());
+        addressFactory["ChainLinkPriceOracle"] = ChainLinkPriceOracle.address;
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "Filda BNB", "fBNB", 18, admin);
+        await proxiedQstroller._supportMarket(sELA.address);
+        console.log("Done to support market fBNB: ", sELA.address);
+        let htCollateralFactor = 0.8e18.toString();
+        await proxiedQstroller._setCollateralFactor(sELA.address, htCollateralFactor);
+        console.log("Done to set collateral factor %s for fBNB %s", htCollateralFactor, sELA.address);
+        addressFactory["fBNB"] = sELA.address;
         await deployer.deploy(Maximillion, sELA.address);
         addressFactory["Maximillion"] = Maximillion.address;
     }
