@@ -1,26 +1,28 @@
 Quick Silver
 =================
-Quick Silver is one fork of Compound.
+Quick Silver is not only one fork of Compound.
 
 🎉 Release 🎉
-### ELA ETH
+### BSC Test
 |       Contract       |                  Address                   |
 | :------------------: | :----------------------------------------: |
-| sELA | 0x4e07f5C9b2e46bE713e43159C65250E34d7bB316 |
-| Comptroller | 0x2Ac63DFC9357c8bd4476ce9fAE8653A7E24B89B9 |
-| ElaPriceOracle | 0x893d9bB8b95Dc87498EE7Df7D09eA9CddF624429 |
-| SILV Token | 0xF078938635F18BD136a41F9Ea5af50689B4D5cb0 |
-| CompoundLens | 0x46C4bE8B5F3D9c643a66FeF6aeF1E558d178BA75 |
-| InterestRateModel | 0xE4508554F6c676Da9578C92dfcb6Ee466E71DcF9 |
-
-### Dev ENV (http://18.162.230.88/ethdev)
-|       Contract       |                  Address                   |
-| :------------------: | :----------------------------------------: |
-| sUSDT | 0xC0F6C06A579F11Bb9cA6C674156d561Aa8a79A9a |
-| sELA | 0xBD2247A60f1B91b88b6f9e18675a97288433F04F |
-| Comptroller | 0xaab1F888D15e3f0fb4508165A2d3d4950690181D |
-| ElaPriceOracle | 0x4eb186C46e7857006f1A242b2AfA71f42C9c9008 |
-| SILV Token | 0xF9e515D82C6994c127B4604CA722272Ff91BB52d |
-| CompoundLens | 0x0a2248DC5C7b74Cfd304147894410C53B258C49f |
-| Mock USDT | 0x88518985E892B6F9a3F992F40D03441B8716EcA2 |
-| InterestRateModel | 0x797df0F153D4F2351F81F19BAC09bBBd3fAA577C |
+| Qstroller | 0xB16Df14C53C4bcfF220F4314ebCe70183dD804c0 |
+| ChainlinkPriceOracle | 0xa9F16D95eE92167E27BD6171989Ec39a9d30031D|
+| Maximillion | 0x80066F46552a8DeF13249FFF82085b4B6B748F59|
+| CompoundLens | 0xe2724763C02Da7b2933ec8490D99Ae598bdb96d3|
+| QsConfig | 0x24d201D259266beA2f6775d36c6121a3F93A3aD2|
+| InterestRateModel | 0x3a3A1Cd7f208cFEcA76Fa9d0f7FfE5022b7814e1
+|
+| fBNB | 0xa557859AD20ccEeE646469baccC37b22caC1299a |
+| ETH | 0xd66c6b4f0be8ce5b39d52e0fd1344c389929b378
+|
+| fETH | 0x9Ddd36Ee5FAcFb03dA93A69859DaaA5e633ecB75
+|
+| USDT | 0x337610d27c682e347c9cd60bd4b3b107c9d34ddd
+|
+| fUSDT | 0x26bCC2f4ff24e321542505b23e721870Bb1F36CF
+|
+| BUSD | 0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee
+|
+| fBUSD | 0x757764B3daEB5e73C05654Ea922b6Ad23a6e0648
+|
