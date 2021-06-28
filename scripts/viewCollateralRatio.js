@@ -15,7 +15,7 @@ module.exports = async function(callback) {
             let compSpeed = await proxiedQstroller.compSpeeds(market);
             let mintPaused = await proxiedQstroller.mintGuardianPaused(market)
             //console.log(`${cTokenName} ${market} mintPaused: ${mintPaused}`);
-            if (compSpeed <= 0) continue;
+            //if (compSpeed <= 0) continue;
             let marketState = await proxiedQstroller.markets(market);
             let collateralRatio = marketState['collateralFactorMantissa'].toString()
             console.log(`${cTokenName} ${market} collateralFactor: ${collateralRatio}`);

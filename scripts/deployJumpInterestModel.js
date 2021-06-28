@@ -12,7 +12,10 @@ const reserveFactor = 0.2e18.toString();
 module.exports = async function(callback) {
     try {
         let newInterestModel = await JumpInterestModel.new(baseRatePerYear, multiplierPerYear, jumpMultiplierPerYear, kink);
-        let allSupportedMarkets = ["0xB16Df14C53C4bcfF220F4314ebCe70183dD804c0","0xAab0C9561D5703e84867670Ac78f6b5b4b40A7c1"]
+        //let allSupportedMarkets = ["0xB16Df14C53C4bcfF220F4314ebCe70183dD804c0","0xAab0C9561D5703e84867670Ac78f6b5b4b40A7c1"]
+        let unitrollerInstance = await Unitroller.deployed();
+        let proxiedQstroller = await Qstroller.at(unitrollerInstance.address);
+        let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
         for (market of allSupportedMarkets) {
             let interestModelAddr = newInterestModel.address;
             let cTokenInstance = await CToken.at(market);
