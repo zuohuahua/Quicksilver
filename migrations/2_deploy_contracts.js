@@ -264,6 +264,23 @@ module.exports = async function(deployer, network) {
         addressFactory["Maximillion"] = Maximillion.address;
     }
 
+    if (network == "arbitrum") {
+        await deployer.deploy(QsPriceOracleV2);
+        let proxiedQstroller = await Qstroller.at(Unitroller.address);
+        await proxiedQstroller._setPriceOracle(QsPriceOracleV2.address);
+        console.log("Done to set price oracle.", await proxiedQstroller.oracle());
+        addressFactory["QsPriceOracleV2"] = QsPriceOracleV2.address;
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "Filda ETH", "fETH", 18, admin);
+        await proxiedQstroller._supportMarket(sELA.address);
+        console.log("Done to support market fETH: ", sELA.address);
+        let htCollateralFactor = 0.8e18.toString();
+        await proxiedQstroller._setCollateralFactor(sELA.address, htCollateralFactor);
+        console.log("Done to set collateral factor %s for fETH %s", htCollateralFactor, sELA.address);
+        addressFactory["fETH"] = sELA.address;
+        await deployer.deploy(Maximillion, sELA.address);
+        addressFactory["Maximillion"] = Maximillion.address;
+    }
+
     if (network == "bsctest" || network == "bsc") {
         let bnbPriceSource = "0x2514895c72f50D8bd4B4F9b1110F0D6bD2c97526";
         if (network == "bsc") {

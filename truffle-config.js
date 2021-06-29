@@ -144,6 +144,18 @@ module.exports = {
           websockets: true
       },
 
+      arbitrum: {
+          provider: () => new HDWalletProvider(mnemonic, `wss://arb1.arbitrum.io/ws`),
+          network_id: "42161",   // This network is yours, in the cloud.
+          timeoutBlocks: 200,
+          confirmations: 2,
+          gasPrice: 2000000000,
+          skipDryRun: true,
+          networkCheckTimeout: 600000000,
+          websockets: true,
+          gas: 8000000
+      },
+
       bsctest: {
           provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545/`),
           network_id: "97",
