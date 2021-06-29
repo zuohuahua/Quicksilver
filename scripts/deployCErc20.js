@@ -7,9 +7,9 @@ const erc20Token = artifacts.require("EIP20Interface");
 const argv = require('yargs').option('token', {string:true}).argv;
 
 let reserveFactor = 0.15e18.toString();
-let underlyingTokenAddr = "0xd3f1be7f74d25f39184d2d0670966e2e837562e3";
+let underlyingTokenAddr = "0x";
 let collateralFactor = 0.05e18.toString();
-let interestModelAddress = "0x3a3A1Cd7f208cFEcA76Fa9d0f7FfE5022b7814e1";
+let interestModelAddress = InterestModel.address;
 module.exports = async function(callback) {
     try {
         console.log(`argv> token=${argv.token}, collateralFactor=${argv.collateralFactor}`);
