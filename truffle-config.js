@@ -17,7 +17,7 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
-
+const wrapProvider = require('arb-ethers-web3-bridge').wrapProvider
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -145,19 +145,33 @@ module.exports = {
       },
 
       arbitrum: {
-          provider: () => new HDWalletProvider(mnemonic, `wss://arb1.arbitrum.io/ws`),
-          network_id: "42161",   // This network is yours, in the cloud.
+          provider: () => wrapProvider(new HDWalletProvider(mnemonic, `wss://arb1.arbitrum.io/ws`)),
+          //network_id: "42161",   // This network is yours, in the cloud.
+          network_id: '*',
           timeoutBlocks: 200,
           confirmations: 2,
-          gasPrice: 2000000000,
+          //gasPrice: 2000000000,
+          gasPrice: 0,
           skipDryRun: true,
           networkCheckTimeout: 600000000,
           websockets: true,
-          gas: 8000000
+          gas: 800000000
+      },
+
+      arbitrumtest: {
+          provider: () => wrapProvider(new HDWalletProvider(mnemonic, `wss://rinkeby.arbitrum.io/ws`)),
+          network_id: '*',//421611
+          timeoutBlocks: 200,
+          confirmations: 2,
+          gasPrice: 0,
+          skipDryRun: true,
+          networkCheckTimeout: 600000000,
+          websockets: true,
+          gas: 800000000
       },
 
       bsctest: {
-          provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545/`),
+          provider: () => new HDWalletProvider(mnemonic, `ws://1.117.32.127/wsbsc/`),
           network_id: "97",
           timeoutBlocks: 600,
           //confirmations: 2,

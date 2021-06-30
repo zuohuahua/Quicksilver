@@ -1,4 +1,5 @@
 const SimplePriceOracle = artifacts.require("QsSimplePriceOracle");
+const QsPriceOracleV2 = artifacts.require("QsPriceOracleV2");
 const InterestModel = artifacts.require("WhitePaperInterestRateModel");
 const Qstroller = artifacts.require("Qstroller");
 const sELA = artifacts.require("CEther");
@@ -264,7 +265,7 @@ module.exports = async function(deployer, network) {
         addressFactory["Maximillion"] = Maximillion.address;
     }
 
-    if (network == "arbitrum") {
+    if (network == "arbitrum" || network == "arbitrumtest") {
         await deployer.deploy(QsPriceOracleV2);
         let proxiedQstroller = await Qstroller.at(Unitroller.address);
         await proxiedQstroller._setPriceOracle(QsPriceOracleV2.address);
