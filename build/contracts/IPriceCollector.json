@@ -22,25 +22,25 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"asset\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"price\",\"type\":\"uint256[]\"}],\"name\":\"setDirectPrice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/IPriceCollector.sol\":\"IPriceCollector\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[]},\"sources\":{\"/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/IPriceCollector.sol\":{\"keccak256\":\"0xcad6d3694f0fcd5a709401d99d58d31cf280270e301fe875a5be301f6aa3dab9\",\"urls\":[\"bzz-raw://45cc0d92e4e70472217ffa3b48ee465fa02c38a3f9554ee6aa5dcaa7bec444ed\",\"dweb:/ipfs/QmR5zfur62usLKiYLq5WNF8wp21pJ9M1p2NGeS1rMpNqpA\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"asset\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"price\",\"type\":\"uint256[]\"}],\"name\":\"setDirectPrice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol-new/contracts/IPriceCollector.sol\":\"IPriceCollector\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[]},\"sources\":{\"/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol-new/contracts/IPriceCollector.sol\":{\"keccak256\":\"0xcad6d3694f0fcd5a709401d99d58d31cf280270e301fe875a5be301f6aa3dab9\",\"urls\":[\"bzz-raw://45cc0d92e4e70472217ffa3b48ee465fa02c38a3f9554ee6aa5dcaa7bec444ed\",\"dweb:/ipfs/QmR5zfur62usLKiYLq5WNF8wp21pJ9M1p2NGeS1rMpNqpA\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.5.16;\n\ncontract IPriceCollector {\n    function setDirectPrice(address[] memory asset, uint[] memory price) public;\n}\n",
-  "sourcePath": "/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/IPriceCollector.sol",
+  "sourcePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol-new/contracts/IPriceCollector.sol",
   "ast": {
-    "absolutePath": "/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/IPriceCollector.sol",
+    "absolutePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol-new/contracts/IPriceCollector.sol",
     "exportedSymbols": {
       "IPriceCollector": [
-        178
+        883
       ]
     },
-    "id": 179,
+    "id": 884,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 168,
+        "id": 873,
         "literals": [
           "solidity",
           "^",
@@ -48,7 +48,7 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:1"
+        "src": "0:24:4"
       },
       {
         "baseContracts": [],
@@ -56,9 +56,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 178,
+        "id": 883,
         "linearizedBaseContracts": [
-          178
+          883
         ],
         "name": "IPriceCollector",
         "nodeType": "ContractDefinition",
@@ -66,23 +66,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 177,
+            "id": 882,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setDirectPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 175,
+              "id": 880,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 171,
+                  "id": 876,
                   "name": "asset",
                   "nodeType": "VariableDeclaration",
-                  "scope": 177,
-                  "src": "81:22:1",
+                  "scope": 882,
+                  "src": "81:22:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -91,20 +91,20 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 169,
+                      "id": 874,
                       "name": "address",
                       "nodeType": "ElementaryTypeName",
-                      "src": "81:7:1",
+                      "src": "81:7:4",
                       "stateMutability": "nonpayable",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "id": 170,
+                    "id": 875,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "81:9:1",
+                    "src": "81:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
                       "typeString": "address[]"
@@ -115,11 +115,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 174,
+                  "id": 879,
                   "name": "price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 177,
-                  "src": "105:19:1",
+                  "scope": 882,
+                  "src": "105:19:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -128,19 +128,19 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 172,
+                      "id": 877,
                       "name": "uint",
                       "nodeType": "ElementaryTypeName",
-                      "src": "105:4:1",
+                      "src": "105:4:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 173,
+                    "id": 878,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "105:6:1",
+                    "src": "105:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -150,39 +150,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "80:45:1"
+              "src": "80:45:4"
             },
             "returnParameters": {
-              "id": 176,
+              "id": 881,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "132:0:1"
+              "src": "132:0:4"
             },
-            "scope": 178,
-            "src": "57:76:1",
+            "scope": 883,
+            "src": "57:76:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 179,
-        "src": "26:109:1"
+        "scope": 884,
+        "src": "26:109:4"
       }
     ],
-    "src": "0:136:1"
+    "src": "0:136:4"
   },
   "legacyAST": {
-    "absolutePath": "/Users/ashton/repo/blockchain/eth/smartcontracts/quicksilver-protocol/contracts/IPriceCollector.sol",
+    "absolutePath": "/Users/songsjun/Workspace/Quicksilver/quicksilver-protocol-new/contracts/IPriceCollector.sol",
     "exportedSymbols": {
       "IPriceCollector": [
-        178
+        883
       ]
     },
-    "id": 179,
+    "id": 884,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 168,
+        "id": 873,
         "literals": [
           "solidity",
           "^",
@@ -190,7 +190,7 @@
           ".16"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:1"
+        "src": "0:24:4"
       },
       {
         "baseContracts": [],
@@ -198,9 +198,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 178,
+        "id": 883,
         "linearizedBaseContracts": [
-          178
+          883
         ],
         "name": "IPriceCollector",
         "nodeType": "ContractDefinition",
@@ -208,23 +208,23 @@
           {
             "body": null,
             "documentation": null,
-            "id": 177,
+            "id": 882,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setDirectPrice",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 175,
+              "id": 880,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 171,
+                  "id": 876,
                   "name": "asset",
                   "nodeType": "VariableDeclaration",
-                  "scope": 177,
-                  "src": "81:22:1",
+                  "scope": 882,
+                  "src": "81:22:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -233,20 +233,20 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 169,
+                      "id": 874,
                       "name": "address",
                       "nodeType": "ElementaryTypeName",
-                      "src": "81:7:1",
+                      "src": "81:7:4",
                       "stateMutability": "nonpayable",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "id": 170,
+                    "id": 875,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "81:9:1",
+                    "src": "81:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
                       "typeString": "address[]"
@@ -257,11 +257,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 174,
+                  "id": 879,
                   "name": "price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 177,
-                  "src": "105:19:1",
+                  "scope": 882,
+                  "src": "105:19:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -270,19 +270,19 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 172,
+                      "id": 877,
                       "name": "uint",
                       "nodeType": "ElementaryTypeName",
-                      "src": "105:4:1",
+                      "src": "105:4:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 173,
+                    "id": 878,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "105:6:1",
+                    "src": "105:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -292,34 +292,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "80:45:1"
+              "src": "80:45:4"
             },
             "returnParameters": {
-              "id": 176,
+              "id": 881,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "132:0:1"
+              "src": "132:0:4"
             },
-            "scope": 178,
-            "src": "57:76:1",
+            "scope": 883,
+            "src": "57:76:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 179,
-        "src": "26:109:1"
+        "scope": 884,
+        "src": "26:109:4"
       }
     ],
-    "src": "0:136:1"
+    "src": "0:136:4"
   },
   "compiler": {
     "name": "solc",
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.0",
-  "updatedAt": "2021-01-14T03:31:03.539Z",
+  "schemaVersion": "3.2.5",
+  "updatedAt": "2021-06-29T12:05:49.685Z",
   "devdoc": {
     "methods": {}
   },
