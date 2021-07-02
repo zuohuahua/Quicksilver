@@ -1,6 +1,6 @@
 const SimplePriceOracle = artifacts.require("QsSimplePriceOracle");
 const QsPriceOracleV2 = artifacts.require("QsPriceOracleV2");
-const InterestModel = artifacts.require("WhitePaperInterestRateModel");
+const InterestModel = artifacts.require("HecoJumpInterestModel");
 const Qstroller = artifacts.require("Qstroller");
 const sELA = artifacts.require("CEther");
 const erc20Delegate = artifacts.require("CErc20Delegate");
@@ -43,7 +43,12 @@ module.exports = async function(deployer, network) {
     await unitrollerInstance._setPendingImplementation(Qstroller.address);
     await qstrollerInstance._become(Unitroller.address);
 
-    await deployer.deploy(InterestModel, "20000000000000000", "200000000000000000");
+    const baseRatePerYear = 0.03e18.toString();
+    const multiplierPerYear = 0.3e18.toString();
+    const jumpMultiplierPerYear = 5e18.toString();
+    const kink = 0.95e18.toString();
+    const reserveFactor = 0.2e18.toString();
+    await deployer.deploy(InterestModel, baseRatePerYear, multiplierPerYear, jumpMultiplierPerYear, kink);
 
     let proxiedQstroller = await Qstroller.at(Unitroller.address);
 
