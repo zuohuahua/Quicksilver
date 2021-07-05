@@ -129,6 +129,8 @@ contract ComptrollerV3Storage is ComptrollerV2Storage {
 }
 
 contract ComptrollerV4Storage is ComptrollerV3Storage {
+    QsConfig public qsConfig;
+
     // @notice The borrowCapGuardian can set borrowCaps to any number for any market. Lowering the borrow cap could disable borrowing on the given market.
     address public borrowCapGuardian;
 

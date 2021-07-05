@@ -5,7 +5,6 @@ import "./compound/EIP20Interface.sol";
 import "./QsConfig.sol";
 
 contract Qstroller is Comptroller {
-    QsConfig public qsConfig;
 
     function _setQsConfig(QsConfig _qsConfig) public {
         require(msg.sender == admin);
