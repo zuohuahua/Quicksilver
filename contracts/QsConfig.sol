@@ -70,6 +70,14 @@ contract QsConfig is Ownable, Exponential {
         governanceAmount = sub_(userAccrued, userAmount);
     }
 
+    function getSupplyCap(uint defaultSupplyCap) external pure returns (uint supplyCap) {
+        supplyCap = defaultSupplyCap;
+    }
+
+    function getBorrowCap(uint defaultBorrowCap) external pure returns (uint borrowCap) {
+        borrowCap = defaultBorrowCap;
+    }
+
     function _setCompRatio(uint _compRatio) public onlyOwner {
         require(_compRatio < 1e18, "compRatio should be less then 100%");
         uint oldCompRatio = compRatio;
