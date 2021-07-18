@@ -12,7 +12,7 @@ import "./Unitroller.sol";
  * @title Compound's Comptroller Contract
  * @author Compound
  */
-contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerErrorReporter, Exponential {
+contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerErrorReporter, Exponential {
     /// @notice Emitted when an admin supports a market
     event MarketListed(CToken cToken);
 
@@ -64,8 +64,11 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
     /// @notice Emitted when borrow cap for a cToken is changed
     event NewBorrowCap(CToken indexed cToken, uint newBorrowCap);
 
-    /// @notice Emitted when borrow cap guardian is changed
-    event NewBorrowCapGuardian(address oldBorrowCapGuardian, address newBorrowCapGuardian);
+    /// @notice Emitted when supply cap for a cToken is changed
+    event NewSupplyCap(CToken indexed cToken, uint newSupplyCap);
+
+    /// @notice Emitted when borrow factor for a cToken is changed
+    event NewBorrowFactor(CToken indexed cToken, uint newBorrowFactor);
 
     /// @notice The threshold above which the flywheel transfers COMP, in wei
     uint public constant compClaimThreshold = 0.001e18;
@@ -87,6 +90,9 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
 
     // liquidationIncentiveMantissa must be no greater than this value
     uint internal constant liquidationIncentiveMaxMantissa = 1.5e18; // 1.5
+
+    // borrowFactorMantissa must not exceed this value
+    uint256 internal constant borrowFactorMaxMantissa = 1e18; // 1.0
 
     constructor() public {
         admin = msg.sender;
@@ -346,7 +352,7 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
             return uint(Error.PRICE_ERROR);
         }
 
-        uint borrowCap = borrowCaps[cToken];
+        uint borrowCap = markets[cToken].borrowCap;
         // Borrow cap of 0 corresponds to unlimited borrowing
         if (borrowCap != 0) {
             uint totalBorrows = CToken(cToken).totalBorrows();
@@ -645,6 +651,7 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
         Exp exchangeRate;
         Exp oraclePrice;
         Exp tokensToDenom;
+        Exp borrowFactorMantissa;
     }
 
     /**
@@ -721,6 +728,7 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
                 return (Error.SNAPSHOT_ERROR, 0, 0);
             }
             vars.collateralFactor = Exp({mantissa: markets[address(asset)].collateralFactorMantissa});
+            vars.borrowFactorMantissa = Exp({mantissa: markets[address(asset)].borrowFactorMantissa});
             vars.exchangeRate = Exp({mantissa: vars.exchangeRateMantissa});
 
             // Get the normalized price of the asset
@@ -742,8 +750,10 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
                 return (Error.MATH_ERROR, 0, 0);
             }
 
-            // sumBorrowPlusEffects += oraclePrice * borrowBalance
-            (mErr, vars.sumBorrowPlusEffects) = mulScalarTruncateAddUInt(vars.oraclePrice, vars.borrowBalance, vars.sumBorrowPlusEffects);
+            // borrowValue = borrowBalance / borrowFactor
+            uint borrowValue = div_(vars.borrowBalance, vars.borrowFactorMantissa);
+            // sumBorrowPlusEffects += oraclePrice * borrowValue
+            (mErr, vars.sumBorrowPlusEffects) = mulScalarTruncateAddUInt(vars.oraclePrice, borrowValue, vars.sumBorrowPlusEffects);
             if (mErr != MathError.NO_ERROR) {
                 return (Error.MATH_ERROR, 0, 0);
             }
@@ -995,7 +1005,7 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
 
         cToken.isCToken(); // Sanity check to make sure its really a CToken
 
-        markets[address(cToken)] = Market({isListed: true, isComped: false, collateralFactorMantissa: 0});
+        markets[address(cToken)] = Market({isListed: true, isComped: false, collateralFactorMantissa: 0, borrowFactorMantissa: 1e18, borrowCap: 0, supplyCap: 0});
 
         _addMarketInternal(address(cToken));
 
@@ -1013,12 +1023,12 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
 
     /**
       * @notice Set the given borrow caps for the given cToken markets. Borrowing that brings total borrows to or above borrow cap will revert.
-      * @dev Admin or borrowCapGuardian function to set the borrow caps. A borrow cap of 0 corresponds to unlimited borrowing.
+      * @dev Admin function to set the borrow caps. A borrow cap of 0 corresponds to unlimited borrowing.
       * @param cTokens The addresses of the markets (tokens) to change the borrow caps for
       * @param newBorrowCaps The new borrow cap values in underlying to be set. A value of 0 corresponds to unlimited borrowing.
       */
     function _setMarketBorrowCaps(CToken[] calldata cTokens, uint[] calldata newBorrowCaps) external {
-        require(msg.sender == admin || msg.sender == borrowCapGuardian, "only admin or borrow cap guardian can set borrow caps");
+        require(msg.sender == admin, "only admin can set borrow caps");
 
         uint numMarkets = cTokens.length;
         uint numBorrowCaps = newBorrowCaps.length;
@@ -1026,26 +1036,51 @@ contract Comptroller is ComptrollerV4Storage, ComptrollerInterface, ComptrollerE
         require(numMarkets != 0 && numMarkets == numBorrowCaps, "invalid input");
 
         for(uint i = 0; i < numMarkets; i++) {
-            borrowCaps[address(cTokens[i])] = newBorrowCaps[i];
+            markets[address(cTokens[i])].borrowCap = newBorrowCaps[i];
             emit NewBorrowCap(cTokens[i], newBorrowCaps[i]);
         }
     }
 
     /**
-     * @notice Admin function to change the Borrow Cap Guardian
-     * @param newBorrowCapGuardian The address of the new Borrow Cap Guardian
+     * @notice Set the given supply caps for the given cToken markets. Supplying that brings total supply to or above supply cap will revert.
+     * @dev Admin function to set the supply caps. A supply cap of 0 corresponds to unlimited supplying.
+     * @param cTokens The addresses of the markets (tokens) to change the supply caps for
+     * @param newSupplyCaps The new supply cap values in underlying to be set. A value of 0 corresponds to unlimited supplying.
      */
-    function _setBorrowCapGuardian(address newBorrowCapGuardian) external {
-        require(msg.sender == admin, "only admin can set borrow cap guardian");
+    function _setMarketSupplyCaps(CToken[] calldata cTokens, uint[] calldata newSupplyCaps) external {
+        require(msg.sender == admin, "only admin can set supply caps");
 
-        // Save current value for inclusion in log
-        address oldBorrowCapGuardian = borrowCapGuardian;
+        uint numMarkets = cTokens.length;
+        uint numSupplyCaps = newSupplyCaps.length;
 
-        // Store borrowCapGuardian with value newBorrowCapGuardian
-        borrowCapGuardian = newBorrowCapGuardian;
+        require(numMarkets != 0 && numMarkets == numSupplyCaps, "invalid input");
 
-        // Emit NewBorrowCapGuardian(OldBorrowCapGuardian, NewBorrowCapGuardian)
-        emit NewBorrowCapGuardian(oldBorrowCapGuardian, newBorrowCapGuardian);
+        for(uint i = 0; i < numMarkets; i++) {
+            markets[address(cTokens[i])].supplyCap = newSupplyCaps[i];
+            emit NewSupplyCap(cTokens[i], newSupplyCaps[i]);
+        }
+    }
+
+    /**
+     * @notice Set the given borrow factors for the given cToken markets.
+     * @dev Admin function to set the borrow factors.
+     * @param cTokens The addresses of the markets (tokens) to change the borrow factors for
+     * @param newBorrowFactors The new borrow factor values in underlying to be set. Must be between (0, 1]
+     */
+    function _setBorrowFactor(CToken[] calldata cTokens, uint[] calldata newBorrowFactors) external {
+        require(msg.sender == admin, "only admin can set borrow factors");
+
+        uint numMarkets = cTokens.length;
+        uint numBorrowFactors = newBorrowFactors.length;
+
+        require(numMarkets != 0 && numMarkets == numBorrowFactors, "invalid input");
+
+        for(uint i = 0; i < numMarkets; i++) {
+            require(newBorrowFactors[i] > 0 && newBorrowFactors[i] <= borrowFactorMaxMantissa, "invalid borrow factor");
+
+            markets[address(cTokens[i])].borrowFactorMantissa = newBorrowFactors[i];
+            emit NewBorrowFactor(cTokens[i], newBorrowFactors[i]);
+        }
     }
 
     /**

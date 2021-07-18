@@ -5,6 +5,7 @@ import "./compound/EIP20Interface.sol";
 import "./QsConfig.sol";
 
 contract Qstroller is Comptroller {
+    QsConfig public qsConfig;
 
     function _setQsConfig(QsConfig _qsConfig) public {
         require(msg.sender == admin);
@@ -79,6 +80,17 @@ contract Qstroller is Comptroller {
 
         if (!markets[cToken].isListed) {
             return uint(Error.MARKET_NOT_LISTED);
+        }
+
+        uint supplyCap = markets[cToken].supplyCap;
+        // Supply cap of 0 corresponds to unlimited borrowing
+        if (supplyCap != 0) {
+            Exp memory exchangeRate = Exp({mantissa: CTokenInterface(cToken).exchangeRateCurrent()});
+            (MathError mErr, uint totalSupplyUnderlying) = mulScalarTruncate(exchangeRate, EIP20Interface(cToken).totalSupply());
+            require(mErr == MathError.NO_ERROR, "totalSupplyUnderlying could not be calculated");
+            (MathError mathErr, uint nextTotalSupplyUnderlying) = addUInt(totalSupplyUnderlying, mintAmount);
+            require(mathErr == MathError.NO_ERROR, "total supplies overflow");
+            require(nextTotalSupplyUnderlying <= supplyCap, "market supply cap reached");
         }
 
         // Keep the flywheel moving

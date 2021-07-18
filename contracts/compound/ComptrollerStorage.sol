@@ -71,6 +71,26 @@ contract ComptrollerV2Storage is ComptrollerV1Storage {
 
         /// @notice Whether or not this market receives COMP
         bool isComped;
+
+        /**
+         *  @notice Multiplier representing the most one can borrow the asset.
+         *  For instance, 0.5 to allow borrowing this asset 50% * collateral value * collateralFactor.
+         *  When calculating equity, 0.5 with 100 borrow balance will produce 200 borrow value
+         *  Must be between (0, 1], and stored as a mantissa.
+         */
+        uint borrowFactorMantissa;
+
+        /**
+         *  The borrow capacity of the asset, will be checked in borrowAllowed()
+         *  0 means there is no limit on the capacity
+         */
+        uint borrowCap;
+
+        /**
+         *  The supply capacity of the asset, will be checked in mintAllowed()
+         *  0 means there is no limit on the capacity
+         */
+        uint supplyCap;
     }
 
     /**
@@ -126,14 +146,4 @@ contract ComptrollerV3Storage is ComptrollerV2Storage {
 
     /// @notice The COMP accrued but not yet transferred to each user
     mapping(address => uint) public compAccrued;
-}
-
-contract ComptrollerV4Storage is ComptrollerV3Storage {
-    QsConfig public qsConfig;
-
-    // @notice The borrowCapGuardian can set borrowCaps to any number for any market. Lowering the borrow cap could disable borrowing on the given market.
-    address public borrowCapGuardian;
-
-    // @notice Borrow caps enforced by borrowAllowed for each cToken address. Defaults to zero which corresponds to unlimited borrowing.
-    mapping(address => uint) public borrowCaps;
 }
