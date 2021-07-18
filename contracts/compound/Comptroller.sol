@@ -768,8 +768,10 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
                 }
 
                 // borrow effect
-                // sumBorrowPlusEffects += oraclePrice * borrowAmount
-                (mErr, vars.sumBorrowPlusEffects) = mulScalarTruncateAddUInt(vars.oraclePrice, borrowAmount, vars.sumBorrowPlusEffects);
+                // borrowValue = borrowAmount / borrowFactor
+                borrowValue = div_(borrowAmount, vars.borrowFactorMantissa);
+                // sumBorrowPlusEffects += oraclePrice * borrowValue
+                (mErr, vars.sumBorrowPlusEffects) = mulScalarTruncateAddUInt(vars.oraclePrice, borrowValue, vars.sumBorrowPlusEffects);
                 if (mErr != MathError.NO_ERROR) {
                     return (Error.MATH_ERROR, 0, 0);
                 }
