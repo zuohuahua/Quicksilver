@@ -5,7 +5,36 @@ import "./compound/EIP20Interface.sol";
 import "./QsConfig.sol";
 
 contract Qstroller is Comptroller {
+    /// @notice Emitted when an admin delists a market
+    event MarketDelisted(CToken cToken);
+
     QsConfig public qsConfig;
+
+    /**
+     * @notice Remove the market from the markets mapping
+     * @param cToken The address of the market (token) to delist
+     */
+    function _delistMarket(CToken cToken) external {
+        require(msg.sender == admin, "only admin may delist market");
+
+        require(markets[address(cToken)].isListed, "market not listed");
+        require(cToken.totalSupply() == 0, "market not empty");
+
+        cToken.isCToken(); // Sanity check to make sure its really a CToken
+
+        delete markets[address(cToken)];
+
+        for (uint i = 0; i < allMarkets.length; i++) {
+            if (allMarkets[i] == cToken) {
+                allMarkets[i] = allMarkets[allMarkets.length - 1];
+                delete allMarkets[allMarkets.length - 1];
+                allMarkets.length--;
+                break;
+            }
+        }
+
+        emit MarketDelisted(cToken);
+    }
 
     function _setQsConfig(QsConfig _qsConfig) public {
         require(msg.sender == admin);
