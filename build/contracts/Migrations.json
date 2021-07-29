@@ -882,12 +882,13 @@
     "256": {
       "events": {},
       "links": {},
-      "address": "0xe431bad374dee5015DC52375D0D63e50Ca54a539",
-      "transactionHash": "0x62a3639e24a721199210a037fdc844a5665381a269a93041eff55a448f662698"
+      "address": "0xa6D538F16220d1C99961CB00E7AA52DAc3a0B1D5",
+      "transactionHash": "0x278cc5862017590dc02022e051905af1db6ca198766329fa9fd009d63bbdd374"
     }
   },
-  "schemaVersion": "3.2.0",
-  "updatedAt": "2021-01-14T03:31:04.681Z",
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-07-29T11:54:13.852Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },
