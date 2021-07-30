@@ -13,6 +13,8 @@ contract QsConfig is Ownable, Exponential {
     uint public compRatio = 0.5e18;
     mapping(address => bool) public whitelist;
     mapping(address => bool) public blacklist;
+    // creditLimits allowed specific protocols to borrow and repay without collateral
+    mapping(address => uint) public creditLimits;
 
     event NewCompToken(address oldCompToken, address newCompToken);
     event NewSafetyVault(address oldSafetyVault, address newSafetyVault);
@@ -21,6 +23,8 @@ contract QsConfig is Ownable, Exponential {
     event NewCompRatio(uint oldCompRatio, uint newCompRatio);
     event WhitelistChange(address user, bool enabled);
     event BlacklistChange(address user, bool enabled);
+    /// @notice Emitted when protocol's credit limit has changed
+    event CreditLimitChanged(address protocol, uint creditLimit);
 
     constructor(QsConfig previousQsConfig) public {
         if (address(previousQsConfig) == address(0x0)) return;
@@ -28,6 +32,18 @@ contract QsConfig is Ownable, Exponential {
         compToken = previousQsConfig.compToken();
         safetyVaultRatio = previousQsConfig.safetyVaultRatio();
         safetyVault = previousQsConfig.safetyVault();
+    }
+
+    /**
+     * @notice Sets whitelisted protocol's credit limit
+     * @param protocol The address of the protocol
+     * @param creditLimit The credit limit
+     */
+    function _setCreditLimit(address protocol, uint creditLimit) public {
+        require(msg.sender == owner(), "only owner can set protocol credit limit");
+
+        creditLimits[protocol] = creditLimit;
+        emit CreditLimitChanged(protocol, creditLimit);
     }
 
     function _setCompToken(address _compToken) public onlyOwner {
@@ -52,7 +68,11 @@ contract QsConfig is Ownable, Exponential {
         compSpeedGuardianPaused = state;
         return state;
     }
-    
+
+    function getCreditLimit(address protocol) external view returns(uint) {
+        return creditLimits[protocol];
+    }
+
     function calculateSeizeTokenAllocation(uint _seizeTokenAmount, uint liquidationIncentiveMantissa) public view returns(uint liquidatorAmount, uint safetyVaultAmount) {
         Exp memory vaultRatio = Exp({mantissa:safetyVaultRatio});
         (,Exp memory tmp) = mulScalar(vaultRatio, _seizeTokenAmount);
