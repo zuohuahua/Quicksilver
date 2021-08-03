@@ -6,10 +6,10 @@ const erc20Token = artifacts.require("EIP20Interface");
 
 const argv = require('yargs').option('token', {string:true}).argv;
 
-let reserveFactor = 0.15e18.toString();
-let underlyingTokenAddr = "0xd3f1be7f74d25f39184d2d0670966e2e837562e3";
-let collateralFactor = 0.05e18.toString();
-let interestModelAddress = "0x748aF8F177293b45A59E32F5da66fA0Cb13fd020";
+let reserveFactor = 0.4e18.toString();
+let underlyingTokenAddr = "";
+let collateralFactor = 0.8e18.toString();
+let interestModelAddress = "0xc43940f47f04b3935d7C1d51c90199924acbc944";
 module.exports = async function(callback) {
     try {
         console.log(`argv> token=${argv.token}, collateralFactor=${argv.collateralFactor}`);
