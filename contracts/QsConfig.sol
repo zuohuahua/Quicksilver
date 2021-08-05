@@ -92,11 +92,13 @@ contract QsConfig is Ownable, Exponential {
         governanceAmount = sub_(userAccrued, userAmount);
     }
 
-    function getSupplyCap(uint defaultSupplyCap) external pure returns (uint supplyCap) {
+    function getSupplyCap(address cToken, uint defaultSupplyCap) external pure returns (uint supplyCap) {
+        cToken;
         supplyCap = defaultSupplyCap;
     }
 
-    function getBorrowCap(uint defaultBorrowCap) external pure returns (uint borrowCap) {
+    function getBorrowCap(address cToken, uint defaultBorrowCap) external pure returns (uint borrowCap) {
+        cToken;
         borrowCap = defaultBorrowCap;
     }
 

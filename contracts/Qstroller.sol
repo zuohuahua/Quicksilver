@@ -125,8 +125,8 @@ contract Qstroller is Comptroller {
         }
 
         uint borrowCap = markets[cToken].borrowCap;
-        if (qsConfig.getBorrowCap(borrowCap) != borrowCap) {
-            borrowCap = qsConfig.getBorrowCap(borrowCap);
+        if (qsConfig.getBorrowCap(cToken, borrowCap) != borrowCap) {
+            borrowCap = qsConfig.getBorrowCap(cToken, borrowCap);
         }
         // Borrow cap of 0 corresponds to unlimited borrowing
         if (borrowCap != 0) {
@@ -196,8 +196,8 @@ contract Qstroller is Comptroller {
         }
 
         uint supplyCap = markets[cToken].supplyCap;
-        if (qsConfig.getSupplyCap(supplyCap) != supplyCap) {
-            supplyCap = qsConfig.getSupplyCap(supplyCap);
+        if (qsConfig.getSupplyCap(cToken, supplyCap) != supplyCap) {
+            supplyCap = qsConfig.getSupplyCap(cToken, supplyCap);
         }
         // Supply cap of 0 corresponds to unlimited borrowing
         if (supplyCap != 0) {
