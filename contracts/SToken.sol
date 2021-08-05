@@ -2,8 +2,9 @@ pragma solidity ^0.5.16;
 
 import "./compound/CToken.sol";
 import "./Qstroller.sol";
+import "./IERC3156FlashLender.sol";
 
-contract SToken is CToken {
+contract SToken is CToken, IERC3156FlashLender {
 
     function seizeInternal(address seizerToken, address liquidator, address borrower, uint seizeTokens) internal returns (uint) {
         /* Fail if seize not allowed */
@@ -67,6 +68,61 @@ contract SToken is CToken {
 
     function isNativeToken() public pure returns (bool) {
         return false;
+    }
+
+    /**
+     * @dev The amount of currency available to be lent.
+     * @param token The loan currency.
+     * @return The amount of `token` that can be borrowed.
+     */
+    function maxFlashLoan(address token) external view returns (uint256) {
+        token;
+        return Qstroller(address(comptroller)).getFlashLoanCap(address(this));
+    }
+
+    /**
+     * @dev The fee to be charged for a given loan.
+     * @param token The loan currency.
+     * @param amount The amount of tokens lent.
+     * @return The amount of `token` to be charged for the loan, on top of the returned principal.
+     */
+    function flashFee(address token, uint256 amount) external view returns (uint256) {
+        return getFlashFeeInternal(token, amount);
+    }
+
+    function getFlashFeeInternal(address token, uint256 amount) internal view returns (uint256) {
+        return Qstroller(address(comptroller)).qsConfig().getFlashFee(msg.sender, token, amount);
+    }
+
+    /**
+     * @dev Initiate a flash loan.
+     * @param receiver The receiver of the tokens in the loan, and the receiver of the callback.
+     * @param token The loan currency.
+     * @param amount The amount of tokens lent.
+     * @param data Arbitrary data structure, intended to contain user-defined parameters.
+     */
+    function flashLoan(IERC3156FlashBorrower receiver, address token, uint256 amount, bytes calldata data) external returns (bool) {
+        require(accrueInterest() == uint(Error.NO_ERROR), "Accrue interest failed");
+
+        uint cashBefore = getCashPrior();
+        require(cashBefore >= amount, "Insufficient liquidity");
+        // 1. calculate fee
+        uint fee = getFlashFeeInternal(token, amount);
+        // 2. transfer fund  to receiver
+        doTransferOut(address(uint160(address(receiver))), amount);
+        // 3. update totalBorrows
+        totalBorrows = add_(totalBorrows, amount);
+        // 4. execute receiver's callback function
+        receiver.onFlashLoan(msg.sender, token, amount, fee, data);
+        // 5. check cash balance
+        uint cashAfter = getCashPrior();
+        require(cashAfter >= add_(cashBefore, fee), "Inconsistent balance");
+
+        (MathError err, uint reservesFee)= mulScalarTruncate(Exp({mantissa: reserveFactorMantissa}), fee);
+        require(err == MathError.NO_ERROR, "Error to calculate flashloan reserve fee");
+        totalReserves = add_(totalReserves, reservesFee);
+        totalBorrows = sub_(totalBorrows, amount);
+        return true;
     }
 
 }

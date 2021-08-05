@@ -70,6 +70,10 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
     /// @notice Emitted when borrow factor for a cToken is changed
     event NewBorrowFactor(CToken indexed cToken, uint newBorrowFactor);
 
+    /// @notice Emitted when flash loan for a cToken is changed
+    event NewFlashLoanCap(CToken indexed cToken, uint newFlashLoanCap);
+
+
     /// @notice The threshold above which the flywheel transfers COMP, in wei
     uint public constant compClaimThreshold = 0.001e18;
 
@@ -877,7 +881,7 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
 
         cToken.isCToken(); // Sanity check to make sure its really a CToken
 
-        markets[address(cToken)] = Market({isListed: true, isComped: false, collateralFactorMantissa: 0, borrowFactorMantissa: 1e18, borrowCap: 0, supplyCap: 0});
+        markets[address(cToken)] = Market({isListed: true, isComped: false, collateralFactorMantissa: 0, borrowFactorMantissa: 1e18, borrowCap: 0, supplyCap: 0, flashLoanCap: 0});
 
         _addMarketInternal(address(cToken));
 
@@ -910,6 +914,26 @@ contract Comptroller is ComptrollerV3Storage, ComptrollerInterface, ComptrollerE
         for(uint i = 0; i < numMarkets; i++) {
             markets[address(cTokens[i])].borrowCap = newBorrowCaps[i];
             emit NewBorrowCap(cTokens[i], newBorrowCaps[i]);
+        }
+    }
+
+    /**
+     * @notice Set the given flash loan caps for the given cToken markets. Borrowing that brings total flash cap to or above flash loan cap will revert.
+     * @dev Admin function to set the flash loan caps. A flash loan cap of 0 corresponds to unlimited flash loan.
+     * @param cTokens The addresses of the markets (tokens) to change the flash loan caps for
+     * @param newFlashLoanCaps The new flash loan cap values in underlying to be set. A value of 0 corresponds to unlimited flash loan.
+     */
+    function _setMarketFlashLoanCaps(CToken[] calldata cTokens, uint[] calldata newFlashLoanCaps) external {
+        require(msg.sender == admin, "only admin can set borrow caps");
+
+        uint numMarkets = cTokens.length;
+        uint numFlashLoanCaps = newFlashLoanCaps.length;
+
+        require(numMarkets != 0 && numMarkets == numFlashLoanCaps, "invalid input");
+
+        for(uint i = 0; i < numMarkets; i++) {
+            markets[address(cTokens[i])].flashLoanCap = newFlashLoanCaps[i];
+            emit NewFlashLoanCap(cTokens[i], newFlashLoanCaps[i]);
         }
     }
 

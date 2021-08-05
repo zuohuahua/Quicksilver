@@ -91,6 +91,12 @@ contract ComptrollerV2Storage is ComptrollerV1Storage {
          *  0 means there is no limit on the capacity
          */
         uint supplyCap;
+
+        /**
+         *  The flash loan capacity of the asset, will be checked in flashLoanAllowed()
+         *  0 means there is no limit on the capacity
+         */
+        uint flashLoanCap;
     }
 
     /**

@@ -92,12 +92,12 @@ contract Qstroller is Comptroller {
     }
 
     /**
-  * @notice Checks if the account should be allowed to borrow the underlying asset of the given market
-  * @param cToken The market to verify the borrow against
-  * @param borrower The account which would borrow the asset
-  * @param borrowAmount The amount of underlying the account would borrow
-  * @return 0 if the borrow is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
-  */
+      * @notice Checks if the account should be allowed to borrow the underlying asset of the given market
+      * @param cToken The market to verify the borrow against
+      * @param borrower The account which would borrow the asset
+      * @param borrowAmount The amount of underlying the account would borrow
+      * @return 0 if the borrow is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
+      */
     function borrowAllowed(address cToken, address borrower, uint borrowAmount) external returns (uint) {
         // Pausing is a very serious situation - we revert to sound the alarms
         require(!borrowGuardianPaused[cToken], "borrow is paused");
@@ -150,6 +150,29 @@ contract Qstroller is Comptroller {
         distributeBorrowerComp(cToken, borrower, borrowIndex, false);
 
         return uint(Error.NO_ERROR);
+    }
+
+    function flashLoanAllowed(address cToken, address to, uint256 flashLoanAmount) view external returns (uint) {
+        // Pausing is a very serious situation - we revert to sound the alarms
+        require(!borrowGuardianPaused[cToken], "borrow is paused");
+
+        if (!markets[cToken].isListed) {
+            return uint(Error.MARKET_NOT_LISTED);
+        }
+
+        uint flashLoanCap = markets[cToken].flashLoanCap;
+        // FlashLoan cap of 0 corresponds to unlimited flash loan
+        if (flashLoanCap != 0) {
+            require(flashLoanAmount <= flashLoanCap, "flash loan cap reached");
+        }
+
+        to;
+
+        return uint(Error.NO_ERROR);
+    }
+
+    function getFlashLoanCap(address cToken) view external returns (uint) {
+        return markets[cToken].flashLoanCap;
     }
 
     /**
@@ -371,6 +394,4 @@ contract Qstroller is Comptroller {
 
         return super.seizeAllowed(cTokenCollateral, cTokenBorrowed, liquidator, borrower, seizeTokens);
     }
-
-
 }

@@ -15,6 +15,7 @@ contract QsConfig is Ownable, Exponential {
     mapping(address => bool) public blacklist;
     // creditLimits allowed specific protocols to borrow and repay without collateral
     mapping(address => uint) public creditLimits;
+    uint public flashLoanFeeRatio = 0.0001e18;
 
     event NewCompToken(address oldCompToken, address newCompToken);
     event NewSafetyVault(address oldSafetyVault, address newSafetyVault);
@@ -25,6 +26,7 @@ contract QsConfig is Ownable, Exponential {
     event BlacklistChange(address user, bool enabled);
     /// @notice Emitted when protocol's credit limit has changed
     event CreditLimitChanged(address protocol, uint creditLimit);
+    event FlashLoanFeeRatioChanged(uint oldFeeRatio, uint newFeeRatio);
 
     constructor(QsConfig previousQsConfig) public {
         if (address(previousQsConfig) == address(0x0)) return;
@@ -98,6 +100,16 @@ contract QsConfig is Ownable, Exponential {
         borrowCap = defaultBorrowCap;
     }
 
+    function getFlashFee(address borrower, address token, uint256 amount) external view returns (uint flashFee) {
+        if (whitelist[borrower]) {
+            return 0;
+        }
+        Exp memory flashLoanFeeRatioExp = Exp({mantissa:flashLoanFeeRatio});
+        (, flashFee) = mulScalarTruncate(flashLoanFeeRatioExp, amount);
+
+        token;
+    }
+
     function _setCompRatio(uint _compRatio) public onlyOwner {
         require(_compRatio < 1e18, "compRatio should be less then 100%");
         uint oldCompRatio = compRatio;
@@ -136,6 +148,16 @@ contract QsConfig is Ownable, Exponential {
         blacklist[_member] = false;
 
         emit BlacklistChange(_member, false);
+    }
+
+    function _setFlashLoanFeeRatio(uint _feeRatio) public onlyOwner {
+        require(_feeRatio != flashLoanFeeRatio, "Same fee ratio already set");
+        require(_feeRatio < 1e18, "Invalid fee ratio");
+
+        uint oldFeeRatio = flashLoanFeeRatio;
+        flashLoanFeeRatio = _feeRatio;
+
+        emit FlashLoanFeeRatioChanged(oldFeeRatio, flashLoanFeeRatio);
     }
 
     function isContract(address account) internal view returns (bool) {
