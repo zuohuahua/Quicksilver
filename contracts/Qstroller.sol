@@ -10,31 +10,31 @@ contract Qstroller is Comptroller {
 
     QsConfig public qsConfig;
 
-    /**
-     * @notice Remove the market from the markets mapping
-     * @param cToken The address of the market (token) to delist
-     */
-    function _delistMarket(CToken cToken) external {
-        require(msg.sender == admin, "only admin may delist market");
-
-        require(markets[address(cToken)].isListed, "market not listed");
-        require(cToken.totalSupply() == 0, "market not empty");
-
-        cToken.isCToken(); // Sanity check to make sure its really a CToken
-
-        delete markets[address(cToken)];
-
-        for (uint i = 0; i < allMarkets.length; i++) {
-            if (allMarkets[i] == cToken) {
-                allMarkets[i] = allMarkets[allMarkets.length - 1];
-                delete allMarkets[allMarkets.length - 1];
-                allMarkets.length--;
-                break;
-            }
-        }
-
-        emit MarketDelisted(cToken);
-    }
+//    /**
+//     * @notice Remove the market from the markets mapping
+//     * @param cToken The address of the market (token) to delist
+//     */
+//    function _delistMarket(CToken cToken) external {
+//        require(msg.sender == admin, "only admin may delist market");
+//
+//        require(markets[address(cToken)].isListed, "market not listed");
+//        require(cToken.totalSupply() == 0, "market not empty");
+//
+//        cToken.isCToken(); // Sanity check to make sure its really a CToken
+//
+//        delete markets[address(cToken)];
+//
+//        for (uint i = 0; i < allMarkets.length; i++) {
+//            if (allMarkets[i] == cToken) {
+//                allMarkets[i] = allMarkets[allMarkets.length - 1];
+//                delete allMarkets[allMarkets.length - 1];
+//                allMarkets.length--;
+//                break;
+//            }
+//        }
+//
+//        emit MarketDelisted(cToken);
+//    }
 
     function _setQsConfig(QsConfig _qsConfig) public {
         require(msg.sender == admin);
@@ -124,10 +124,7 @@ contract Qstroller is Comptroller {
             return uint(Error.PRICE_ERROR);
         }
 
-        uint borrowCap = markets[cToken].borrowCap;
-        if (qsConfig.getBorrowCap(cToken, borrowCap) != borrowCap) {
-            borrowCap = qsConfig.getBorrowCap(cToken, borrowCap);
-        }
+        uint borrowCap = qsConfig.getBorrowCap(cToken);
         // Borrow cap of 0 corresponds to unlimited borrowing
         if (borrowCap != 0) {
             uint totalBorrows = CToken(cToken).totalBorrows();
@@ -160,7 +157,7 @@ contract Qstroller is Comptroller {
             return uint(Error.MARKET_NOT_LISTED);
         }
 
-        uint flashLoanCap = markets[cToken].flashLoanCap;
+        uint flashLoanCap = qsConfig.getFlashLoanCap(cToken);
         // FlashLoan cap of 0 corresponds to unlimited flash loan
         if (flashLoanCap != 0) {
             require(flashLoanAmount <= flashLoanCap, "flash loan cap reached");
@@ -172,7 +169,7 @@ contract Qstroller is Comptroller {
     }
 
     function getFlashLoanCap(address cToken) view external returns (uint) {
-        return markets[cToken].flashLoanCap;
+        return qsConfig.getFlashLoanCap(cToken);
     }
 
     /**
@@ -195,17 +192,15 @@ contract Qstroller is Comptroller {
             return uint(Error.MARKET_NOT_LISTED);
         }
 
-        uint supplyCap = markets[cToken].supplyCap;
-        if (qsConfig.getSupplyCap(cToken, supplyCap) != supplyCap) {
-            supplyCap = qsConfig.getSupplyCap(cToken, supplyCap);
-        }
+        uint supplyCap = qsConfig.getSupplyCap(cToken);
+
         // Supply cap of 0 corresponds to unlimited borrowing
         if (supplyCap != 0) {
             Exp memory exchangeRate = Exp({mantissa: CTokenInterface(cToken).exchangeRateCurrent()});
             (MathError mErr, uint totalSupplyUnderlying) = mulScalarTruncate(exchangeRate, EIP20Interface(cToken).totalSupply());
-            require(mErr == MathError.NO_ERROR, "totalSupplyUnderlying could not be calculated");
+            require(mErr == MathError.NO_ERROR);
             (MathError mathErr, uint nextTotalSupplyUnderlying) = addUInt(totalSupplyUnderlying, mintAmount);
-            require(mathErr == MathError.NO_ERROR, "total supplies overflow");
+            require(mathErr == MathError.NO_ERROR);
             require(nextTotalSupplyUnderlying <= supplyCap, "market supply cap reached");
         }
 
@@ -379,7 +374,7 @@ contract Qstroller is Comptroller {
         address liquidator,
         address borrower,
         uint repayAmount) public returns (uint) {
-        require(qsConfig.getCreditLimit(borrower) == 0 , "cannot liquidate credit account");
+        require(qsConfig.getCreditLimit(borrower) == 0 , "credit account");
 
         return super.liquidateBorrowAllowed(cTokenBorrowed, cTokenCollateral, liquidator, borrower, repayAmount);
     }
@@ -390,7 +385,7 @@ contract Qstroller is Comptroller {
         address liquidator,
         address borrower,
         uint seizeTokens) public returns (uint) {
-        require(qsConfig.getCreditLimit(borrower) == 0 , "cannot sieze from credit account");
+        require(qsConfig.getCreditLimit(borrower) == 0 , "credit account");
 
         return super.seizeAllowed(cTokenCollateral, cTokenBorrowed, liquidator, borrower, seizeTokens);
     }

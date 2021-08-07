@@ -10,9 +10,30 @@ contract QsConfig is Ownable, Exponential {
     uint public safetyVaultRatio;
     address public safetyVault;
 
+    struct MarketCap {
+        /**
+       *  The borrow capacity of the asset, will be checked in borrowAllowed()
+       *  0 means there is no limit on the capacity
+       */
+        uint borrowCap;
+
+        /**
+         *  The supply capacity of the asset, will be checked in mintAllowed()
+         *  0 means there is no limit on the capacity
+         */
+        uint supplyCap;
+
+        /**
+         *  The flash loan capacity of the asset, will be checked in flashLoanAllowed()
+         *  0 means there is no limit on the capacity
+         */
+        uint flashLoanCap;
+    }
+
     uint public compRatio = 0.5e18;
     mapping(address => bool) public whitelist;
     mapping(address => bool) public blacklist;
+    mapping(address => MarketCap) marketsCap;
     // creditLimits allowed specific protocols to borrow and repay without collateral
     mapping(address => uint) public creditLimits;
     uint public flashLoanFeeRatio = 0.0001e18;
@@ -28,6 +49,15 @@ contract QsConfig is Ownable, Exponential {
     event CreditLimitChanged(address protocol, uint creditLimit);
     event FlashLoanFeeRatioChanged(uint oldFeeRatio, uint newFeeRatio);
 
+    /// @notice Emitted when borrow cap for a cToken is changed
+    event NewBorrowCap(address indexed cToken, uint newBorrowCap);
+
+    /// @notice Emitted when supply cap for a cToken is changed
+    event NewSupplyCap(address indexed cToken, uint newSupplyCap);
+
+    /// @notice Emitted when flash loan for a cToken is changed
+    event NewFlashLoanCap(address indexed cToken, uint newFlashLoanCap);
+
     constructor(QsConfig previousQsConfig) public {
         if (address(previousQsConfig) == address(0x0)) return;
 
@@ -36,6 +66,59 @@ contract QsConfig is Ownable, Exponential {
         safetyVault = previousQsConfig.safetyVault();
     }
 
+        /**
+          * @notice Set the given borrow caps for the given cToken markets. Borrowing that brings total borrows to or above borrow cap will revert.
+          * @dev Admin function to set the borrow caps. A borrow cap of 0 corresponds to unlimited borrowing.
+          * @param cTokens The addresses of the markets (tokens) to change the borrow caps for
+          * @param newBorrowCaps The new borrow cap values in underlying to be set. A value of 0 corresponds to unlimited borrowing.
+          */
+        function _setMarketBorrowCaps(address[] calldata cTokens, uint[] calldata newBorrowCaps) external onlyOwner {
+            uint numMarkets = cTokens.length;
+            uint numBorrowCaps = newBorrowCaps.length;
+
+            require(numMarkets != 0 && numMarkets == numBorrowCaps, "invalid input");
+
+            for(uint i = 0; i < numMarkets; i++) {
+                marketsCap[cTokens[i]].borrowCap = newBorrowCaps[i];
+                emit NewBorrowCap(cTokens[i], newBorrowCaps[i]);
+            }
+        }
+
+        /**
+         * @notice Set the given flash loan caps for the given cToken markets. Borrowing that brings total flash cap to or above flash loan cap will revert.
+         * @dev Admin function to set the flash loan caps. A flash loan cap of 0 corresponds to unlimited flash loan.
+         * @param cTokens The addresses of the markets (tokens) to change the flash loan caps for
+         * @param newFlashLoanCaps The new flash loan cap values in underlying to be set. A value of 0 corresponds to unlimited flash loan.
+         */
+        function _setMarketFlashLoanCaps(address[] calldata cTokens, uint[] calldata newFlashLoanCaps) external onlyOwner {
+            uint numMarkets = cTokens.length;
+            uint numFlashLoanCaps = newFlashLoanCaps.length;
+
+            require(numMarkets != 0 && numMarkets == numFlashLoanCaps, "invalid input");
+
+            for(uint i = 0; i < numMarkets; i++) {
+                marketsCap[cTokens[i]].flashLoanCap = newFlashLoanCaps[i];
+                emit NewFlashLoanCap(cTokens[i], newFlashLoanCaps[i]);
+            }
+        }
+
+        /**
+         * @notice Set the given supply caps for the given cToken markets. Supplying that brings total supply to or above supply cap will revert.
+         * @dev Admin function to set the supply caps. A supply cap of 0 corresponds to unlimited supplying.
+         * @param cTokens The addresses of the markets (tokens) to change the supply caps for
+         * @param newSupplyCaps The new supply cap values in underlying to be set. A value of 0 corresponds to unlimited supplying.
+         */
+        function _setMarketSupplyCaps(address[] calldata cTokens, uint[] calldata newSupplyCaps) external onlyOwner {
+            uint numMarkets = cTokens.length;
+            uint numSupplyCaps = newSupplyCaps.length;
+
+            require(numMarkets != 0 && numMarkets == numSupplyCaps, "invalid input");
+
+            for(uint i = 0; i < numMarkets; i++) {
+                marketsCap[cTokens[i]].supplyCap = newSupplyCaps[i];
+                emit NewSupplyCap(cTokens[i], newSupplyCaps[i]);
+            }
+        }
     /**
      * @notice Sets whitelisted protocol's credit limit
      * @param protocol The address of the protocol
@@ -71,8 +154,20 @@ contract QsConfig is Ownable, Exponential {
         return state;
     }
 
-    function getCreditLimit(address protocol) external view returns(uint) {
+    function getCreditLimit(address protocol) external view returns (uint) {
         return creditLimits[protocol];
+    }
+
+    function getBorrowCap(address cToken) external view returns (uint) {
+        return marketsCap[cToken].borrowCap;
+    }
+
+    function getSupplyCap(address cToken) external view returns (uint) {
+        return marketsCap[cToken].supplyCap;
+    }
+
+    function getFlashLoanCap(address cToken) external view returns (uint) {
+        return marketsCap[cToken].flashLoanCap;
     }
 
     function calculateSeizeTokenAllocation(uint _seizeTokenAmount, uint liquidationIncentiveMantissa) public view returns(uint liquidatorAmount, uint safetyVaultAmount) {
@@ -90,16 +185,6 @@ contract QsConfig is Ownable, Exponential {
         Exp memory compRatioExp = Exp({mantissa:compRatio});
         (, userAmount) = mulScalarTruncate(compRatioExp, userAccrued);
         governanceAmount = sub_(userAccrued, userAmount);
-    }
-
-    function getSupplyCap(address cToken, uint defaultSupplyCap) external pure returns (uint supplyCap) {
-        cToken;
-        supplyCap = defaultSupplyCap;
-    }
-
-    function getBorrowCap(address cToken, uint defaultBorrowCap) external pure returns (uint borrowCap) {
-        cToken;
-        borrowCap = defaultBorrowCap;
     }
 
     function getFlashFee(address borrower, address token, uint256 amount) external view returns (uint flashFee) {

@@ -79,24 +79,6 @@ contract ComptrollerV2Storage is ComptrollerV1Storage {
          *  Must be between (0, 1], and stored as a mantissa.
          */
         uint borrowFactorMantissa;
-
-        /**
-         *  The borrow capacity of the asset, will be checked in borrowAllowed()
-         *  0 means there is no limit on the capacity
-         */
-        uint borrowCap;
-
-        /**
-         *  The supply capacity of the asset, will be checked in mintAllowed()
-         *  0 means there is no limit on the capacity
-         */
-        uint supplyCap;
-
-        /**
-         *  The flash loan capacity of the asset, will be checked in flashLoanAllowed()
-         *  0 means there is no limit on the capacity
-         */
-        uint flashLoanCap;
     }
 
     /**

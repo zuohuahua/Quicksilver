@@ -2,9 +2,9 @@ pragma solidity ^0.5.16;
 
 import "./compound/CToken.sol";
 import "./Qstroller.sol";
-import "./IERC3156FlashLender.sol";
+import "./IERC3156FlashBorrower.sol";
 
-contract SToken is CToken, IERC3156FlashLender {
+contract SToken is CToken {
 
     function seizeInternal(address seizerToken, address liquidator, address borrower, uint seizeTokens) internal returns (uint) {
         /* Fail if seize not allowed */
@@ -59,9 +59,6 @@ contract SToken is CToken, IERC3156FlashLender {
         /* Emit a Transfer event */
         emit Transfer(borrower, liquidator, liquidatorSeizeTokens);
         emit Transfer(borrower, safetyVault, safetyVaultTokens);
-
-        /* We call the defense hook */
-        comptroller.seizeVerify(address(this), seizerToken, liquidator, borrower, seizeTokens);
 
         return uint(Error.NO_ERROR);
     }
