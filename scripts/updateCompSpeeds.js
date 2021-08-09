@@ -36,7 +36,7 @@ const allTokens = [
     '0x8C86799D402CD6D5d05FBb271f5f421f277C230d', // USDC
     '0x5264A0AdF29E31C618273a0260E9de8Edc13811F', //(F)
     '0x3D7a2A68D00F117e9c3cFCfA9c1c1f73cB52baFc',  // DAI
-    '0xF173F3897753692E7465E0932fe2285707E7E609'
+    '0xF173F3897753692E7465E0932fe2285707E7E609'  //TUSD
 ]
 
 const allCompSpeeds = [
@@ -56,7 +56,7 @@ const allCompSpeeds = [
     '3900000000000000', // HBCH
     '0',                  // HLTC(F)
     '3900000000000000', // HLTC
-    '1989000000000000000', // HUSDT
+    '2067000000000000000', // HUSDT
     '0',                 // HBSV(F)
     '0', // HBSV
     '0',                  // HXTZ(F)
@@ -74,7 +74,7 @@ const allCompSpeeds = [
     '3900000000000000', // USDC
     '0',
     '3900000000000000', // DAI
-    '390000000000000000'
+    '312000000000000000' // TUSD
 ]
 
 module.exports = async function(callback) {
