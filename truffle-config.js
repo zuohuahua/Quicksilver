@@ -44,6 +44,7 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 7545,            // Standard Ethereum port (default: none)
      network_id: "5777",       // Any network (default: none)
+        gas: 80000000
     },
     elalocal: {
       host: "127.0.0.1",
@@ -186,6 +187,27 @@ module.exports = {
           timeoutBlocks: 600,
           //confirmations: 2,
           gasPrice: 10000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
+          websockets: true
+      },
+      matictest: {
+          provider: () => new HDWalletProvider(mnemonic, `wss://rpc-mumbai.matic.today`),
+          network_id: "80001",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 5000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
+          websockets: true
+      },
+      matic: {
+          provider: () => new HDWalletProvider(mnemonic, `wss://ws-matic-mainnet.chainstacklabs.com`),
+          network_id: "137",
+          chain_id: "137",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 3000000000,
           skipDryRun: false,
           networkCheckTimeout: 600000000,
           websockets: true
