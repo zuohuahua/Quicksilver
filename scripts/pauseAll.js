@@ -9,8 +9,8 @@ module.exports = async function(callback) {
 
         let qsControllerInstance = await Qstroller.at(Unitroller.address)
         //
-        // await qsControllerInstance._setMintPaused(argv.fToken, argv.paused)
-        // console.log("MintPaused: ", await qsControllerInstance.mintGuardianPaused(argv.fToken))
+        await qsControllerInstance._setMintPaused(argv.fToken, argv.paused)
+        console.log("MintPaused: ", await qsControllerInstance.mintGuardianPaused(argv.fToken))
 
         // await qsControllerInstance._setBorrowPaused(argv.fToken, argv.paused)
         // console.log("BorrowPaused: ", await qsControllerInstance.borrowGuardianPaused(argv.fToken))
@@ -18,8 +18,8 @@ module.exports = async function(callback) {
         // await qsControllerInstance._setTransferPaused(argv.paused)
         // console.log("TransferPaused: ", await qsControllerInstance.transferGuardianPaused())
 
-        await qsControllerInstance._setSeizePaused(argv.paused)
-        console.log("SeizePaused: ", await qsControllerInstance.seizeGuardianPaused())
+        // await qsControllerInstance._setSeizePaused(argv.paused)
+        // console.log("SeizePaused: ", await qsControllerInstance.seizeGuardianPaused())
 
         callback()
     } catch (e) {
