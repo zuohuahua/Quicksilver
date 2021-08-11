@@ -5,9 +5,9 @@ const Unitroller = artifacts.require("Unitroller");
 
 const baseRatePerYear = 0.03e18.toString()
 const multiplierPerYear = 0.73e18.toString()
-const jumpMultiplierPerYear = 3.1e18.toString()
+const jumpMultiplierPerYear = 3.8e18.toString()
 const kink = 0.8e18.toString()
-const reserveFactor = 0.2e18.toString();
+const reserveFactor = 0.26e18.toString();
 
 module.exports = async function(callback) {
     try {
