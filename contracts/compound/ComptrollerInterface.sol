@@ -46,4 +46,6 @@ contract ComptrollerInterface {
         address cTokenBorrowed,
         address cTokenCollateral,
         uint repayAmount) external view returns (uint, uint);
+
+    function getLiquidationIncentive(address cTokenCollateral) public view returns (uint);
 }

@@ -79,6 +79,11 @@ contract ComptrollerV2Storage is ComptrollerV1Storage {
          *  Must be between (0, 1], and stored as a mantissa.
          */
         uint borrowFactorMantissa;
+
+        /**
+         * @notice Multiplier representing the discount on collateral that a liquidator receives
+         */
+        uint liquidationIncentiveMantissa;
     }
 
     /**
