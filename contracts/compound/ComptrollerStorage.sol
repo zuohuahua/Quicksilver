@@ -71,6 +71,19 @@ contract ComptrollerV2Storage is ComptrollerV1Storage {
 
         /// @notice Whether or not this market receives COMP
         bool isComped;
+
+        /**
+         *  @notice Multiplier representing the most one can borrow the asset.
+         *  For instance, 0.5 to allow borrowing this asset 50% * collateral value * collateralFactor.
+         *  When calculating equity, 0.5 with 100 borrow balance will produce 200 borrow value
+         *  Must be between (0, 1], and stored as a mantissa.
+         */
+        uint borrowFactorMantissa;
+
+        /**
+         * @notice Multiplier representing the discount on collateral that a liquidator receives
+         */
+        uint liquidationIncentiveMantissa;
     }
 
     /**

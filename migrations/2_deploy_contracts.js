@@ -1,12 +1,14 @@
 const SimplePriceOracle = artifacts.require("QsSimplePriceOracle");
-const InterestModel = artifacts.require("WhitePaperInterestRateModel");
+const MockPriceOracle = artifacts.require("MockPriceOracle");
+const QsPriceOracleV2 = artifacts.require("QsPriceOracleV2");
+const InterestModel = artifacts.require("HecoJumpInterestModel");
 const Qstroller = artifacts.require("Qstroller");
 const sELA = artifacts.require("CEther");
 const erc20Delegate = artifacts.require("CErc20Delegate");
 const erc20Delegator = artifacts.require("CErc20Delegator");
 const Unitroller = artifacts.require("Unitroller");
 const CompoundLens = artifacts.require("CompoundLens");
-const QsPriceOracle = artifacts.require("QsPriceOracle");
+const ChainLinkPriceOracle = artifacts.require("ChainlinkAdaptor");
 const QsConfig = artifacts.require("QsConfig");
 const Maximillion = artifacts.require("Maximillion");
 
@@ -28,11 +30,9 @@ module.exports = async function(deployer, network) {
     await deployer.deploy(Unitroller);
     await deployer.deploy(Qstroller);
     await deployer.deploy(CompoundLens);
-    await deployer.deploy(QsPriceOracle);
-    await deployer.deploy(QsConfig);
+    await deployer.deploy(QsConfig, "0x0000000000000000000000000000000000000000");
 
     addressFactory["Qstroller"] = Unitroller.address;
-    addressFactory["QsPriceOracle"] = QsPriceOracle.address;
     addressFactory["QsConfig"] = QsConfig.address;
     addressFactory["CompoundLens"] = CompoundLens.address;
 
@@ -44,19 +44,17 @@ module.exports = async function(deployer, network) {
     await unitrollerInstance._setPendingImplementation(Qstroller.address);
     await qstrollerInstance._become(Unitroller.address);
 
-    await deployer.deploy(InterestModel, "20000000000000000", "200000000000000000");
+    const baseRatePerYear = 0.03e18.toString();
+    const multiplierPerYear = 0.3e18.toString();
+    const jumpMultiplierPerYear = 5e18.toString();
+    const kink = 0.95e18.toString();
+    const reserveFactor = 0.2e18.toString();
+    await deployer.deploy(InterestModel, baseRatePerYear, multiplierPerYear, jumpMultiplierPerYear, kink);
 
     let proxiedQstroller = await Qstroller.at(Unitroller.address);
 
-    await proxiedQstroller._setPriceOracle(QsPriceOracle.address);
-    console.log("Done to set price oracle.", await proxiedQstroller.oracle());
-
     await proxiedQstroller._setQsConfig(QsConfig.address);
     console.log("Done to set quick silver config.", await  proxiedQstroller.qsConfig());
-
-    await proxiedQstroller._setMaxAssets(maxAssets);
-    let result = await proxiedQstroller.maxAssets();
-    console.log("Done to set max assets.", result.toString());
 
     await proxiedQstroller._setLiquidationIncentive(liquidationIncentive);
     console.log("Done to set liquidation incentive.");
@@ -71,8 +69,8 @@ module.exports = async function(deployer, network) {
         let compImpl = await unitrollerInstance.comptrollerImplementation();
         console.log("compImpl: " + compImpl);
 
-        await deployer.deploy(SimplePriceOracle);
-
+        await deployer.deploy(MockPriceOracle);
+        await proxiedQstroller._setPriceOracle(MockPriceOracle.address);
         if (network == "eladev" || network == "elalocal") {
             await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "QuickSilver ELA", "sELA", 18, admin);
             await proxiedQstroller._supportMarket(sELA.address);
@@ -156,9 +154,6 @@ module.exports = async function(deployer, network) {
 
         let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
         console.log(allSupportedMarkets);
-
-        await proxiedQstroller._setPriceOracle(SimplePriceOracle.address);
-        console.log("Done to update price oracle.");
     }
 
     if (network == "ropsten") {
@@ -265,6 +260,65 @@ module.exports = async function(deployer, network) {
         await proxiedQstroller._setCollateralFactor(sELA.address, htCollateralFactor);
         console.log("Done to set collateral factor %s for fHT %s", htCollateralFactor, sELA.address);
         addressFactory["fHT"] = sELA.address;
+        await deployer.deploy(Maximillion, sELA.address);
+        addressFactory["Maximillion"] = Maximillion.address;
+    }
+
+    if (network == "arbitrum" || network == "arbitrumtest") {
+        await deployer.deploy(QsPriceOracleV2);
+        let proxiedQstroller = await Qstroller.at(Unitroller.address);
+        await proxiedQstroller._setPriceOracle(QsPriceOracleV2.address);
+        console.log("Done to set price oracle.", await proxiedQstroller.oracle());
+        addressFactory["QsPriceOracleV2"] = QsPriceOracleV2.address;
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "Filda ETH", "fETH", 18, admin);
+        await proxiedQstroller._supportMarket(sELA.address);
+        console.log("Done to support market fETH: ", sELA.address);
+        let htCollateralFactor = 0.8e18.toString();
+        await proxiedQstroller._setCollateralFactor(sELA.address, htCollateralFactor);
+        console.log("Done to set collateral factor %s for fETH %s", htCollateralFactor, sELA.address);
+        addressFactory["fETH"] = sELA.address;
+        await deployer.deploy(Maximillion, sELA.address);
+        addressFactory["Maximillion"] = Maximillion.address;
+    }
+
+    if (network == "bsctest" || network == "bsc") {
+        let bnbPriceSource = "0x2514895c72f50D8bd4B4F9b1110F0D6bD2c97526";
+        if (network == "bsc") {
+            bnbPriceSource = "0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE";
+        }
+        await deployer.deploy(ChainLinkPriceOracle, bnbPriceSource);
+        let proxiedQstroller = await Qstroller.at(Unitroller.address);
+        await proxiedQstroller._setPriceOracle(ChainLinkPriceOracle.address);
+        console.log("Done to set price oracle.", await proxiedQstroller.oracle());
+        addressFactory["ChainLinkPriceOracle"] = ChainLinkPriceOracle.address;
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "Filda BNB", "fBNB", 18, admin);
+        await proxiedQstroller._supportMarket(sELA.address);
+        console.log("Done to support market fBNB: ", sELA.address);
+        let htCollateralFactor = 0.8e18.toString();
+        await proxiedQstroller._setCollateralFactor(sELA.address, htCollateralFactor);
+        console.log("Done to set collateral factor %s for fBNB %s", htCollateralFactor, sELA.address);
+        addressFactory["fBNB"] = sELA.address;
+        await deployer.deploy(Maximillion, sELA.address);
+        addressFactory["Maximillion"] = Maximillion.address;
+    }
+
+    if (network == "matictest" || network == "matic") {
+        let maticPriceSource = "0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada";
+        if (network == "matic") {
+            maticPriceSource = "0xAB594600376Ec9fD91F8e885dADF0CE036862dE0";
+        }
+        await deployer.deploy(ChainLinkPriceOracle, maticPriceSource);
+        let proxiedQstroller = await Qstroller.at(Unitroller.address);
+        await proxiedQstroller._setPriceOracle(ChainLinkPriceOracle.address);
+        console.log("Done to set price oracle.", await proxiedQstroller.oracle());
+        addressFactory["ChainLinkPriceOracle"] = ChainLinkPriceOracle.address;
+        await deployer.deploy(sELA, Unitroller.address, InterestModel.address, 0.02e18.toString(), "FilDA Matic", "fMatic", 18, admin);
+        await proxiedQstroller._supportMarket(sELA.address);
+        console.log("Done to support market fMatic: ", sELA.address);
+        let maticCollateralFactor = 0.8e18.toString();
+        await proxiedQstroller._setCollateralFactor(sELA.address, maticCollateralFactor);
+        console.log("Done to set collateral factor %s for fMatic %s", maticCollateralFactor, sELA.address);
+        addressFactory["fMatic"] = sELA.address;
         await deployer.deploy(Maximillion, sELA.address);
         addressFactory["Maximillion"] = Maximillion.address;
     }

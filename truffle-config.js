@@ -17,7 +17,7 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
-
+const wrapProvider = require('arb-ethers-web3-bridge').wrapProvider
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -44,6 +44,7 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 7545,            // Standard Ethereum port (default: none)
      network_id: "5777",       // Any network (default: none)
+        gas: 80000000
     },
     elalocal: {
       host: "127.0.0.1",
@@ -138,9 +139,77 @@ module.exports = {
           network_id: "128",   // This network is yours, in the cloud.
           timeoutBlocks: 200,
           confirmations: 2,
-          gasPrice: 5000000000,
+          gasPrice: 2000000000,
           skipDryRun: true,
           networkCheckTimeout: 100000000,
+          websockets: true
+      },
+
+      arbitrum: {
+          provider: () => wrapProvider(new HDWalletProvider(mnemonic, `wss://arb1.arbitrum.io/ws`)),
+          //network_id: "42161",   // This network is yours, in the cloud.
+          network_id: '*',
+          timeoutBlocks: 200,
+          confirmations: 2,
+          //gasPrice: 2000000000,
+          gasPrice: 0,
+          skipDryRun: true,
+          networkCheckTimeout: 600000000,
+          websockets: true,
+          gas: 800000000
+      },
+
+      arbitrumtest: {
+          provider: () => wrapProvider(new HDWalletProvider(mnemonic, `wss://rinkeby.arbitrum.io/ws`)),
+          network_id: '*',//421611
+          timeoutBlocks: 200,
+          confirmations: 2,
+          gasPrice: 0,
+          skipDryRun: true,
+          networkCheckTimeout: 600000000,
+          websockets: true,
+          gas: 800000000
+      },
+
+      bsctest: {
+          provider: () => new HDWalletProvider(mnemonic, `ws://1.117.32.127/wsbsc/`),
+          network_id: "97",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 10000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
+          websockets: true
+      },
+      bsc: {
+          provider: () => new HDWalletProvider(mnemonic, `wss://bsc-ws-node.nariox.org:443`),
+          network_id: "56",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 10000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
+          websockets: true
+      },
+      matictest: {
+          provider: () => new HDWalletProvider(mnemonic, `wss://rpc-mumbai.matic.today`),
+          network_id: "80001",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 5000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
+          websockets: true
+      },
+      matic: {
+          provider: () => new HDWalletProvider(mnemonic, `wss://ws-matic-mainnet.chainstacklabs.com`),
+          network_id: "137",
+          chain_id: "137",
+          timeoutBlocks: 600,
+          //confirmations: 2,
+          gasPrice: 3000000000,
+          skipDryRun: false,
+          networkCheckTimeout: 600000000,
           websockets: true
       },
   },

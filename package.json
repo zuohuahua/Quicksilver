@@ -19,6 +19,7 @@
   "author": "Compound Finance",
   "license": "UNLICENSED",
   "devDependencies": {
+    "arb-ethers-web3-bridge": "^0.7.3",
     "bignumber.js": "8.0.1",
     "jest-diff": "^24.9.0",
     "jest-junit": "^6.4.0",
@@ -26,7 +27,7 @@
     "solparse": "^2.2.8"
   },
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.1.0",
+    "@truffle/hdwallet-provider": "^1.4.0",
     "eth-saddle": "^0.1.17"
   },
   "resolutions": {
