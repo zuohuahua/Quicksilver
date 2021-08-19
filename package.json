@@ -1,7 +1,7 @@
 {
   "name": "quicksilver-protocol",
   "version": "1.0.0",
-  "description": "Quick Silver ================= Quick Silver is one fork of Compound.",
+  "description": "Quick Silver is not only one fork of Compound.",
   "main": "jest.config.js",
   "directories": {
     "doc": "docs",
