@@ -1,19 +1,23 @@
 pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
-import "./compound/CErc20.sol";
+import "./compound/CErc20Delegate.sol";
 import "./compound/EIP20Interface.sol";
 
-// Ref: https://etherscan.io/address/0xc2edad668740f1aa35e4d8f227fb8e17dca888cd#code
 interface HecoPool {
     struct PoolInfo {
         address lpToken;
+    }
+
+    struct UserInfo {
+        uint256 amount;
     }
 
     function deposit(uint256, uint256) external;
     function withdraw(uint256, uint256) external;
     function mdx() view external returns (address);
     function poolInfo(uint256) view external returns (PoolInfo memory);
+    function userInfo(uint256, address) view external returns (UserInfo memory);
     function pending(uint256, address) external view returns (uint256);
 }
 
@@ -22,7 +26,7 @@ interface HecoPool {
  * @title Mdex LP Contract
  * @notice CToken which wraps Mdex's LP token
  */
-contract QsMdxLPDelegate is CErc20, CDelegateInterface {
+contract QsMdxLPDelegate is CErc20Delegate {
     /**
      * @notice HecoPool address
      */
@@ -69,28 +73,11 @@ contract QsMdxLPDelegate is CErc20, CDelegateInterface {
     mapping(address => uint) public cTokenUserAccrued;
 
     /**
-     * @notice Construct an empty delegate
-     */
-    constructor() public {}
-
-    /**
-     * @notice Called by the delegator on a delegate to forfeit its responsibility
-     */
-    function _resignImplementation() public {
-        // Shh -- we don't ever want this hook to be marked pure
-        if (false) {
-            implementation = address(0);
-        }
-
-        require(msg.sender == admin, "only admin");
-    }
-
-    /**
      * @notice Delegate interface to become the implementation
      * @param data The encoded arguments for becoming
      */
     function _becomeImplementation(bytes memory data) public {
-        require(msg.sender == admin, "only admin");
+        super._becomeImplementation(data);
 
         (address hecoPoolAddress_, address cMdxAddress_, uint pid_) = abi.decode(data, (address, address, uint));
         hecoPool = hecoPoolAddress_;
@@ -112,7 +99,7 @@ contract QsMdxLPDelegate is CErc20, CDelegateInterface {
      * @notice Manually claim rewards by user
      * @return The amount of cmdx rewards user claims
      */
-    function claim(address account) public returns (uint) {
+    function claimMdx(address account) public returns (uint) {
         claimAndStakeMdx();
 
         updateLPSupplyIndex();
@@ -131,6 +118,15 @@ contract QsMdxLPDelegate is CErc20, CDelegateInterface {
             return cTokenBalance;
         }
         return 0;
+    }
+
+    /*** CErc20 Overrides ***/
+    /**
+     * lp token does not borrow.
+     */
+    function borrow(uint borrowAmount) external returns (uint) {
+        borrowAmount;
+        require(false, "lptoken prohibits borrowing");
     }
 
     /*** CToken Overrides ***/
@@ -156,15 +152,21 @@ contract QsMdxLPDelegate is CErc20, CDelegateInterface {
     /*** Safe Token ***/
 
     /**
+     * @notice Gets balance of this contract in terms of the underlying
+     * @return The quantity of underlying tokens owned by this contract
+     */
+    function getCashPrior() internal view returns (uint) {
+        HecoPool.UserInfo memory userInfo = HecoPool(hecoPool).userInfo(pid, address(this));
+        return userInfo.amount;
+    }
+
+    /**
      * @notice Transfer the underlying to this contract and sweep into master chef
      * @param from Address to transfer funds from
      * @param amount Amount of underlying to transfer
-     * @param isNative The amount is in native or not
      * @return The actual amount that is transferred
      */
-    function doTransferIn(address from, uint amount, bool isNative) internal returns (uint) {
-        isNative; // unused
-
+    function doTransferIn(address from, uint amount) internal returns (uint) {
         // Perform the EIP-20 transfer in
         EIP20Interface token = EIP20Interface(underlying);
         require(token.transferFrom(from, address(this), amount), "unexpected EIP-20 transfer in return");
@@ -187,11 +189,8 @@ contract QsMdxLPDelegate is CErc20, CDelegateInterface {
      * @notice Transfer the underlying from this contract, after sweeping out of master chef
      * @param to Address to transfer funds to
      * @param amount Amount of underlying to transfer
-     * @param isNative The amount is in native or not
      */
-    function doTransferOut(address payable to, uint amount, bool isNative) internal {
-        isNative; // unused
-
+    function doTransferOut(address payable to, uint amount) internal {
         // Withdraw the underlying tokens from HecoPool.
         HecoPool(hecoPool).withdraw(pid, amount);
 
@@ -250,4 +249,5 @@ contract QsMdxLPDelegate is CErc20, CDelegateInterface {
     function cTokenBalance() internal view returns (uint) {
         return EIP20Interface(cMdx).balanceOf(address(this));
     }
+
 }
