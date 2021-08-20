@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
-import "./compound/CErc20Delegate.sol";
+import "./compound/CErc20.sol";
 import "./compound/EIP20Interface.sol";
 
 // Ref: https://etherscan.io/address/0xc2edad668740f1aa35e4d8f227fb8e17dca888cd#code
@@ -22,7 +22,7 @@ interface HecoPool {
  * @title Mdex LP Contract
  * @notice CToken which wraps Mdex's LP token
  */
-contract QsMdxLPDelegate is CErc20Delegate {
+contract QsMdxLPDelegate is CErc20, CDelegateInterface {
     /**
      * @notice HecoPool address
      */
@@ -69,11 +69,28 @@ contract QsMdxLPDelegate is CErc20Delegate {
     mapping(address => uint) public cTokenUserAccrued;
 
     /**
+     * @notice Construct an empty delegate
+     */
+    constructor() public {}
+
+    /**
+     * @notice Called by the delegator on a delegate to forfeit its responsibility
+     */
+    function _resignImplementation() public {
+        // Shh -- we don't ever want this hook to be marked pure
+        if (false) {
+            implementation = address(0);
+        }
+
+        require(msg.sender == admin, "only admin");
+    }
+
+    /**
      * @notice Delegate interface to become the implementation
      * @param data The encoded arguments for becoming
      */
     function _becomeImplementation(bytes memory data) public {
-        super._becomeImplementation(data);
+        require(msg.sender == admin, "only admin");
 
         (address hecoPoolAddress_, address cMdxAddress_, uint pid_) = abi.decode(data, (address, address, uint));
         hecoPool = hecoPoolAddress_;
@@ -81,7 +98,7 @@ contract QsMdxLPDelegate is CErc20Delegate {
         cMdx = cMdxAddress_;
 
         HecoPool.PoolInfo memory poolInfo = HecoPool(hecoPool).poolInfo(pid_);
-        require(poolInfo.lpToken == underlying, "mismatch underlying token");
+        require(poolInfo.lpToken == underlying, "mismatch underlying");
         pid = pid_;
 
         // Approve moving our LP into the heco pool contract.
