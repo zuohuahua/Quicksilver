@@ -43,13 +43,13 @@ contract QsMdxLPDelegate is CErc20Delegate {
     uint public pid;
 
     /**
-     * @notice cMdx address
+     * @notice fMdx address
      */
-    address public cMdx;
+    address public fMdx;
 
     /**
      * @notice Container for rewards state
-     * @member balance The balance of cMdx
+     * @member balance The balance of fMdx
      * @member index The last updated index
      */
     struct RewardState {
@@ -68,9 +68,9 @@ contract QsMdxLPDelegate is CErc20Delegate {
     mapping(address => uint) public lpSupplierIndex;
 
     /**
-     * @notice The cMdx amount of every user
+     * @notice The fMdx amount of every user
      */
-    mapping(address => uint) public cTokenUserAccrued;
+    mapping(address => uint) public fTokenUserAccrued;
 
     /**
      * @notice Delegate interface to become the implementation
@@ -79,10 +79,10 @@ contract QsMdxLPDelegate is CErc20Delegate {
     function _becomeImplementation(bytes memory data) public {
         super._becomeImplementation(data);
 
-        (address hecoPoolAddress_, address cMdxAddress_, uint pid_) = abi.decode(data, (address, address, uint));
+        (address hecoPoolAddress_, address fMdxAddress_, uint pid_) = abi.decode(data, (address, address, uint));
         hecoPool = hecoPoolAddress_;
         mdx = HecoPool(hecoPool).mdx();
-        cMdx = cMdxAddress_;
+        fMdx = fMdxAddress_;
 
         HecoPool.PoolInfo memory poolInfo = HecoPool(hecoPool).poolInfo(pid_);
         require(poolInfo.lpToken == underlying, "mismatch underlying");
@@ -91,13 +91,13 @@ contract QsMdxLPDelegate is CErc20Delegate {
         // Approve moving our LP into the heco pool contract.
         EIP20Interface(underlying).approve(hecoPoolAddress_, uint(-1));
 
-        // Approve moving mdx rewards into the cmdx contract.
-        EIP20Interface(mdx).approve(cMdxAddress_, uint(-1));
+        // Approve moving mdx rewards into the fMdx contract.
+        EIP20Interface(mdx).approve(fMdxAddress_, uint(-1));
     }
 
     /**
      * @notice Manually claim rewards by user
-     * @return The amount of cmdx rewards user claims
+     * @return The amount of fMdx rewards user claims
      */
     function claimMdx(address account) public returns (uint) {
         claimAndStakeMdx();
@@ -105,17 +105,17 @@ contract QsMdxLPDelegate is CErc20Delegate {
         updateLPSupplyIndex();
         updateSupplierIndex(account);
 
-        // Get user's cmdx accrued.
-        uint cTokenBalance = cTokenUserAccrued[account];
-        if (cTokenBalance > 0) {
-            lpSupplyState.balance = sub_(lpSupplyState.balance, cTokenBalance);
+        // Get user's fMdx accrued.
+        uint fTokenBalance = fTokenUserAccrued[account];
+        if (fTokenBalance > 0) {
+            lpSupplyState.balance = sub_(lpSupplyState.balance, fTokenBalance);
 
-            EIP20Interface(cMdx).transfer(account, cTokenBalance);
+            EIP20Interface(fMdx).transfer(account, fTokenBalance);
 
-            // Clear user's cmdx accrued.
-            cTokenUserAccrued[account] = 0;
+            // Clear user's fMdx accrued.
+            fTokenUserAccrued[account] = 0;
 
-            return cTokenBalance;
+            return fTokenBalance;
         }
         return 0;
     }
@@ -175,8 +175,8 @@ contract QsMdxLPDelegate is CErc20Delegate {
         HecoPool(hecoPool).deposit(pid, amount);
 
         if (mdxBalance() > 0) {
-            // Send mdx rewards to cMdx.
-            CErc20(cMdx).mint(mdxBalance());
+            // Send mdx rewards to fMdx.
+            CErc20(fMdx).mint(mdxBalance());
         }
 
         updateLPSupplyIndex();
@@ -195,8 +195,8 @@ contract QsMdxLPDelegate is CErc20Delegate {
         HecoPool(hecoPool).withdraw(pid, amount);
 
         if (mdxBalance() > 0) {
-            // Send mdx rewards to cMdx.
-            CErc20(cMdx).mint(mdxBalance());
+            // Send mdx rewards to fMdx.
+            CErc20(fMdx).mint(mdxBalance());
         }
 
         updateLPSupplyIndex();
@@ -214,20 +214,20 @@ contract QsMdxLPDelegate is CErc20Delegate {
 
         if (mdxBalance() > 0) {
             // Send mdx rewards to mdx pool.
-            CErc20(cMdx).mint(mdxBalance());
+            CErc20(fMdx).mint(mdxBalance());
         }
     }
 
     function updateLPSupplyIndex() internal {
-        uint cTokenBalance = cTokenBalance();
-        uint cTokenAccrued = sub_(cTokenBalance, lpSupplyState.balance);
+        uint fTokenBalance = fTokenBalance();
+        uint cTokenAccrued = sub_(fTokenBalance, lpSupplyState.balance);
         uint supplyTokens = CToken(address(this)).totalSupply();
         Double memory ratio = supplyTokens > 0 ? fraction(cTokenAccrued, supplyTokens) : Double({mantissa: 0});
         Double memory index = add_(Double({mantissa: lpSupplyState.index}), ratio);
 
         // Update lpSupplyState.
         lpSupplyState.index = index.mantissa;
-        lpSupplyState.balance = cTokenBalance;
+        lpSupplyState.balance = fTokenBalance;
     }
 
     function updateSupplierIndex(address supplier) internal {
@@ -237,7 +237,7 @@ contract QsMdxLPDelegate is CErc20Delegate {
         if (deltaIndex.mantissa > 0) {
             uint supplierTokens = CToken(address(this)).balanceOf(supplier);
             uint supplierDelta = mul_(supplierTokens, deltaIndex);
-            cTokenUserAccrued[supplier] = add_(cTokenUserAccrued[supplier], supplierDelta);
+            fTokenUserAccrued[supplier] = add_(fTokenUserAccrued[supplier], supplierDelta);
             lpSupplierIndex[supplier] = supplyIndex.mantissa;
         }
     }
@@ -246,8 +246,8 @@ contract QsMdxLPDelegate is CErc20Delegate {
         return EIP20Interface(mdx).balanceOf(address(this));
     }
 
-    function cTokenBalance() internal view returns (uint) {
-        return EIP20Interface(cMdx).balanceOf(address(this));
+    function fTokenBalance() internal view returns (uint) {
+        return EIP20Interface(fMdx).balanceOf(address(this));
     }
 
 }

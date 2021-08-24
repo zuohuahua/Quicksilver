@@ -19,6 +19,14 @@ contract QsMdxLPOracle is ChainlinkAggregatorV3Interface {
     uint private half0Decimals;
     uint private half1Decimals;
 
+    struct RoundData {
+        uint80 roundId;
+        int256 answer;
+        uint256 startedAt;
+        uint256 updatedAt;
+        uint80 answeredInRound;
+    }
+
     constructor(
         uint8 _decimals,
         string memory _description,
@@ -58,20 +66,22 @@ contract QsMdxLPOracle is ChainlinkAggregatorV3Interface {
     ) {
         _roundId;
 
+        RoundData memory data;
         uint totalSupply = IUniswapV2Pair(pair).totalSupply();
         (uint r0, uint r1, ) = IUniswapV2Pair(pair).getReserves();
         uint sqrtK = sqrt(r0.mul(r1)).mul(10 ** uint(decimals_)).div(totalSupply);
-        uint px0 = getTokenPrice(IUniswapV2Pair(pair).token0(), token0Source);
-        uint px1 = getTokenPrice(IUniswapV2Pair(pair).token1(), token1Source);
+        (data.roundId, data.answer, data.startedAt, data.updatedAt, data.answeredInRound) =
+                getTokenPrice(IUniswapV2Pair(pair).token0(), token0Source);
+        (, int256 px1,,,) = getTokenPrice(IUniswapV2Pair(pair).token1(), token1Source);
         // fair token0 amt: sqrtK * sqrt(px1/px0)
         // fair token1 amt: sqrtK * sqrt(px0/px1)
         // fair lp price = 2 * sqrt(px0 * px1)
         // split into 2 sqrts multiplication to prevent uint overflow
-        answer = int256(sqrtK.mul(2).mul(sqrt(px0)).div(10 ** uint(half0Decimals)).mul(sqrt(px1)).div(10 ** uint(half1Decimals)));
-        startedAt = block.timestamp;
-        updatedAt = block.timestamp;
-        roundId = 0;
-        answeredInRound = 0;
+        answer = int256(sqrtK.mul(2).mul(sqrt(uint(data.answer))).div(10 ** uint(half0Decimals)).mul(sqrt(uint(px1))).div(10 ** uint(half1Decimals)));
+        roundId = data.roundId;
+        startedAt = data.startedAt;
+        updatedAt = data.updatedAt;
+        answeredInRound = data.answeredInRound;
     }
 
     function latestRoundData()
@@ -87,10 +97,23 @@ contract QsMdxLPOracle is ChainlinkAggregatorV3Interface {
         return getRoundData(0);
     }
 
-    function getTokenPrice(address token, ChainlinkAggregatorV3Interface tokenSource) private view returns (uint) {
+    function getTokenPrice(address token, ChainlinkAggregatorV3Interface tokenSource) private view returns (
+        uint80 roundId,
+        int256 answer,
+        uint256 startedAt,
+        uint256 updatedAt,
+        uint80 answeredInRound) {
         uint tokenDecimals = uint(EIP20Interface(token).decimals());
-        (,int256 answer,,,) = tokenSource.latestRoundData();
-        return uint(answer).mul(1e18).div(10 ** tokenDecimals);
+        uint lpDecimals = uint(EIP20Interface(pair).decimals());
+
+        RoundData memory data;
+        (data.roundId, data.answer, data.startedAt, data.updatedAt, data.answeredInRound) = tokenSource.latestRoundData();
+
+        answer = int256(uint(data.answer).mul(10 ** lpDecimals).div(10 ** tokenDecimals));
+        roundId = data.roundId;
+        startedAt = data.startedAt;
+        updatedAt = data.updatedAt;
+        answeredInRound = data.answeredInRound;
     }
 
     // implementation from https://github.com/Uniswap/uniswap-lib/commit/99f3f28770640ba1bb1ff460ac7c5292fb8291a0
