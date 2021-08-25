@@ -3,6 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import "./compound/CErc20Delegate.sol";
 import "./compound/EIP20Interface.sol";
+import "./Qstroller.sol";
 
 interface HecoPool {
     struct PoolInfo {
@@ -48,13 +49,22 @@ contract QsMdxLPDelegate is CErc20Delegate {
     address public fMdx;
 
     /**
+     * @notice Comp address
+     */
+    address public comp;
+
+    /**
      * @notice Container for rewards state
      * @member balance The balance of fMdx
-     * @member index The last updated index
+     * @member index The last updated fMdx index
+     * @member compBalance The balance of comp
+     * @member compIndex The last updated comp index
      */
     struct RewardState {
         uint balance;
         uint index;
+        uint compBalance;
+        uint compIndex;
     }
 
     /**
@@ -73,6 +83,16 @@ contract QsMdxLPDelegate is CErc20Delegate {
     mapping(address => uint) public fTokenUserAccrued;
 
     /**
+     * @notice The index of every comp supplier
+     */
+    mapping(address => uint) public compSupplierIndex;
+
+    /**
+     * @notice The comp amount of every user
+     */
+    mapping(address => uint) public compUserAccrued;
+
+    /**
      * @notice Delegate interface to become the implementation
      * @param data The encoded arguments for becoming
      */
@@ -83,6 +103,8 @@ contract QsMdxLPDelegate is CErc20Delegate {
         hecoPool = hecoPoolAddress_;
         mdx = HecoPool(hecoPool).mdx();
         fMdx = fMdxAddress_;
+
+        comp = Qstroller(address(comptroller)).getCompAddress();
 
         HecoPool.PoolInfo memory poolInfo = HecoPool(hecoPool).poolInfo(pid_);
         require(poolInfo.lpToken == underlying, "mismatch underlying");
@@ -108,16 +130,29 @@ contract QsMdxLPDelegate is CErc20Delegate {
         // Get user's fMdx accrued.
         uint fTokenBalance = fTokenUserAccrued[account];
         if (fTokenBalance > 0) {
+            uint err = CErc20(fMdx).redeem(fTokenBalance);
+            require(err == 0, "redeem fmdx failed");
+
             lpSupplyState.balance = sub_(lpSupplyState.balance, fTokenBalance);
 
-            EIP20Interface(fMdx).transfer(account, fTokenBalance);
+            EIP20Interface(mdx).transfer(account, mdxBalance());
 
             // Clear user's fMdx accrued.
             fTokenUserAccrued[account] = 0;
-
-            return fTokenBalance;
         }
-        return 0;
+
+        // Get user's comp accrued.
+        uint compBalance = compUserAccrued[account];
+        if (compBalance > 0) {
+            lpSupplyState.compBalance = sub_(lpSupplyState.compBalance, compBalance);
+
+            EIP20Interface(comp).transfer(account, compBalance);
+
+            // Clear user's comp accrued.
+            compUserAccrued[account] = 0;
+        }
+
+        return fTokenBalance;
     }
 
     /*** CErc20 Overrides ***/
@@ -127,6 +162,24 @@ contract QsMdxLPDelegate is CErc20Delegate {
     function borrow(uint borrowAmount) external returns (uint) {
         borrowAmount;
         require(false, "lptoken prohibits borrowing");
+    }
+
+    /**
+     * lp token does not repayBorrow.
+     */
+    function repayBorrow(uint repayAmount) external returns (uint) {
+        repayAmount;
+        require(false, "lptoken prohibits repay");
+    }
+
+    function repayBorrowBehalf(address borrower, uint repayAmount) external returns (uint) {
+        borrower;repayAmount;
+        require(false, "lptoken prohibits repayBorrowBehalf");
+    }
+
+    function liquidateBorrow(address borrower, uint repayAmount, CTokenInterface cTokenCollateral) external returns (uint) {
+        borrower;repayAmount;cTokenCollateral;
+        require(false, "lptoken prohibits liquidate");
     }
 
     /*** CToken Overrides ***/
@@ -179,6 +232,8 @@ contract QsMdxLPDelegate is CErc20Delegate {
             CErc20(fMdx).mint(mdxBalance());
         }
 
+        harvestComp();
+
         updateLPSupplyIndex();
         updateSupplierIndex(from);
 
@@ -199,6 +254,8 @@ contract QsMdxLPDelegate is CErc20Delegate {
             CErc20(fMdx).mint(mdxBalance());
         }
 
+        harvestComp();
+
         updateLPSupplyIndex();
         updateSupplierIndex(to);
 
@@ -216,18 +273,37 @@ contract QsMdxLPDelegate is CErc20Delegate {
             // Send mdx rewards to mdx pool.
             CErc20(fMdx).mint(mdxBalance());
         }
+
+        harvestComp();
+    }
+
+    function harvestComp() internal {
+        address[] memory holders = new address[](1);
+        holders[0] = address(this);
+        CToken[] memory cTokens = new CToken[](1);
+        cTokens[0] = CToken(fMdx);
+
+        // MdexLP contract will never borrow assets from Compound.
+        Qstroller(address(comptroller)).claimComp(holders, cTokens, false, true);
     }
 
     function updateLPSupplyIndex() internal {
         uint fTokenBalance = fTokenBalance();
-        uint cTokenAccrued = sub_(fTokenBalance, lpSupplyState.balance);
+        uint fTokenAccrued = sub_(fTokenBalance, lpSupplyState.balance);
         uint supplyTokens = CToken(address(this)).totalSupply();
-        Double memory ratio = supplyTokens > 0 ? fraction(cTokenAccrued, supplyTokens) : Double({mantissa: 0});
+        Double memory ratio = supplyTokens > 0 ? fraction(fTokenAccrued, supplyTokens) : Double({mantissa: 0});
         Double memory index = add_(Double({mantissa: lpSupplyState.index}), ratio);
+
+        uint compBalance = compBalance();
+        uint compAccrued = sub_(compBalance, lpSupplyState.compBalance);
+        Double memory compRatio = supplyTokens > 0 ? fraction(compAccrued, supplyTokens) : Double({mantissa: 0});
+        Double memory compIndex = add_(Double({mantissa: lpSupplyState.compIndex}), compRatio);
 
         // Update lpSupplyState.
         lpSupplyState.index = index.mantissa;
         lpSupplyState.balance = fTokenBalance;
+        lpSupplyState.compIndex = compIndex.mantissa;
+        lpSupplyState.compBalance = compBalance;
     }
 
     function updateSupplierIndex(address supplier) internal {
@@ -240,6 +316,16 @@ contract QsMdxLPDelegate is CErc20Delegate {
             fTokenUserAccrued[supplier] = add_(fTokenUserAccrued[supplier], supplierDelta);
             lpSupplierIndex[supplier] = supplyIndex.mantissa;
         }
+
+        Double memory compSupplyIndex = Double({mantissa: lpSupplyState.compIndex});
+        Double memory compSupplierIndex_ = Double({mantissa: compSupplierIndex[supplier]});
+        Double memory deltaCompIndex = sub_(compSupplyIndex, compSupplierIndex_);
+        if (deltaCompIndex.mantissa > 0) {
+            uint supplierTokens = CToken(address(this)).balanceOf(supplier);
+            uint supplierDelta = mul_(supplierTokens, deltaCompIndex);
+            compUserAccrued[supplier] = add_(compUserAccrued[supplier], supplierDelta);
+            compSupplierIndex[supplier] = compSupplyIndex.mantissa;
+        }
     }
 
     function mdxBalance() internal view returns (uint) {
@@ -250,4 +336,7 @@ contract QsMdxLPDelegate is CErc20Delegate {
         return EIP20Interface(fMdx).balanceOf(address(this));
     }
 
+    function compBalance() internal view returns (uint) {
+        return EIP20Interface(comp).balanceOf(address(this));
+    }
 }
