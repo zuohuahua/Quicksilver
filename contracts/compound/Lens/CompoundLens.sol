@@ -2,6 +2,7 @@ pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
 import "../CErc20.sol";
+import "../../SToken.sol";
 import "../CToken.sol";
 import "../PriceOracle.sol";
 import "../EIP20Interface.sol";
@@ -35,14 +36,39 @@ contract CompoundLens {
         uint underlyingDecimals;
     }
 
-    function cTokenMetadata(CToken cToken) public returns (CTokenMetadata memory) {
+    function cTokenMetadataExpand(SToken cToken) public returns (
+        uint collateralFactorMantissa,
+        uint exchangeRateCurrent,
+        uint supplyRatePerBlock,
+        uint borrowRatePerBlock,
+        uint reserveFactorMantissa,
+        uint totalBorrows,
+        uint totalReserves, uint totalSupply, uint totalCash,
+        bool isListed, address underlyingAssetAddress,
+        uint underlyingDecimals) {
+        CTokenMetadata memory cTokenData = cTokenMetadata(cToken);
+        exchangeRateCurrent = cTokenData.exchangeRateCurrent;
+        supplyRatePerBlock = cTokenData.supplyRatePerBlock;
+        borrowRatePerBlock = cTokenData.borrowRatePerBlock;
+        reserveFactorMantissa = cTokenData.reserveFactorMantissa;
+        totalBorrows = cTokenData.totalBorrows;
+        totalReserves = cTokenData.totalReserves;
+        totalSupply = cTokenData.totalSupply;
+        totalCash = cTokenData.totalCash;
+        isListed = cTokenData.isListed;
+        collateralFactorMantissa = cTokenData.collateralFactorMantissa;
+        underlyingAssetAddress = cTokenData.underlyingAssetAddress;
+        underlyingDecimals = cTokenData.underlyingDecimals;
+    }
+
+    function cTokenMetadata(SToken cToken) public returns (CTokenMetadata memory) {
         uint exchangeRateCurrent = cToken.exchangeRateCurrent();
         ComptrollerLensInterface comptroller = ComptrollerLensInterface(address(cToken.comptroller()));
         (bool isListed, uint collateralFactorMantissa) = comptroller.markets(address(cToken));
         address underlyingAssetAddress;
         uint underlyingDecimals;
 
-        if (compareStrings(cToken.symbol(), "cETH")) {
+        if (cToken.isNativeToken()) {
             underlyingAssetAddress = address(0);
             underlyingDecimals = 18;
         } else {
@@ -69,7 +95,7 @@ contract CompoundLens {
         });
     }
 
-    function cTokenMetadataAll(CToken[] calldata cTokens) external returns (CTokenMetadata[] memory) {
+    function cTokenMetadataAll(SToken[] calldata cTokens) external returns (CTokenMetadata[] memory) {
         uint cTokenCount = cTokens.length;
         CTokenMetadata[] memory res = new CTokenMetadata[](cTokenCount);
         for (uint i = 0; i < cTokenCount; i++) {
@@ -87,14 +113,14 @@ contract CompoundLens {
         uint tokenAllowance;
     }
 
-    function cTokenBalances(CToken cToken, address payable account) public returns (CTokenBalances memory) {
+    function cTokenBalances(SToken cToken, address payable account) public returns (CTokenBalances memory) {
         uint balanceOf = cToken.balanceOf(account);
         uint borrowBalanceCurrent = cToken.borrowBalanceCurrent(account);
         uint balanceOfUnderlying = cToken.balanceOfUnderlying(account);
         uint tokenBalance;
         uint tokenAllowance;
 
-        if (compareStrings(cToken.symbol(), "cETH")) {
+        if (cToken.isNativeToken()) {
             tokenBalance = account.balance;
             tokenAllowance = account.balance;
         } else {
@@ -114,7 +140,7 @@ contract CompoundLens {
         });
     }
 
-    function cTokenBalancesAll(CToken[] calldata cTokens, address payable account) external returns (CTokenBalances[] memory) {
+    function cTokenBalancesAll(SToken[] calldata cTokens, address payable account) external returns (CTokenBalances[] memory) {
         uint cTokenCount = cTokens.length;
         CTokenBalances[] memory res = new CTokenBalances[](cTokenCount);
         for (uint i = 0; i < cTokenCount; i++) {
@@ -162,6 +188,13 @@ contract CompoundLens {
             liquidity: liquidity,
             shortfall: shortfall
         });
+    }
+
+    function getAccountLimitsExpand(ComptrollerLensInterface comptroller, address account) public view returns (uint liquidity, uint shortfall,  CToken[] memory markets) {
+        AccountLimits memory accountLimits = getAccountLimits(comptroller, account);
+        liquidity = accountLimits.liquidity;
+        shortfall = accountLimits.shortfall;
+        markets = accountLimits.markets;
     }
 
     struct GovReceipt {
@@ -314,10 +347,6 @@ contract CompoundLens {
             });
         }
         return res;
-    }
-
-    function compareStrings(string memory a, string memory b) internal pure returns (bool) {
-        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
     function add(uint a, uint b, string memory errorMessage) internal pure returns (uint) {

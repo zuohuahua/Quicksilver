@@ -8,4 +8,4 @@ node_modules/
 junit.xml
 scenario/.tsbuilt/
 scenario/.tscache
-
+*.DS_Store

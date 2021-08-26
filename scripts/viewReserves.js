@@ -12,12 +12,12 @@ module.exports = async function(callback) {
             let cTokenName = await cTokenInstance.name();
             let totalReserves = await cTokenInstance.totalReserves() / Math.pow(10, 18);
             let reserveFactorMantissa = await cTokenInstance.reserveFactorMantissa() / Math.pow(10, 18);
-            if (cTokenName === "Filda HUSD") {
+            if (cTokenName === "Filda HUSD" || cTokenName === "Filda pNEO") {
                 totalReserves = await cTokenInstance.totalReserves() / Math.pow(10, 8);
                 reserveFactorMantissa = await cTokenInstance.reserveFactorMantissa() / Math.pow(10, 18);
             }
-            if (totalReserves <= 0) continue;
-            console.log(`${cTokenName} totalReserves: ${totalReserves}, reserveFactorMantissa: ${reserveFactorMantissa}`)
+            if (totalReserves <= 0 && reserveFactorMantissa > 0) continue;
+            console.log(`${cTokenName} ${market} totalReserves: ${totalReserves}, reserveFactorMantissa: ${reserveFactorMantissa}`)
         }
         callback();
     } catch (e) {
