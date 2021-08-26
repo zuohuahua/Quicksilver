@@ -138,12 +138,13 @@ module.exports = {
           network_id: "128",   // This network is yours, in the cloud.
           timeoutBlocks: 200,
           confirmations: 2,
-          gasPrice: 5000000000,
+          gasPrice: 2500000000,
           skipDryRun: true,
           networkCheckTimeout: 100000000,
           websockets: true
       },
   },
+  plugins: ["truffle-contract-size"],
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
