@@ -4,9 +4,9 @@ const Qstroller = artifacts.require("Qstroller");
 const Unitroller = artifacts.require("Unitroller");
 
 const baseRatePerYear = 0.03e18.toString()
-const multiplierPerYear = 0.35e18.toString()
-const jumpMultiplierPerYear = 4e18.toString()
-const kink = 0.9e18.toString()
+const multiplierPerYear = 0.4e18.toString()
+const jumpMultiplierPerYear = 5.2e18.toString()
+const kink = 0.8e18.toString()
 const reserveFactor = 0.15e18.toString();
 
 module.exports = async function(callback) {

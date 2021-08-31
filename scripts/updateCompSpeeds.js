@@ -40,7 +40,7 @@ const allTokens = [
 ]
 
 const allCompSpeeds = [
-    '727350000000000000', // HT
+    '1000350000000000000', // HT
     '0', // ELA
     '7800000000000000', // HFIL
     '0',                  // ethUSDT
@@ -74,7 +74,7 @@ const allCompSpeeds = [
     '7800000000000000', // USDC
     '0',
     '7800000000000000', // DAI
-    '312000000000000000' // TUSD
+    '39000000000000000' // TUSD
 ]
 
 module.exports = async function(callback) {
