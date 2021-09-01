@@ -4901,12 +4901,12 @@
         }
       },
       "links": {},
-      "address": "0xb56E99E6E2165837e0DaC8f4eBd29a56Aac91907",
-      "transactionHash": "0x8a8685776b3ce580f606aa7ac52e086518df1600dad9d4bbf1c96a9908c8babf"
+      "address": "0xcE7aB48463bc9a7baf83D96efdf858C91Da3a844",
+      "transactionHash": "0x41c868f2c844c5fe08f185b0f62512d08ed76c8c9e92d0058583cb97424e287b"
     }
   },
-  "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-29T11:54:13.747Z",
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-09-01T12:48:30.604Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Compound",
