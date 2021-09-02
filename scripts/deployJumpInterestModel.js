@@ -4,14 +4,17 @@ const Qstroller = artifacts.require("Qstroller");
 const Unitroller = artifacts.require("Unitroller");
 
 const baseRatePerYear = 0.03e18.toString()
-const multiplierPerYear = 0.35e18.toString()
-const jumpMultiplierPerYear = 4e18.toString()
-const kink = 0.9e18.toString()
+const multiplierPerYear = 0.4e18.toString()
+const jumpMultiplierPerYear = 5.2e18.toString()
+const kink = 0.8e18.toString()
 const reserveFactor = 0.15e18.toString();
 
 module.exports = async function(callback) {
     try {
         let newInterestModel = await JumpInterestModel.new(baseRatePerYear, multiplierPerYear, jumpMultiplierPerYear, kink);
+        let unitrollerInstance = await Unitroller.deployed();
+        let proxiedQstroller = await Qstroller.at(unitrollerInstance.address);
+        //let allSupportedMarkets = await proxiedQstroller.getAllMarkets();
         let allSupportedMarkets = ["0x824151251B38056d54A15E56B73c54ba44811aF8"]
         for (market of allSupportedMarkets) {
             let interestModelAddr = newInterestModel.address;
